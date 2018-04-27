@@ -1,0 +1,8 @@
+{
+  "name": "Open",
+  "app_id": "47b3d6fe",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
