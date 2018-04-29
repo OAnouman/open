@@ -1,0 +1,43 @@
+login-form {
+    .logo {
+        font-size: 14rem;
+        color: $logo-color;
+    }
+    .toolbar-title {
+        font-family: "ABeatByKai";
+        font-size: 7rem !important;
+        color: $logo-color;
+        text-shadow: 1px 3px 3px rgba(0, 0, 0, .16);
+    }
+    ion-item {
+        background: transparent !important;
+    }
+    // ion input
+    .item-md.item-input.input-has-focus .item-inner {
+        border-bottom-color: transparent !important;
+        box-shadow: none !important;
+    }
+    .item-md.item-input .item-inner {
+        border-bottom-color: transparent !important;
+        box-shadow: none !important;
+    }
+    .item-md.item-input.ng-valid.input-has-value:not(.input-has-focus) .item-inner {
+        border-bottom-color: transparent !important;
+        box-shadow: none !important;
+    }
+    .item-md.item-input.ng-invalid.ng-touched:not(.input-has-focus) .item-inner {
+        border-bottom-color: transparent !important;
+        box-shadow: none !important;
+    }
+    ion-label {
+        color: #222 !important;
+    }
+    // button {
+    //     background: $button-login-color !important;
+    // }
+    a {
+        text-decoration: none;
+        color: $button-login-color;
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,12 @@
+edit-profile-form {
+    .avatar {
+        background: color($colors, secondary, base);
+        padding: 30px 0 !important;
+    }
+    .circle-img {
+        width: 150px;
+        height: 150px;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+    }
+}

@@ -1,0 +1,93 @@
+<ion-list no-lines>
+
+    <ion-grid>
+
+        <ion-row text-center align-items-center>
+            <ion-col col-12 col-sm-6>
+
+                <ion-icon class="logo" name="c-handshake"></ion-icon>
+
+            </ion-col>
+
+            <ion-col col-12 col-sm-6>
+
+                <ion-title>open</ion-title>
+
+                <p class="slogan">faire des deals n'aura
+                    <br> jamais été aussi simple !</p>
+
+            </ion-col>
+        </ion-row>
+
+        <ion-row align-items-center justify-content-center>
+            <ion-col col-12 col-sm-6>
+                <form [formGroup]="loginForm">
+
+                    <ion-item>
+                        <ion-label floating>
+                            <ion-icon name="mail"></ion-icon> Email</ion-label>
+                        <ion-input type="email" formControlName="email" [(ngModel)]="account.email"></ion-input>
+                    </ion-item>
+
+                    <div>
+                        <ng-container *ngFor="let validation of errorMessages.email">
+                            <div class="globals__inputs-error" *ngIf="loginForm.get('email').hasError(validation.type) && loginForm.get('email').dirty">
+                                {{ validation.message}}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <ion-item>
+                        <ion-label floating>
+                            <ion-icon name="unlock"></ion-icon>&nbsp;Password</ion-label>
+                        <ion-input type="password" formControlName="password" [(ngModel)]="account.password"></ion-input>
+                    </ion-item>
+
+                    <div>
+                        <ng-container *ngFor="let validation of errorMessages.password">
+                            <div class="globals__inputs-error" *ngIf="loginForm.get('password').hasError(validation.type) && loginForm.get('password').dirty">
+                                {{ validation.message}}
+                            </div>
+                        </ng-container>
+                    </div>
+
+                </form>
+
+            </ion-col>
+
+            <ion-col col-12 col-sm-6 margin-top text-center>
+
+                <ion-row>
+                    <ion-col col-6>
+                        <button ion-button block color="primary" [disabled]="loginForm.invalid" (click)="signInWithEmailAndPassword($event)" [disabled]="isButtonsDisabled">Se Connecter</button>
+                    </ion-col>
+                    <ion-col col-6>
+                        <button ion-button block color="light" (click)="goToRegisterPage()" [disabled]="isButtonsDisabled">S'inscrire</button>
+                    </ion-col>
+                </ion-row>
+
+                <div padding-top>
+                    <p no-padding>Mot de passe oublié ?</p>
+                </div>
+
+            </ion-col>
+
+        </ion-row>
+
+        <!-- <ion-row>
+            <ion-col col-12 col-sm-6 align-self-end>
+                <button block color="light" ion-button left (click)="googleSignIn()">
+            <ion-icon color="danger" name="logo-google" margin-right></ion-icon>
+            Se connecter avec Google
+          </button>
+    
+                <button block color="light" ion-button left margin-top>
+            <ion-icon color="facebook" name="logo-facebook" margin-right></ion-icon>
+            Se connecter avec Facebook
+          </button>
+            </ion-col>
+        </ion-row> -->
+
+    </ion-grid>
+
+</ion-list>

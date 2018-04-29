@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,3 +12,52 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+ion-icon {
+    &[class*="c-"] {
+        mask-size: contain;
+        mask-position: 50% 50%;
+        mask-repeat: no-repeat;
+        background: currentColor;
+        width: 1em;
+        height: 1em;
+    }
+    &[class*="c-handshake"] {
+        mask-image: url(../assets/svgs/handshake.svg);
+    }
+}
+
+@font-face {
+    font-family: 'ABeatbyKai';
+    src: url('../assets/fonts/ABEAKRG.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: url('../assets/fonts/OpenSans-Regular.ttf') format('truetype');
+}
+
+// ion-input {
+//     background: color($colors, background) !important;
+// }
+ion-item {
+    padding: 0 !important;
+    .item-inner {
+        padding: 0 !important;
+    }
+}
+
+.globals__inputs-error {
+    color: color($colors, danger);
+}
+
+.globals__toast-error {
+    div{
+        background: rgba(255, 0, 0, .5);
+    }
+}
+
+.globals__toast-success {
+    div{
+        background: rgba(75, 181, 67, .5);
+    }
+}

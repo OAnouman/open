@@ -1,0 +1,54 @@
+<ion-grid>
+    <ion-row align-items-center justify-content-center>
+        <ion-col col-12 col-sm-6>
+            <form [formGroup]="registerForm">
+
+                <ion-item>
+                    <ion-label floating>
+                        <ion-icon name="mail"></ion-icon> Email</ion-label>
+                    <ion-input type="email" formControlName="email" [(ngModel)]="account.email"></ion-input>
+                </ion-item>
+
+                <div>
+                    <ng-container *ngFor="let validation of errorMessages.email">
+                        <div class="globals__inputs-error" *ngIf="registerForm.get('email').hasError(validation.type) && registerForm.get('email').dirty">
+                            {{ validation.message}}
+                        </div>
+                    </ng-container>
+                </div>
+
+                <ion-item>
+                    <ion-label floating>
+                        <ion-icon name="unlock"></ion-icon>&nbsp;Password</ion-label>
+                    <ion-input type="password" formControlName="password" [(ngModel)]="account.password"></ion-input>
+                </ion-item>
+
+                <div>
+                    <ng-container *ngFor="let validation of errorMessages.password">
+                        <div class="globals__inputs-error" *ngIf="registerForm.get('password').hasError(validation.type) && registerForm.get('password').dirty">
+                            {{ validation.message}}
+                        </div>
+                    </ng-container>
+                </div>
+
+            </form>
+
+        </ion-col>
+
+        <ion-col col-12 col-sm-6 margin-top text-center>
+
+            <ion-row>
+                <ion-col>
+                    <button ion-button block color="light" (click)="signUpWithEmailAndCredential()" [disabled]="registerForm.invalid">Creer Un Compte</button>
+                </ion-col>
+            </ion-row>
+
+            <div padding-top>
+                <button ion-button clear block (click)="goBackToLoginPage()">J'ai déjà un compte</button>
+            </div>
+
+        </ion-col>
+
+    </ion-row>
+
+</ion-grid>

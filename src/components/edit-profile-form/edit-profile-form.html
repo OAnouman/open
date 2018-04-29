@@ -1,0 +1,105 @@
+<ion-grid no-padding no-margin>
+
+    <ion-row justifiy-content-center align-items-center>
+        <ion-col class="avatar" col-12 text-center>
+
+            <img class="circle-img" src="{{userProfile.picture}}">
+
+        </ion-col>
+    </ion-row>
+
+    <ion-row padding-left padding-right>
+
+        <ion-col>
+
+            <form [formGroup]="profile">
+
+                <ion-row>
+                    <ion-col col-12 col-sm-6>
+
+                        <ion-item no-padding>
+                            <ion-label floating>Nom</ion-label>
+                            <ion-input type="text" formControlName="name" [(ngModel)]="userProfile.name"></ion-input>
+                        </ion-item>
+
+                        <div>
+                            <ng-container *ngFor="let validation of errorMessages.name">
+                                <div class="globals__inputs-error" *ngIf="profile.get('name').hasError(validation.type) && profile.get('name').dirty">
+                                    {{ validation.message}}
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <ion-item no-padding>
+                            <ion-label floating>Pseudo</ion-label>
+                            <ion-input type="text" [(ngModel)]="userProfile.username" formControlName="username" [textMask]="{mask: masks.username}"></ion-input>
+                        </ion-item>
+
+                        <div>
+                            <ng-container *ngFor="let validation of errorMessages.username">
+                                <div class="globals__inputs-error" *ngIf="profile.get('username').hasError(validation.type) && profile.get('username').dirty">
+                                    {{ validation.message}}
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <ion-item no-padding>
+                            <ion-label floating>Email</ion-label>
+                            <ion-input type="email" formControlName="email" [(ngModel)]="userProfile.email" [readonly]="true"></ion-input>
+                        </ion-item>
+
+                        <div>
+                            <ng-container *ngFor="let validation of errorMessages.email">
+                                <div class="globals__inputs-error" *ngIf="profile.get('email').hasError(validation.type) && profile.get('email').dirty">
+                                    {{ validation.message}}
+                                </div>
+                            </ng-container>
+                        </div>
+
+                    </ion-col>
+
+                    <ion-col col-12 col-sm-6>
+
+                        <ion-item no-padding>
+                            <ion-label floating>Mobile</ion-label>
+                            <ion-input type="tel" formControlName="phoneNumber" [(ngModel)]="userProfile.phoneNumber" [textMask]="{mask:masks.phoneNumber, guide:true}"></ion-input>
+                        </ion-item>
+
+                        <div>
+                            <ng-container *ngFor="let validation of errorMessages.phoneNumber">
+                                <div class="globals__inputs-error" *ngIf="profile.get('phoneNumber').hasError(validation.type) && profile.get('phoneNumber').dirty">
+                                    {{ validation.message}}
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <ion-item no-padding>
+                            <ion-label floating>Ville</ion-label>
+                            <ion-input type="text" formControlName="city" [(ngModel)]="userProfile.city"></ion-input>
+                        </ion-item>
+
+                        <div>
+                            <ng-container *ngFor="let validation of errorMessages.city">
+                                <div class="globals__inputs-error" *ngIf="profile.get('city').hasError(validation.type) && profile.get('city').dirty">
+                                    {{ validation.message}}
+                                </div>
+                            </ng-container>
+                        </div>
+
+                    </ion-col>
+
+                </ion-row>
+
+            </form>
+
+        </ion-col>
+
+    </ion-row>
+
+    <ion-row padding-left padding-right margin-top>
+        <ion-col>
+            <button ion-button block color="secondary" [disabled]="profile.invalid" (click)="createProfile()">Enregistrer</button>
+        </ion-col>
+    </ion-row>
+
+</ion-grid>
