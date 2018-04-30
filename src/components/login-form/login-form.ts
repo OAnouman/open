@@ -1,11 +1,10 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
-import { AuthProvider } from '../../providers/auth/auth';
-import { Profile } from '../../models/profile/profile.interface';
-import { Account } from '../../models/account/account.interface';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Loading, LoadingController, NavController, ToastController } from 'ionic-angular';
 import 'rxjs/Observable';
+import { Account } from '../../models/account/account.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { AuthProvider } from '../../providers/auth/auth';
 
 /**
  * Generated class for the LoginFormComponent component.
@@ -17,7 +16,7 @@ import 'rxjs/Observable';
   selector: 'login-form',
   templateUrl: 'login-form.html'
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
 
 
   /**
@@ -52,6 +51,10 @@ export class LoginFormComponent {
       email: ['', Validators.compose([Validators.email, Validators.required])],
       password: ['', Validators.compose([Validators.required])]
     })
+
+  }
+
+  ngOnInit(): void {
 
     this.errorMessages = {
 

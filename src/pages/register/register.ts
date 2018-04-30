@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
 
 /**
@@ -17,8 +17,9 @@ import { Profile } from '../../models/profile/profile.interface';
 export class RegisterPage {
 
   constructor(
-    private navCtrl: NavController,
-    private navParams: NavParams) {
+    private _navCtrl: NavController,
+    private _navParams: NavParams,
+    private _toastCtrl: ToastController) {
   }
 
 
@@ -26,7 +27,12 @@ export class RegisterPage {
 
     if (profile) {
 
-      this.navCtrl.setRoot('EditProfilePage', { profile });
+      this._toastCtrl.create({
+        message: `Un mail de confirmation a été envoyé à ${profile.email}.`,
+        duration: 5000
+      }).present();
+
+      this._navCtrl.setRoot('EditProfilePage', { profile });
 
     }
 

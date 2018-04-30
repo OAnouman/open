@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
-import { Observable } from 'rxjs/Observable';
 
 /**
  * Generated class for the LoginPage page.
@@ -35,7 +34,7 @@ export class LoginPage {
       this.navCtrl.setRoot('HomePage', { profile });
     } else {
 
-      this.navCtrl.push('EditProfilePage', { profile });
+      this.navCtrl.setRoot('EditProfilePage', { profile });
 
     }
 

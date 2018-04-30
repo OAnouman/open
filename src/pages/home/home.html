@@ -16,4 +16,21 @@
 
 <ion-content padding>
 
+
+
 </ion-content>
+
+<ion-footer *ngIf="!currentUser.emailVerified">
+    <ion-grid>
+        <ion-row class="email-confirmation-warning">
+            <ion-col col-auto>
+                <ion-icon name="warning"></ion-icon>
+            </ion-col>
+            <ion-col>
+                <div text-wrap>
+                    Vous devez confirmer votre adresse mail pour pouvoir publier des annonces
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-footer>

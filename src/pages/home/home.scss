@@ -1,3 +1,6 @@
 page-home {
-
+    .email-confirmation-warning {
+        background: color($colors, danger);
+        color: white;
+    }
 }

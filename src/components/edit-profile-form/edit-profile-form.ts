@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActionSheetController, AlertController, Loading, LoadingController, ToastController } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
 import { DataProvider } from '../../providers/data/data';
-import { Loading, LoadingController, ToastController } from 'ionic-angular';
+import { Camera, CameraOptions } from "@ionic-native/camera";
 
 
 /**
@@ -15,7 +16,7 @@ import { Loading, LoadingController, ToastController } from 'ionic-angular';
   selector: 'edit-profile-form',
   templateUrl: 'edit-profile-form.html'
 })
-export class EditProfileFormComponent {
+export class EditProfileFormComponent implements OnInit {
 
 
   @Input() userProfile: Profile;
@@ -40,16 +41,14 @@ export class EditProfileFormComponent {
 
   private loadingInstance: Loading;
 
-  // Inputs mask
-  masks: any;
-
-  // (0 4 5 6 7 8) d - dd-dd-dd
-
   constructor(
     private formBuilder: FormBuilder,
     private dataPvd: DataProvider,
     private loadingCtrl: LoadingController,
-    private toastCtrl: ToastController) {
+    private toastCtrl: ToastController,
+    private actShtCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
+    private camera: Camera) {
 
     // Profile form form group
     this.profile = this.formBuilder.group({
@@ -64,6 +63,13 @@ export class EditProfileFormComponent {
       city: ['', Validators.compose([Validators.required])]
     })
 
+    this.userProfileCreated = new EventEmitter<Profile>();
+
+  }
+
+  ngOnInit(): void {
+
+    // Define error messages for input fields
 
     this.errorMessages = {
 
@@ -117,16 +123,7 @@ export class EditProfileFormComponent {
       ]
 
     }
-
-    this.userProfileCreated = new EventEmitter<Profile>();
-
-    this.masks = {
-      phoneNumber: [/[0-8]/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/],
-      username: ['@', /[a-zA-Z_]/]
-    };
-
   }
-
 
   /**
    * Create usere profile and :mit event with profile
@@ -143,10 +140,7 @@ export class EditProfileFormComponent {
 
       this.loadingInstance.present();
 
-      // sanitize phoneNumber
-      this.userProfile.phoneNumber = this.userProfile.phoneNumber.replace(/\D+/g, '');
-
-      const docRef = await this.dataPvd.createUserProfile(this.userProfile);
+      await this.dataPvd.createUserProfile(this.userProfile);
 
       this.userProfileCreated.emit(this.userProfile);
 
@@ -160,6 +154,77 @@ export class EditProfileFormComponent {
         message: e.message,
         duration: 5000,
         cssClass: 'globals__toast-error'
+      }).present();
+
+    }
+
+  }
+
+  showActionSheet() {
+
+    this.actShtCtrl.create({
+      title: 'Image de profil',
+      buttons: [
+        {
+          text: 'Galérie',
+          handler: () => {
+            this.handleCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
+          },
+          icon: 'image'
+        },
+        {
+          text: 'Caméra',
+          handler: () => {
+            this.handleCamera(this.camera.PictureSourceType.CAMERA);
+          },
+          icon: 'camera'
+        }
+      ]
+    }).present();
+
+  }
+
+  /**
+   * This function capture image from either the
+   * device camera or gallery
+   * 
+   * @private
+   * @param {number} sourceType Picture source. Use Camera["PictureSourceType"] property
+   * @memberof EditProfileFormComponent
+   */
+  private async handleCamera(sourceType: number) {
+
+    try {
+
+      const srcTypeRef = this.camera.PictureSourceType;
+
+      if (sourceType !== srcTypeRef.CAMERA && sourceType !== srcTypeRef.PHOTOLIBRARY && sourceType !== srcTypeRef.SAVEDPHOTOALBUM) {
+        throw new Error('La source spécifiée est invalide');
+      }
+
+      const cameraOptions: CameraOptions = {
+        quality: 100,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.JPEG,
+        mediaType: this.camera.MediaType.PICTURE,
+        sourceType: sourceType,
+        targetHeight: 500,
+        targetWidth: 500,
+        saveToPhotoAlbum: false,
+        allowEdit: true,
+      };
+
+      const imageData = await this.camera.getPicture(cameraOptions);
+
+      this.userProfile.picture = `data:image/jpeg;base64,${imageData}`
+
+      this.camera.cleanup();
+
+    } catch (e) {
+
+      this.toastCtrl.create({
+        message: e.message,
+        duration: 5000,
       }).present();
 
     }

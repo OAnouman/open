@@ -40,6 +40,10 @@ export class AuthProvider {
 
     const user = await this.afAuth.auth.createUserAndRetrieveDataWithEmailAndPassword(account.email, account.password);
 
+    //  Send email verification mail
+
+    await this.afAuth.auth.currentUser.sendEmailVerification();
+
     let userProfile = {} as Profile;
 
     userProfile.uid = user['user'].uid

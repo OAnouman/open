@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { User } from 'firebase';
+import { AuthProvider } from '../../providers/auth/auth';
 
 /**
  * Generated class for the HomePage page.
@@ -15,11 +17,16 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  currentUser: User;
+
+  constructor(
+    private _navCtrl: NavController,
+    private _navParams: NavParams,
+    private _authPvd: AuthProvider) {
+
+    this.currentUser = this._authPvd.getAuthenticatedUser();
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad HomePage');
-  }
+
 
 }

@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Profile } from '../../models/profile/profile.interface';
-import { User } from 'firebase';
 import { Observable } from 'rxjs/Observable';
+import { Profile } from '../../models/profile/profile.interface';
+import { StorageProvider } from '../storage/storage';
+import { User } from 'firebase';
+
 
 /*
   Generated class for the DataProvider provider.
@@ -15,13 +16,35 @@ import { Observable } from 'rxjs/Observable';
 export class DataProvider {
 
   constructor(
-    private afs: AngularFirestore) {
+    private afs: AngularFirestore,
+    private _storagePvd: StorageProvider) {
   }
 
 
+  /**
+   * Create a new user profile
+   * 
+   * @param {Profile} profile 
+   * @memberof DataProvider
+   */
   async createUserProfile(profile: Profile) {
 
-    await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
+    // If avatar selected, upload then save profile with 
+    // avatar url
+
+    if (profile.picture) {
+
+      (await this._storagePvd.createUploadTask(profile)).subscribe(async (downloadLink: string) => {
+
+        profile.picture = downloadLink;
+
+        await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
+
+      })
+
+    } else {
+      await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
+    }
 
   }
 

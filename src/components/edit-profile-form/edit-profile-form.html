@@ -3,7 +3,11 @@
     <ion-row justifiy-content-center align-items-center>
         <ion-col class="avatar" col-12 text-center>
 
-            <img class="circle-img" src="{{userProfile.picture}}">
+            <img *ngIf="userProfile.picture; else avatarPlaceholder" class="circle-img" width="150" height=150 [src]="userProfile.picture" (click)="showActionSheet()">
+
+            <ng-template #avatarPlaceholder>
+                <ion-icon class="avatar-placeholder" name="camera" color="light" (click)="showActionSheet()"></ion-icon>
+            </ng-template>
 
         </ion-col>
     </ion-row>
@@ -19,7 +23,7 @@
 
                         <ion-item no-padding>
                             <ion-label floating>Nom</ion-label>
-                            <ion-input type="text" formControlName="name" [(ngModel)]="userProfile.name"></ion-input>
+                            <ion-input type="text" formControlName="name" [(ngModel)]="userProfile.name" #name (keyup.enter)="name.focusNext()"></ion-input>
                         </ion-item>
 
                         <div>
@@ -32,7 +36,7 @@
 
                         <ion-item no-padding>
                             <ion-label floating>Pseudo</ion-label>
-                            <ion-input type="text" [(ngModel)]="userProfile.username" formControlName="username" [textMask]="{mask: masks.username}"></ion-input>
+                            <ion-input type="text" [(ngModel)]="userProfile.username" formControlName="username" #username (keyup.enter)="username.focusNext()"></ion-input>
                         </ion-item>
 
                         <div>
@@ -45,7 +49,7 @@
 
                         <ion-item no-padding>
                             <ion-label floating>Email</ion-label>
-                            <ion-input type="email" formControlName="email" [(ngModel)]="userProfile.email" [readonly]="true"></ion-input>
+                            <ion-input type="email" formControlName="email" [(ngModel)]="userProfile.email" [readonly]="true" #email (keyup.enter)="email.focusNext()"></ion-input>
                         </ion-item>
 
                         <div>
@@ -62,7 +66,7 @@
 
                         <ion-item no-padding>
                             <ion-label floating>Mobile</ion-label>
-                            <ion-input type="tel" formControlName="phoneNumber" [(ngModel)]="userProfile.phoneNumber" [textMask]="{mask:masks.phoneNumber, guide:true}"></ion-input>
+                            <ion-input type="tel" formControlName="phoneNumber" [(ngModel)]="userProfile.phoneNumber" #phoneNumber (keyup.enter)="phoneNumber.focusNext()"></ion-input>
                         </ion-item>
 
                         <div>
@@ -75,7 +79,7 @@
 
                         <ion-item no-padding>
                             <ion-label floating>Ville</ion-label>
-                            <ion-input type="text" formControlName="city" [(ngModel)]="userProfile.city"></ion-input>
+                            <ion-input type="text" formControlName="city" [(ngModel)]="userProfile.city" #city (keyup.enter)="city.focusNext()"></ion-input>
                         </ion-item>
 
                         <div>
@@ -96,7 +100,7 @@
 
     </ion-row>
 
-    <ion-row padding-left padding-right margin-top>
+    <ion-row padding-left padding-right margin-top margin-bottom>
         <ion-col>
             <button ion-button block color="secondary" [disabled]="profile.invalid" (click)="createProfile()">Enregistrer</button>
         </ion-col>
