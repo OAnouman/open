@@ -4,6 +4,8 @@ import { Profile } from '../../models/profile/profile.interface';
 import { Account } from '../../models/account/account.interface';
 import { DataProvider } from '../data/data';
 import { User } from 'firebase';
+import { IfObservable } from 'rxjs/observable/IfObservable';
+import { Observable } from 'rxjs/Observable';
 
 
 /*
@@ -16,15 +18,15 @@ import { User } from 'firebase';
 export class AuthProvider {
 
   constructor(
-    private afAuth: AngularFireAuth,
-    private dataPvd: DataProvider) {
+    private _afAuth: AngularFireAuth,
+    private _dataPvd: DataProvider) {
   }
 
   async signInWithEmailAndPassword(account: Account) {
 
-    const user = await this.afAuth.auth.signInAndRetrieveDataWithEmailAndPassword(account.email, account.password);
+    const user = await this._afAuth.auth.signInAndRetrieveDataWithEmailAndPassword(account.email, account.password);
 
-    return this.dataPvd.getUserProfile(user['user']);
+    return this._dataPvd.getUserProfile(user['user']);
 
   }
 
@@ -38,11 +40,11 @@ export class AuthProvider {
    */
   async signUpWithEmailAndPassword(account: Account): Promise<Profile> {
 
-    const user = await this.afAuth.auth.createUserAndRetrieveDataWithEmailAndPassword(account.email, account.password);
+    const user = await this._afAuth.auth.createUserAndRetrieveDataWithEmailAndPassword(account.email, account.password);
 
     //  Send email verification mail
 
-    await this.afAuth.auth.currentUser.sendEmailVerification();
+    await this._afAuth.auth.currentUser.sendEmailVerification();
 
     let userProfile = {} as Profile;
 
@@ -56,14 +58,22 @@ export class AuthProvider {
 
 
   /**
-   * Get current  authenticated user
+   * Get current authenticated user
    * 
    * @returns {User} 
    * @memberof AuthProvider
    */
-  getAuthenticatedUser(): User {
+  getCurrentUser(): User {
 
-    return this.afAuth.auth.currentUser;
+    return this._afAuth.auth.currentUser;
 
   }
+
+  getAuthenticatedUser(): Observable<User> {
+
+    return this._afAuth.authState;
+
+  }
+
+
 }

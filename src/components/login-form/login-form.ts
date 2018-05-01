@@ -106,7 +106,7 @@ export class LoginFormComponent implements OnInit {
 
           profile = <Profile>{
             email: this.account.email,
-            uid: this.authPvd.getAuthenticatedUser().uid
+            uid: this.authPvd.getCurrentUser().uid
           }
 
         }

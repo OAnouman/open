@@ -2,6 +2,14 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { AuthProvider } from '../providers/auth/auth';
+import { User } from 'firebase';
+import firebase from "firebase/app";
+import { Profile } from '../models/profile/profile.interface';
+import { DataProvider } from '../providers/data/data';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/do';
 
 
 @Component({
@@ -10,14 +18,22 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: string = 'LoginPage';
+  rootPage: string;
+
+  userProfile: Profile;
 
   pages: Array<{ title: string, component: any }>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(
+    public platform: Platform,
+    public statusBar: StatusBar,
+    public splashScreen: SplashScreen,
+    private _authPvd: AuthProvider,
+    private _dataPvd: DataProvider) {
+
     this.initializeApp();
 
-
+    this.setRootPage();
 
   }
 
@@ -34,5 +50,29 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  async setRootPage() {
+
+    // Set auth persistance
+    // All future login will be indefinity kept
+
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+    // Set root page 
+
+    await this._authPvd.getAuthenticatedUser()
+      .map((user: User) => {
+        if (!user) {
+          this.rootPage = 'LoginPage';
+        } else {
+          this.rootPage = 'HomePage';
+        }
+        return user;
+      })
+      .mergeMap((user: User) => this._dataPvd.getUserProfile(user))
+      .do(profile => this.userProfile = profile)
+      .toPromise();
+
   }
 }

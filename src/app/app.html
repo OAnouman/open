@@ -1,17 +1,57 @@
 <ion-menu [content]="content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <ion-header>
+        <ion-grid>
+            <ion-row align-items-end>
+                <ion-col>
+                    <ion-row align-items-center>
+                        <ion-col col-auto>
+                            <img [src]="userProfile?.picture" height="60" width="60" class="circle-img">
+                        </ion-col>
+                        <ion-col>
+                            <p class="username" no-margin>{{ userProfile?.name }}
+                                <small>@{{ userProfile?.username }}</small>
+                            </p>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-header>
 
-  <ion-content>
-    <ion-list>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
-      </button>
-    </ion-list>
-  </ion-content>
+    <ion-content>
+        <ion-list no-lines padding-top>
+
+            <button ion-item>
+                <ion-icon name="home" color="primary" item-start></ion-icon>
+                Accueil
+            </button>
+            <hr>
+            <button ion-item>
+                <ion-icon name="filing" class="primary-dark" item-start></ion-icon>
+                Mes annonces
+            </button>
+
+            <button ion-item>
+                <ion-icon color="danger" name="notifications" item-start></ion-icon>
+                Mes alertes
+            </button>
+
+            <hr>
+
+            <button ion-item>
+                <ion-icon name="contact" item-start class="grey"></ion-icon>
+                Mon profil
+            </button>
+
+            <button ion-item bottom>
+                <ion-icon name="settings" class="grey" item-start></ion-icon>
+                Paramètres
+            </button>
+
+        </ion-list>
+
+
+    </ion-content>
 
 </ion-menu>
 

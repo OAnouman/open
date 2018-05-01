@@ -16,8 +16,6 @@ import { MyApp } from './app.component';
 import { FIREBASE_CREDENTIALS } from "./firebase/firebase.credentials";
 
 
-
-
 @NgModule({
   declarations: [
     MyApp,

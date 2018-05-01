@@ -1,0 +1,17 @@
+page-ad-preview {
+    .content {
+        padding: 16px !important;
+    }
+    h2>small {
+        font-style: italic;
+    }
+    .card .list .item .input-wrapper {
+        border-bottom: .5px solid rgba(128, 128, 128, .5);
+    }
+    ion-content {
+        .fixed-content,
+        .scroll-content {
+            margin-top: 0 !important;
+        }
+    }
+}

@@ -51,13 +51,53 @@ ion-item {
 }
 
 .globals__toast-error {
-    div{
+    div {
         background: rgba(255, 0, 0, .5);
     }
 }
 
 .globals__toast-success {
-    div{
+    div {
         background: rgba(75, 181, 67, .5);
+    }
+}
+
+.grey {
+    color: $icon-grey
+}
+
+.primary-dark {
+    color: $primary-dark;
+}
+
+//**************SIDEMENU******************
+ion-menu {
+    ion-header {
+        background-image: url("../assets/imgs/sidemenu_background_blue.jpg");
+        background-size: cover;
+        height: 30%;
+        .circle-img {
+            -webkit-border-radius: 50%;
+            border-radius: 50%;
+        }
+        ion-grid {
+            height: 100%;
+            ion-row {
+                height: 100%;
+            }
+        }
+        .username {
+            color: color($colors, light);
+        }
+    }
+    ion-content {
+        ion-list {
+            button[ion-item] {
+                font-size: 1.4rem;
+                ion-icon {
+                    font-size: 2.4rem;
+                }
+            }
+        }
     }
 }

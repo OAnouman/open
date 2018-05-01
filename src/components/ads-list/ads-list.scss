@@ -1,0 +1,21 @@
+ads-list {
+    ion-avatar {
+        margin-left: 16px !important;
+    }
+    ion-card {
+        position: relative;
+    }
+    .card-image {
+        position: relative;
+    }
+    .overlay {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        background: #000;
+        opacity: .5;
+        h2 {
+            color: white !important;
+        }
+    }
+}

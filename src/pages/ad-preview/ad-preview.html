@@ -1,0 +1,66 @@
+<!--
+  Generated template for the AdPreviewPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+    <ion-navbar transparent>
+        <!-- <ion-title>{{ ad.title }}</ion-title> -->
+        <ion-buttons end>
+            <button ion-button clear (click)="dismiss()">
+                Fermer
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content no-padding>
+
+    <ion-grid no-padding>
+
+        <ion-row no-padding>
+            <ion-col col-12>
+                <img src="assets/imgs/rectangle.png" width="100%">
+            </ion-col>
+
+            <!-- TODO: Add photo slide here -->
+
+            <ion-col col-12>
+
+                <ion-card>
+                    <ion-card-header>
+                        <ion-title text-center>{{ ad.title.toUpperCase() }}</ion-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-list>
+                            <ion-item>
+                                <h1 text-center> {{ ad.price.toLocaleString('fr-FR') }} F</h1>
+                            </ion-item>
+                            <ion-item>
+                                <ion-avatar item-left>
+                                    <img src="assets/imgs/avatar.png" alt="">
+                                </ion-avatar>
+                                <h2>{{ ad.user }} <small>- {{ ad.createdAt }}</small></h2>
+                            </ion-item>
+                            <ion-item (click)="showContactActionSheet()">
+                                <ion-icon item-left name="call" class="primary-dark"></ion-icon>
+                                <h2>47 18 91 71</h2>
+                            </ion-item>
+                            <ion-item>
+                                <p text-wrap>{{ ad.body }}</p>
+                            </ion-item>
+                        </ion-list>
+                    </ion-card-content>
+
+                </ion-card>
+
+            </ion-col>
+
+        </ion-row>
+
+    </ion-grid>
+
+
+
+</ion-content>

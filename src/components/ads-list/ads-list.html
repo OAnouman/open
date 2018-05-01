@@ -1,0 +1,49 @@
+<ion-searchbar placeholder="Je cherche..." animate="true" (ionInput)="searchAd()"></ion-searchbar>
+
+<ion-list>
+    <ion-card *ngFor="let ad of ads" (click)="selected(ad)">
+        <ion-item>
+            <ion-avatar item-start margin-left>
+                <img src="assets/imgs/avatar.png">
+            </ion-avatar>
+            <h3>{{ ad.title }}</h3>
+            <p> {{ ad.user }} - {{ ad.createdAt }}</p>
+        </ion-item>
+        <div class="card-image">
+            <img src="assets/imgs/rectangle.png">
+
+            <div class="overlay" text-center padding>
+                <h2> {{ ad.price.toLocaleString('fr-FR') }} F </h2>
+            </div>
+        </div>
+
+        <ion-card-content>
+            <p> {{ ad.body | summarize }}</p>
+        </ion-card-content>
+        <ion-row align-items-center>
+            <ion-col col-auto>
+                <button ion-button icon-left clear small>
+                <ion-icon name="heart-outline"></ion-icon>
+                <div></div>
+              </button>
+            </ion-col>
+            <ion-col col-auto>
+                <button ion-button clear small (click)="preview(ad)">
+                <div>Voir</div>
+              </button>
+            </ion-col>
+            <ion-col col-auto>
+                <button ion-button clear small>
+                <div>Contacter</div>
+              </button>
+            </ion-col>
+            <ion-col text-center col-auto>
+                <ion-note>
+                    {{ ad.viewsCount }}
+                    <ion-icon name="eye"></ion-icon>
+                </ion-note>
+            </ion-col>
+        </ion-row>
+    </ion-card>
+
+</ion-list>

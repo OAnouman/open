@@ -48,7 +48,7 @@ export class DataProvider {
 
   }
 
-  /**
+  /** 
    * Get profile matching the given user
    * 
    * @param {User} user 
