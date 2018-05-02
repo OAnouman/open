@@ -13,7 +13,8 @@ import { AuthProvider } from '../providers/auth/auth';
 import { DataProvider } from '../providers/data/data';
 import { StorageProvider } from '../providers/storage/storage';
 import { MyApp } from './app.component';
-import { FIREBASE_CREDENTIALS } from "./firebase/firebase.credentials";
+import { IonicStorageModule } from "@ionic/storage";
+import { FIREBASE_CREDENTIALS } from './firebase/firebase.credentials';
 
 
 @NgModule({
@@ -24,9 +25,13 @@ import { FIREBASE_CREDENTIALS } from "./firebase/firebase.credentials";
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(FIREBASE_CREDENTIALS),
-    AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    IonicStorageModule.forRoot({
+      name: '__open_db', //REVIEW: Change if app name is modified
+      driverOrder: ['sqlite', 'indexeddb', 'websql']
+    }),
   ],
   bootstrap: [IonicApp],
   entryComponents: [

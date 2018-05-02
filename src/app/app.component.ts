@@ -10,6 +10,7 @@ import { DataProvider } from '../providers/data/data';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/do';
+import { Storage } from '@ionic/storage'
 
 
 @Component({
@@ -22,6 +23,8 @@ export class MyApp {
 
   userProfile: Profile;
 
+  avatarPlaceholder: string = '../assets/imgs/avatar.png';
+
   pages: Array<{ title: string, component: any }>;
 
   constructor(
@@ -29,12 +32,12 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     private _authPvd: AuthProvider,
-    private _dataPvd: DataProvider) {
+    private _dataPvd: DataProvider,
+    private _storage: Storage) {
 
     this.initializeApp();
 
     this.setRootPage();
-
   }
 
   initializeApp() {
@@ -56,23 +59,27 @@ export class MyApp {
 
     // Set auth persistance
     // All future login will be indefinity kept
-
+    // REVIEW
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
     // Set root page 
 
-    await this._authPvd.getAuthenticatedUser()
-      .map((user: User) => {
-        if (!user) {
-          this.rootPage = 'LoginPage';
-        } else {
-          this.rootPage = 'HomePage';
-        }
-        return user;
-      })
-      .mergeMap((user: User) => this._dataPvd.getUserProfile(user))
-      .do(profile => this.userProfile = profile)
-      .toPromise();
+    // Try to get the uid from local storage (SQLite). 
+    // if null no user is logged in on this device, else 
+    // we fetch firebase for the user profile
+
+    const uid = await this._storage.get('uid');
+
+    if (!uid) {
+      this.rootPage = 'LoginPage';
+    }
+    else {
+      this.rootPage = 'HomePage';
+      this._dataPvd.getProfileFromUid(uid)
+        .subscribe(profile => {
+          this.userProfile = profile;
+        });
+    }
 
   }
 }

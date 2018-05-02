@@ -94,13 +94,15 @@ export class LoginFormComponent implements OnInit {
 
       this.loadingInstance.present();
 
-      const profile = await this.authPvd.signInWithEmailAndPassword(this.account);
+      const profile$ = await this.authPvd.signInWithEmailAndPassword(this.account);
 
-      profile.subscribe((profile: Profile) => {
+      profile$.subscribe(profile => {
+
 
         // If user doesn't have a profile with 
         // the current user mail
         // new create one and emit it
+
 
         if (!profile) {
 
@@ -113,10 +115,9 @@ export class LoginFormComponent implements OnInit {
 
         this.userProfile.emit(profile);
 
+        this.loadingInstance.dismiss();
 
       })
-
-      this.loadingInstance.dismiss();
 
     } catch (e) {
 

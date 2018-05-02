@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/map';
 import { Profile } from '../../models/profile/profile.interface';
 import { StorageProvider } from '../storage/storage';
 import { User } from 'firebase';
+import { Storage } from "@ionic/storage";
 
 
 /*
@@ -15,11 +18,12 @@ import { User } from 'firebase';
 @Injectable()
 export class DataProvider {
 
+
   constructor(
     private afs: AngularFirestore,
     private _storagePvd: StorageProvider) {
-  }
 
+  }
 
   /**
    * Create a new user profile
@@ -33,7 +37,6 @@ export class DataProvider {
     // avatar url
 
     if (profile.picture) {
-
       (await this._storagePvd.createUploadTask(profile)).subscribe(async (downloadLink: string) => {
 
         profile.picture = downloadLink;
@@ -41,7 +44,6 @@ export class DataProvider {
         await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
 
       })
-
     } else {
       await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
     }
@@ -56,9 +58,12 @@ export class DataProvider {
    * @memberof DataProvider
    */
   getUserProfile(user: User): Observable<Profile> {
-
     return this.afs.doc<Profile>(`profiles/${user.uid}`).valueChanges();
-
   }
+
+  getProfileFromUid(uid: string) {
+    return this.afs.doc<Profile>(`profiles/${uid}`).valueChanges();
+  }
+
 
 }

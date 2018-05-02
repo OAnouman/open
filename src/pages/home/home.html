@@ -31,7 +31,7 @@
 
 </ion-content>
 
-<ion-footer *ngIf="!currentUser.emailVerified">
+<ion-footer *ngIf="!currentUser?.emailVerified && userLoadFinished">
     <ion-grid>
         <ion-row class="email-confirmation-warning">
             <ion-col col-auto>

@@ -5,11 +5,11 @@
                 <ion-col>
                     <ion-row align-items-center>
                         <ion-col col-auto>
-                            <img [src]="userProfile?.picture" height="60" width="60" class="circle-img">
+                            <img [src]="userProfile?.picture ? userProfile?.picture : avatarPlaceholder" height="60" width="60" class="circle-img">
                         </ion-col>
                         <ion-col>
                             <p class="username" no-margin>{{ userProfile?.name }}
-                                <small>@{{ userProfile?.username }}</small>
+                                <br><small>{{ userProfile?.username }}</small>
                             </p>
                         </ion-col>
                     </ion-row>

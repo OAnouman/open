@@ -6,6 +6,7 @@ import { DataProvider } from '../data/data';
 import { User } from 'firebase';
 import { IfObservable } from 'rxjs/observable/IfObservable';
 import { Observable } from 'rxjs/Observable';
+import { Storage } from "@ionic/storage";
 
 
 /*
@@ -19,12 +20,18 @@ export class AuthProvider {
 
   constructor(
     private _afAuth: AngularFireAuth,
-    private _dataPvd: DataProvider) {
+    private _dataPvd: DataProvider,
+    private _storage: Storage) {
   }
 
   async signInWithEmailAndPassword(account: Account) {
 
     const user = await this._afAuth.auth.signInAndRetrieveDataWithEmailAndPassword(account.email, account.password);
+
+    // Save uid to local storage to later profile fetch 
+    // on app start
+
+    await this._storage.set('uid', user['user'].uid);
 
     return this._dataPvd.getUserProfile(user['user']);
 
@@ -51,6 +58,11 @@ export class AuthProvider {
     userProfile.uid = user['user'].uid
 
     userProfile.email = user['user'].email;
+
+    // Save uid to local storage to later profile fetch 
+    // on app start
+
+    const res = await this._storage.set('uid', userProfile.uid);
 
     return userProfile;
 

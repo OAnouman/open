@@ -37,11 +37,11 @@ export class HideFabDirective implements AfterViewInit {
   handleScroll(event: Content) {
 
     if ((event.scrollTop - this._storedScroll) > 0) {
-      this._renderer.setElementStyle(this._fabRef, 'top', '70px');
-      this._renderer.setElementStyle(this._fabRef, 'transition', 'top .5s');
+      this._renderer.setElementStyle(this._fabRef, 'right', '-70px');
+      this._renderer.setElementStyle(this._fabRef, 'transition', 'right .5s');
     } else if (event.scrollTop - this._storedScroll < 0) {
-      this._renderer.setElementStyle(this._fabRef, 'top', '0');
-      this._renderer.setElementStyle(this._fabRef, 'transition', 'top .5s');
+      this._renderer.setElementStyle(this._fabRef, 'right', '0');
+      this._renderer.setElementStyle(this._fabRef, 'transition', 'right .5s');
     }
 
     // We store the last scroll position

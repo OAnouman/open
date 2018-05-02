@@ -42,7 +42,7 @@ export class EditProfilePage {
 
       this.toastCtrl.create({
         message: `Bienvenu(e) sur Open ${profile.name} !`,
-        duration: 3000,
+        duration: 5000,
       }).present();
 
       this.navCtrl.setRoot('HomePage', profile);

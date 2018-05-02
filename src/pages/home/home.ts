@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
 import { User } from 'firebase';
 import { AuthProvider } from '../../providers/auth/auth';
 import { ADS_LIST } from '../../mocks/ads/ad.mocks';
 import { Ad } from '../../models/ad/ad.interface';
-// import { AdPreviewPage } from '../ad-preview/ad-preview';
-
+import { DataProvider } from '../../providers/data/data';
+import { Profile } from '../../models/profile/profile.interface';
+import { Storage } from "@ionic/storage";
 /**
  * Generated class for the HomePage page.
  *
@@ -22,17 +23,35 @@ export class HomePage {
 
   currentUser: User;
 
+  currentUserProfile: Profile;
+
   ads: Ad[] = ADS_LIST;
+
+  userLoadFinished: boolean = false;
 
   constructor(
     private _navCtrl: NavController,
     private _navParams: NavParams,
     private _authPvd: AuthProvider,
-    private _modalCtrl: ModalController) {
+    private _modalCtrl: ModalController,
+    private _toastCtrl: ToastController,
+    private _dataPvd: DataProvider,
+    private _storage: Storage) {
 
-    // this.currentUserSubscription = this._authPvd.getAuthenticatedUser().subscribe((user: User) => this.currentUser = user);
 
-    this.currentUser = this._authPvd.getCurrentUser();
+  }
+
+  ionViewWillLoad() {
+
+    this._authPvd.getAuthenticatedUser()
+      .subscribe(user => {
+        this.currentUser = user;
+        this.userLoadFinished = true;
+      });
+
+    this._storage.get('uid')
+      .then(uid => this._dataPvd.getProfileFromUid(uid)
+        .subscribe(profile => this.currentUserProfile = profile));
 
   }
 
