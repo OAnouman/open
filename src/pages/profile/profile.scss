@@ -8,4 +8,7 @@ page-profile {
     ion-header ion-navbar ion-icon.back-button-icon.icon {
         color: map-get($colors, light);
     }
+    ion-navbar.toolbar>.toolbar-background {
+        background: linear-gradient(to bottom, rgba(0, 0, 0, .4), transparent) !important;
+    }
 }

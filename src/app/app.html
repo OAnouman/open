@@ -5,7 +5,7 @@
                 <ion-col>
                     <ion-row align-items-center>
                         <ion-col col-auto>
-                            <img [src]="userProfile?.picture ? userProfile?.picture : avatarPlaceholder" height="60" width="60" class="circle-img">
+                            <img [src]="userProfile?.picture ? userProfile?.picture : avatarPlaceholder" height="60" width="60" class="circle-img" (click)="openProfilePage()" menuToggle>
                         </ion-col>
                         <ion-col>
                             <p class="username" no-margin>{{ userProfile?.name }}

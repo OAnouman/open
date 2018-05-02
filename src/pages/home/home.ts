@@ -51,7 +51,6 @@ export class HomePage {
 
   ionViewWillLoad() {
 
-
     this._storage.get('uid')
       .then(uid => this._dataPvd.getProfileFromUid(uid)
         .subscribe(profile => this.currentUserProfile = profile));
