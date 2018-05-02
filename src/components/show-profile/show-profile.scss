@@ -1,0 +1,24 @@
+show-profile {
+    // card-content .list .item .item-inner .input-wrapper {
+    //     border-bottom: .5px solid rgba(128, 128, 128, .5) !important;
+    // }
+    .card .list .item .input-wrapper {
+        border-bottom: .5px solid rgba(128, 128, 128, .5);
+    }
+    .card .list .item:last-child .input-wrapper {
+        border-bottom: none;
+    }
+    ion-row>ion-col>div {
+        position: relative;
+        >div {
+            position: absolute;
+            bottom: 10px;
+            height: 30px;
+            left: 10px;
+            >h2 {
+                text-overflow: ellipsis;
+                font-weight: 400;
+            }
+        }
+    }
+}

@@ -6,6 +6,7 @@ import { RegisterFormComponent } from './register-form/register-form';
 import { TextMaskModule } from "angular2-text-mask";
 import { AdsListComponent } from './ads-list/ads-list';
 import { SummarizePipe } from '../pipes/Summarize.pipe';
+import { ShowProfileComponent } from './show-profile/show-profile';
 
 
 
@@ -14,13 +15,15 @@ import { SummarizePipe } from '../pipes/Summarize.pipe';
         EditProfileFormComponent,
         RegisterFormComponent,
         AdsListComponent,
-        SummarizePipe],
+        SummarizePipe,
+    ShowProfileComponent],
     imports: [
         IonicModule,
         TextMaskModule],
     exports: [LoginFormComponent,
         EditProfileFormComponent,
         RegisterFormComponent,
-        AdsListComponent]
+        AdsListComponent,
+    ShowProfileComponent]
 })
 export class ComponentsModule { }

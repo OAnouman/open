@@ -31,19 +31,27 @@ export class DataProvider {
    * @param {Profile} profile 
    * @memberof DataProvider
    */
-  async createUserProfile(profile: Profile) {
+  async saveUserProfile(profile: Profile) {
 
     // If avatar selected, upload then save profile with 
     // avatar url
 
     if (profile.picture) {
-      (await this._storagePvd.createUploadTask(profile)).subscribe(async (downloadLink: string) => {
 
-        profile.picture = downloadLink;
+      // If picture is already online we just save
+      // profile infos
+      if (profile.picture.startsWith('https://')) {
 
         await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
 
-      })
+      } else if (profile.picture.startsWith('data:image')) {
+        // Picture sets for first time or new picture selected
+        (await this._storagePvd.createUploadTask(profile)).subscribe(async (downloadLink: string) => {
+          profile.picture = downloadLink;
+          await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
+        })
+
+      }
     } else {
       await this.afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
     }

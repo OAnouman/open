@@ -35,8 +35,8 @@
                     <ion-card-content>
                         <ion-list>
                             <ion-item>
+                                <h1 text-center> {{ ad.price.toLocaleString('fr-FR') }} F</h1>
                             </ion-item>
-                            <h1 text-center> {{ ad.price.toLocaleString('fr-FR') }} F</h1>
                             <ion-item>
                                 <ion-avatar item-left>
                                     <img src="assets/imgs/avatar.png" alt="">
@@ -44,7 +44,7 @@
                                 <h2>{{ ad.user }} <small>- {{ ad.createdAt }}</small></h2>
                             </ion-item>
                             <ion-item (click)="showContactActionSheet()">
-                                <ion-icon item-left name="call" class="primary-dark"></ion-icon>
+                                <ion-icon item-left name="call" color="primary"></ion-icon>
                                 <h2>47 18 91 71</h2>
                             </ion-item>
                             <ion-item>

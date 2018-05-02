@@ -7,6 +7,7 @@ import { Ad } from '../../models/ad/ad.interface';
 import { DataProvider } from '../../providers/data/data';
 import { Profile } from '../../models/profile/profile.interface';
 import { Storage } from "@ionic/storage";
+import { StatusBar } from '@ionic-native/status-bar';
 /**
  * Generated class for the HomePage page.
  *
@@ -27,7 +28,7 @@ export class HomePage {
 
   ads: Ad[] = ADS_LIST;
 
-  userLoadFinished: boolean = false;
+  userLoadFinished: boolean;
 
   constructor(
     private _navCtrl: NavController,
@@ -36,9 +37,10 @@ export class HomePage {
     private _modalCtrl: ModalController,
     private _toastCtrl: ToastController,
     private _dataPvd: DataProvider,
-    private _storage: Storage) {
+    private _storage: Storage,
+    private _statusBar: StatusBar) {
 
-
+    this.userLoadFinished = false;
   }
 
   ionViewWillLoad() {
@@ -59,6 +61,10 @@ export class HomePage {
   preview(ad: Ad) {
     this._modalCtrl.create('AdPreviewPage', { ad })
       .present();
+  }
+
+  ionViewDidEnter() {
+    this._statusBar.backgroundColorByHexString('#2196F3');
   }
 
 }

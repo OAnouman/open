@@ -1,0 +1,57 @@
+<ion-grid no-padding>
+
+    <ion-row no-padding>
+        <ion-col col-12>
+            <div>
+                <img [src]="profile?.picture" width="100%">
+                <div text-center>
+                    <h2 ion-text color="light" text-left no-margin>{{ profile?.name }}</h2>
+                </div>
+            </div>
+        </ion-col>
+
+        <ion-col col-12>
+
+            <ion-card>
+                <ion-card-header>
+                    <strong>Infos</strong>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list>
+                        <ion-item>
+                            <ion-icon item-left name="contact" color="primary"></ion-icon>
+                            {{profile?.username}}
+                        </ion-item>
+
+                    </ion-list>
+                </ion-card-content>
+
+            </ion-card>
+
+            <ion-card>
+                <ion-card-header>
+                    <strong>Contacts</strong>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list>
+                        <ion-item>
+                            <ion-icon item-left name="mail" color="primary"></ion-icon>
+                            <h2>{{profile?.email}}</h2>
+                        </ion-item>
+                        <ion-item>
+                            <ion-icon item-left name="call" color="primary"></ion-icon>
+                            <h2>{{ profile?.phoneNumber }}</h2>
+                        </ion-item>
+                        <ion-item>
+                            <ion-icon item-left name="pin" color="primary"></ion-icon>
+                            <h2 text-wrap>{{ profile?.city }}</h2>
+                        </ion-item>
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+
+        </ion-col>
+
+    </ion-row>
+
+</ion-grid>

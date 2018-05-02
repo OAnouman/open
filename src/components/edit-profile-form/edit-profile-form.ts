@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActionSheetController, AlertController, Loading, LoadingController, ToastController } from 'ionic-angular';
+import { ActionSheetController, AlertController, Loading, LoadingController, ToastController, TextInput } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
 import { DataProvider } from '../../providers/data/data';
 import { Camera, CameraOptions } from "@ionic-native/camera";
@@ -21,7 +21,7 @@ export class EditProfileFormComponent implements OnInit {
 
   @Input() userProfile: Profile;
 
-  @Output() userProfileCreated: EventEmitter<Profile>;
+  @Output() userProfileSaved: EventEmitter<Profile>;
 
   /**
    * Reference to profile frm
@@ -42,19 +42,19 @@ export class EditProfileFormComponent implements OnInit {
   private loadingInstance: Loading;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private dataPvd: DataProvider,
-    private loadingCtrl: LoadingController,
-    private toastCtrl: ToastController,
-    private actShtCtrl: ActionSheetController,
-    private alertCtrl: AlertController,
-    private camera: Camera) {
+    private _formBuilder: FormBuilder,
+    private _dataPvd: DataProvider,
+    private _loadingCtrl: LoadingController,
+    private _toastCtrl: ToastController,
+    private _actShtCtrl: ActionSheetController,
+    private _alertCtrl: AlertController,
+    private _camera: Camera) {
 
     // Profile form form group
-    this.profile = this.formBuilder.group({
+    this.profile = this._formBuilder.group({
       name: ['', Validators.compose([Validators.minLength(3), Validators.pattern('[a-zA-Z -]*'), Validators.required])],
 
-      username: ['', Validators.compose([Validators.required, Validators.pattern('[a-z0-9_]*'), Validators.minLength(3)])],
+      username: ['', Validators.compose([Validators.required, Validators.pattern('[@]{1}[a-z0-9_]*'), Validators.minLength(3)])],
 
       email: ['', Validators.compose([Validators.email, Validators.required])],
 
@@ -63,7 +63,7 @@ export class EditProfileFormComponent implements OnInit {
       city: ['', Validators.compose([Validators.required])]
     })
 
-    this.userProfileCreated = new EventEmitter<Profile>();
+    this.userProfileSaved = new EventEmitter<Profile>();
 
   }
 
@@ -90,7 +90,7 @@ export class EditProfileFormComponent implements OnInit {
           type: 'minlength', message: 'Le nom d\'utilisateur doit contenir au moins 3 caractères.'
         },
         {
-          type: 'pattern', message: 'Le nom d\'utilidateur ne peut contenir que des lettres minuscules et le caratère (_).'
+          type: 'pattern', message: 'Le nom d\'utilidateur ne peut contenir qu\'un caractère \'@\', des lettres minuscules et le caratère \'_\'.'
         },
         {
           type: 'required', message: 'Le nom d\'utilisateur est requis.'
@@ -125,24 +125,30 @@ export class EditProfileFormComponent implements OnInit {
     }
   }
 
+
+  setUsername(event: TextInput) {
+
+    event.setValue(`@${event.value.replace('@', '')}`);
+
+  }
   /**
    * Create usere profile and :mit event with profile
    * 
    * @memberof EditProfileFormComponent
    */
-  async createProfile() {
+  async saveProfile() {
 
-    this.loadingInstance = this.loadingCtrl.create({
-      content: 'Creation du profil...'
+    this.loadingInstance = this._loadingCtrl.create({
+      content: 'Enregistrement du profil...'
     })
 
     try {
 
       this.loadingInstance.present();
 
-      await this.dataPvd.createUserProfile(this.userProfile);
+      await this._dataPvd.saveUserProfile(this.userProfile);
 
-      this.userProfileCreated.emit(this.userProfile);
+      this.userProfileSaved.emit(this.userProfile);
 
       this.loadingInstance.dismiss();
 
@@ -150,7 +156,7 @@ export class EditProfileFormComponent implements OnInit {
 
       this.loadingInstance.dismiss();
 
-      this.toastCtrl.create({
+      this._toastCtrl.create({
         message: e.message,
         duration: 5000,
         cssClass: 'globals__toast-error'
@@ -162,20 +168,20 @@ export class EditProfileFormComponent implements OnInit {
 
   showActionSheet() {
 
-    this.actShtCtrl.create({
+    this._actShtCtrl.create({
       title: 'Image de profil',
       buttons: [
         {
           text: 'Galérie',
           handler: () => {
-            this.handleCamera(this.camera.PictureSourceType.PHOTOLIBRARY);
+            this.handleCamera(this._camera.PictureSourceType.PHOTOLIBRARY);
           },
           icon: 'image'
         },
         {
           text: 'Caméra',
           handler: () => {
-            this.handleCamera(this.camera.PictureSourceType.CAMERA);
+            this.handleCamera(this._camera.PictureSourceType.CAMERA);
           },
           icon: 'camera'
         }
@@ -196,7 +202,7 @@ export class EditProfileFormComponent implements OnInit {
 
     try {
 
-      const srcTypeRef = this.camera.PictureSourceType;
+      const srcTypeRef = this._camera.PictureSourceType;
 
       if (sourceType !== srcTypeRef.CAMERA && sourceType !== srcTypeRef.PHOTOLIBRARY && sourceType !== srcTypeRef.SAVEDPHOTOALBUM) {
         throw new Error('La source spécifiée est invalide');
@@ -204,9 +210,9 @@ export class EditProfileFormComponent implements OnInit {
 
       const cameraOptions: CameraOptions = {
         quality: 100,
-        destinationType: this.camera.DestinationType.DATA_URL,
-        encodingType: this.camera.EncodingType.JPEG,
-        mediaType: this.camera.MediaType.PICTURE,
+        destinationType: this._camera.DestinationType.DATA_URL,
+        encodingType: this._camera.EncodingType.JPEG,
+        mediaType: this._camera.MediaType.PICTURE,
         sourceType: sourceType,
         targetHeight: 500,
         targetWidth: 500,
@@ -214,15 +220,15 @@ export class EditProfileFormComponent implements OnInit {
         allowEdit: true,
       };
 
-      const imageData = await this.camera.getPicture(cameraOptions);
+      const imageData = await this._camera.getPicture(cameraOptions);
 
       this.userProfile.picture = `data:image/jpeg;base64,${imageData}`
 
-      this.camera.cleanup();
+      this._camera.cleanup();
 
     } catch (e) {
 
-      this.toastCtrl.create({
+      this._toastCtrl.create({
         message: e.message,
         duration: 5000,
       }).present();

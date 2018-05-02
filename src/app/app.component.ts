@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, NavController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthProvider } from '../providers/auth/auth';
@@ -7,9 +7,6 @@ import { User } from 'firebase';
 import firebase from "firebase/app";
 import { Profile } from '../models/profile/profile.interface';
 import { DataProvider } from '../providers/data/data';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/do';
 import { Storage } from '@ionic/storage'
 
 
@@ -80,6 +77,12 @@ export class MyApp {
           this.userProfile = profile;
         });
     }
+
+  }
+
+  openProfilePage(): void {
+
+    this.nav.push('ProfilePage');
 
   }
 }

@@ -1,0 +1,11 @@
+page-profile {
+    ion-content {
+        .fixed-content,
+        .scroll-content {
+            margin-top: 0 !important;
+        }
+    }
+    ion-header ion-navbar ion-icon.back-button-icon.icon {
+        color: map-get($colors, light);
+    }
+}

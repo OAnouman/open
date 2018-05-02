@@ -1,9 +1,9 @@
 <ion-grid no-padding no-margin>
 
     <ion-row justifiy-content-center align-items-center>
-        <ion-col class="avatar" col-12 text-center>
+        <ion-col col-12 text-center>
 
-            <img *ngIf="userProfile.picture; else avatarPlaceholder" class="circle-img" width="150" height=150 [src]="userProfile.picture" (click)="showActionSheet()">
+            <img *ngIf="userProfile.picture; else avatarPlaceholder" width="100%" [src]="userProfile.picture" (click)="showActionSheet()">
 
             <ng-template #avatarPlaceholder>
                 <ion-icon class="avatar-placeholder" name="camera" color="light" (click)="showActionSheet()"></ion-icon>
@@ -36,7 +36,7 @@
 
                         <ion-item no-padding>
                             <ion-label floating>Pseudo</ion-label>
-                            <ion-input type="text" [(ngModel)]="userProfile.username" formControlName="username" #username (keyup.enter)="username.focusNext()"></ion-input>
+                            <ion-input type="text" [(ngModel)]="userProfile.username" formControlName="username" #username (keyup.enter)="username.focusNext()" (input)="setUsername(username)"></ion-input>
                         </ion-item>
 
                         <div>
@@ -102,7 +102,7 @@
 
     <ion-row padding-left padding-right margin-top margin-bottom>
         <ion-col>
-            <button ion-button block color="secondary" [disabled]="profile.invalid" (click)="createProfile()">Enregistrer</button>
+            <button ion-button block color="secondary" [disabled]="profile.invalid" (click)="saveProfile()">Enregistrer</button>
         </ion-col>
     </ion-row>
 

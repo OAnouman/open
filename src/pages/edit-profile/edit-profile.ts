@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
+import { StatusBar } from '@ionic-native/status-bar';
 
 /**
  * Generated class for the EditProfilePage page.
@@ -19,14 +20,15 @@ export class EditProfilePage {
   profile: Profile;
 
   constructor(
-    private navCtrl: NavController,
-    private navParams: NavParams,
-    private toastCtrl: ToastController) {
+    private _navCtrl: NavController,
+    private _navParams: NavParams,
+    private _toastCtrl: ToastController,
+    private _statusBar: StatusBar) {
   }
 
 
   ionViewWillLoad() {
-    this.profile = this.navParams.get('profile');
+    this.profile = this._navParams.get('profile');
   }
 
   /**
@@ -36,20 +38,22 @@ export class EditProfilePage {
    * @param {Profile} profile 
    * @memberof EditProfilePage
    */
-  profileCreated(profile: Profile): void {
+  profileSaved(profile: Profile): void {
 
     if (profile) {
 
-      this.toastCtrl.create({
-        message: `Bienvenu(e) sur Open ${profile.name} !`,
-        duration: 5000,
-      }).present();
+      let goBack: boolean = this._navParams.get('goBack');
 
-      this.navCtrl.setRoot('HomePage', profile);
+      goBack ?
+        this._navCtrl.pop()
+        : this._navCtrl.setRoot('HomePage', profile);
 
     }
 
   }
 
+  ionViewDidEnter() {
+    this._statusBar.backgroundColorByHexString('#2196F3');
+  }
 
 }
