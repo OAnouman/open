@@ -28,7 +28,7 @@ export class HomePage {
 
   ads: Ad[] = ADS_LIST;
 
-  userLoadFinished: boolean;
+  userLoadFinished: boolean = false;
 
   constructor(
     private _navCtrl: NavController,
@@ -40,16 +40,17 @@ export class HomePage {
     private _storage: Storage,
     private _statusBar: StatusBar) {
 
-    this.userLoadFinished = false;
-  }
-
-  ionViewWillLoad() {
-
+    // FIXME: Doesn't always get user
     this._authPvd.getAuthenticatedUser()
       .subscribe(user => {
         this.currentUser = user;
         this.userLoadFinished = true;
       });
+
+  }
+
+  ionViewWillLoad() {
+
 
     this._storage.get('uid')
       .then(uid => this._dataPvd.getProfileFromUid(uid)
@@ -66,5 +67,8 @@ export class HomePage {
   ionViewDidEnter() {
     this._statusBar.backgroundColorByHexString('#2196F3');
   }
+
+
+  //IMPLEMENT: Unsubscribe when view (activity) destroyed or unload
 
 }
