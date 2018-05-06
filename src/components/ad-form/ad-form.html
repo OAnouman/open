@@ -1,0 +1,76 @@
+<ion-list no-lines>
+    <form [formGroup]="adForm">
+        <ion-item>
+            <ion-icon color="secondary" name="camera" item-left (click)="showActionSheet()">
+            </ion-icon>
+            <div class="imgs-container">
+                <img *ngFor="let img of ad.pictures" [src]="img" height="100%" width="30%" (press)="deleteImg(img)">
+                <p *ngIf="!ad.pictures" class="picts-placeholder">
+                    Ajouter des images
+                </p>
+            </div>
+        </ion-item>
+        <ion-item>
+            <ion-icon color="secondary" name="megaphone" item-left></ion-icon>
+            <ion-item>
+                <ion-input type="text" placeholder="Titre" #title formControlName="title" [(ngModel)]="ad.title" (keyup.enter)="title.focusNext()"></ion-input>
+            </ion-item>
+
+            <div>
+                <ng-container *ngFor="let validation of errorMessages.title">
+                    <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('title').hasError(validation.type) && adForm.get('title').dirty">
+                        {{ validation.message}}
+                    </div>
+                </ng-container>
+            </div>
+
+        </ion-item>
+        <ion-item>
+            <ion-icon color="secondary" name="pricetag" item-left></ion-icon>
+            <ion-item>
+                <ion-input type="number" placeholder="Prix" #price formControlName="price" [(ngModel)]="ad.price" (keyup.enter)="price.focusNext()"></ion-input>
+            </ion-item>
+
+            <div>
+                <ng-container *ngFor="let validation of errorMessages.price">
+                    <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('price').hasError(validation.type) && adForm.get('price').dirty">
+                        {{ validation.message}}
+                    </div>
+                </ng-container>
+            </div>
+        </ion-item>
+        <ion-item>
+            <ion-icon color="secondary" name="flag" item-left></ion-icon>
+            <ion-item>
+                <ion-select multiple="true" placeholder="Etiquettes" [selectOptions]="selectOptions" #tags formControlName="tags" [(ngModel)]="ad.tags" (change)="tags.focusNext()" [selectedText]="selectedText" (ionChange)="tagsSelectionChange()">
+                    <ion-option [value]="{name:'Emploi', color:'secondary'}">Emploi</ion-option>
+                    <ion-option [value]="{name:'Defectueux', color:'danger'}">Defectueux</ion-option>
+                    <ion-option [value]="{name:'Neuf', color:'success'}">Neuf</ion-option>
+                    <ion-option [value]="{name:'Occasion', color:'caution'}">Occasion</ion-option>
+                    <ion-option [value]="{name:'Troc', color:'light'}">Troc</ion-option>
+                </ion-select>
+            </ion-item>
+
+            <div>
+                <ng-container *ngFor="let validation of errorMessages.tags">
+                    <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('tags').hasError(validation.type) && adForm.get('tags').dirty">
+                        {{ validation.message}}
+                    </div>
+                </ng-container>
+            </div>
+        </ion-item>
+        <ion-item>
+            <ion-item>
+                <ion-textarea text-wrap placeholder="Description" auto-resize #body formControlName="body" [(ngModel)]="ad.body"></ion-textarea>
+            </ion-item>
+
+            <div>
+                <ng-container *ngFor="let validation of errorMessages.body">
+                    <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('body').hasError(validation.type) && adForm.get('body').dirty">
+                        {{ validation.message}}
+                    </div>
+                </ng-container>
+            </div>
+        </ion-item>
+    </form>
+</ion-list>

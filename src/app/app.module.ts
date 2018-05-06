@@ -32,6 +32,7 @@ import { FIREBASE_CREDENTIALS } from './firebase/firebase.credentials';
       name: '__open_db', //REVIEW: Change if app name is modified
       driverOrder: ['sqlite', 'indexeddb', 'websql']
     }),
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Renderer, AfterViewInit } from '@angular/core';
+import { Directive, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
 import { Content } from 'ionic-angular';
 
 /**
@@ -21,7 +21,7 @@ export class HideFabDirective implements AfterViewInit {
 
   constructor(
     private _element: ElementRef,
-    private _renderer: Renderer) {
+    private _renderer: Renderer2) {
 
   }
 
@@ -30,18 +30,25 @@ export class HideFabDirective implements AfterViewInit {
     //Add 'implements AfterViewInit' to the class.
 
     this._fabRef = this._element.nativeElement.getElementsByClassName('fab')[0];
-    this._renderer.setElementStyle(this._fabRef, 'transition', 'transform 500ms, top 500ms');
+    this._renderer.setStyle(this._fabRef, 'transition', 'transform 500ms, top 500ms');
 
   }
 
+
+  /**
+   * Automatically hide fab when scrolling
+   * 
+   * @param {Content} event 
+   * @memberof HideFabDirective
+   */
   handleScroll(event: Content) {
 
     if ((event.scrollTop - this._storedScroll) > 0) {
-      this._renderer.setElementStyle(this._fabRef, 'right', '-70px');
-      this._renderer.setElementStyle(this._fabRef, 'transition', 'right .5s');
+      this._renderer.setStyle(this._fabRef, 'right', '-70px');
+      this._renderer.setStyle(this._fabRef, 'transition', 'right .5s');
     } else if (event.scrollTop - this._storedScroll < 0) {
-      this._renderer.setElementStyle(this._fabRef, 'right', '0');
-      this._renderer.setElementStyle(this._fabRef, 'transition', 'right .5s');
+      this._renderer.setStyle(this._fabRef, 'right', '0');
+      this._renderer.setStyle(this._fabRef, 'transition', 'right .5s');
     }
 
     // We store the last scroll position

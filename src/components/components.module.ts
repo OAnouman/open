@@ -3,11 +3,13 @@ import { LoginFormComponent } from './login-form/login-form';
 import { IonicModule } from 'ionic-angular';
 import { EditProfileFormComponent } from './edit-profile-form/edit-profile-form';
 import { RegisterFormComponent } from './register-form/register-form';
-import { TextMaskModule } from "angular2-text-mask";
 import { AdsListComponent } from './ads-list/ads-list';
 import { SummarizePipe } from '../pipes/Summarize.pipe';
 import { ShowProfileComponent } from './show-profile/show-profile';
-
+import { AdFormComponent } from './ad-form/ad-form';
+import { AutoResizeTextAreaDirective } from '../directives/auto-resize-text-area/auto-resize-text-area';
+import { IonTagsInputModule } from 'ionic-tags-input';
+import { MomentModule } from "ngx-moment";
 
 
 @NgModule({
@@ -16,14 +18,18 @@ import { ShowProfileComponent } from './show-profile/show-profile';
         RegisterFormComponent,
         AdsListComponent,
         SummarizePipe,
-    ShowProfileComponent],
+        AutoResizeTextAreaDirective,
+        ShowProfileComponent,
+        AdFormComponent],
     imports: [
         IonicModule,
-        TextMaskModule],
+        IonTagsInputModule,
+        MomentModule],
     exports: [LoginFormComponent,
         EditProfileFormComponent,
         RegisterFormComponent,
         AdsListComponent,
-    ShowProfileComponent]
+        ShowProfileComponent,
+        AdFormComponent]
 })
 export class ComponentsModule { }

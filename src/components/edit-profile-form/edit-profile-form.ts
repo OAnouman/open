@@ -172,7 +172,7 @@ export class EditProfileFormComponent implements OnInit {
       title: 'Image de profil',
       buttons: [
         {
-          text: 'Galérie',
+          text: 'Galerie',
           handler: () => {
             this.handleCamera(this._camera.PictureSourceType.PHOTOLIBRARY);
           },

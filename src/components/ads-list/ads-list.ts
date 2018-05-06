@@ -1,6 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Ad } from '../../models/ad/ad.interface';
 import { ModalController } from 'ionic-angular';
+import { DataProvider } from '../../providers/data/data';
+import { Observable } from 'rxjs/Observable';
+// import { ADS_LIST } from "../../mocks/ads/ad.mocks";
 
 /**
  * Generated class for the AdsListComponent component.
@@ -15,21 +18,17 @@ import { ModalController } from 'ionic-angular';
 export class AdsListComponent {
 
 
-  @Input() ads: Ad[];
+  @Input() ads: Observable<Ad[]>;
 
   @Output() previewAd: EventEmitter<Ad>;
   @Output() selectedAd: EventEmitter<Ad>;
 
   constructor(
-    private _modalCtrl: ModalController
-  ) {
+    private _modalCtrl: ModalController,
+    private _dataPvd: DataProvider) {
 
     this.previewAd = new EventEmitter<Ad>();
     this.selectedAd = new EventEmitter<Ad>();
-  }
-
-  selected(ad: Ad): void {
-
   }
 
   searchAd(): void {
@@ -40,6 +39,13 @@ export class AdsListComponent {
 
     this.previewAd.emit(ad);
 
+  }
+
+  displayMoreContent(infiniteScroll) {
+
+
+
+    infiniteScroll.complete();
   }
 
 }

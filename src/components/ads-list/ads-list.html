@@ -1,17 +1,17 @@
 <ion-searchbar placeholder="Je cherche..." animate="true" (ionInput)="searchAd()"></ion-searchbar>
 
 <ion-list>
-    <ion-card *ngFor="let ad of ads" (click)="selected(ad)">
+    <ion-card *ngFor="let ad of ads | async">
         <ion-item>
             <ion-avatar item-start margin-left>
-                <img src="assets/imgs/avatar.png">
+                <img [src]="(ad.userProfile | async)?.picture">
             </ion-avatar>
             <h3>{{ ad.title }}</h3>
-            <p> {{ ad.user }} - {{ ad.createdAt }}</p>
+            <p> {{ (ad.userProfile | async)?.username }} - {{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }}
+            </p>
         </ion-item>
         <div class="card-image">
-            <img src="assets/imgs/rectangle.png">
-
+            <img [src]="ad.pictures[0]" (click)="preview(ad)" width="100%" height="100%">
             <div class="overlay" text-center padding>
                 <h2> {{ ad.price.toLocaleString('fr-FR') }} F </h2>
             </div>
@@ -20,22 +20,29 @@
         <ion-card-content>
             <p> {{ ad.body | summarize }}</p>
         </ion-card-content>
+
+        <div class="chip-container">
+            <ion-chip *ngFor="let tag of ad.tags" [color]="tag.color">
+                <ion-label>{{ tag.name }}</ion-label>
+            </ion-chip>
+        </div>
+
         <ion-row align-items-center>
             <ion-col col-auto>
                 <button ion-button icon-left clear small>
-                <ion-icon name="heart-outline"></ion-icon>
-                <div></div>
-              </button>
+          <ion-icon name="heart-outline"></ion-icon>
+          <div></div>
+        </button>
             </ion-col>
             <ion-col col-auto>
                 <button ion-button clear small (click)="preview(ad)">
-                <div>Voir</div>
-              </button>
+          <div>Voir</div>
+        </button>
             </ion-col>
             <ion-col col-auto>
                 <button ion-button clear small>
-                <div>Contacter</div>
-              </button>
+          <div>Contacter</div>
+        </button>
             </ion-col>
             <ion-col text-center col-auto>
                 <ion-note>
@@ -47,3 +54,11 @@
     </ion-card>
 
 </ion-list>
+
+<ion-infinite-scroll (ionInfinite)="displayMoreContent($event)">
+
+    <ion-infinite-scroll-content>
+
+    </ion-infinite-scroll-content>
+
+</ion-infinite-scroll>

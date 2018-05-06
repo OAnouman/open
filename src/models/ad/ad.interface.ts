@@ -1,10 +1,17 @@
+import { Profile } from "../profile/profile.interface";
+import { Observable } from "rxjs/Observable";
+
 export interface Ad {
 
     title: string;
 
-    user: string;
+    uid: string;
 
-    createdAt: string;
+    userProfile?: Observable<Profile>;
+
+    createdAt?: any;
+
+    lastUpdatedAt?: any;
 
     price: number;
 
@@ -12,8 +19,10 @@ export interface Ad {
 
     viewsCount: number;
 
-    mainPicture?: string;
+    pictures: string[];
 
-    pictures?: string[];
+    sold?: boolean;
+
+    tags: { name: string, color: string }[];
 
 }

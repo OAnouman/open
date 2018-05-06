@@ -21,12 +21,12 @@
 
 <ion-content hide-fab>
 
-    <ads-list [ads]="ads" (previewAd)="preview($event)"></ads-list>
+    <ads-list *ngIf="ads" [ads]="ads" (previewAd)="preview($event)"></ads-list>
 
     <ion-fab bottom right>
-        <button ion-fab>
-            <ion-icon name="create"></ion-icon> 
-        </button>
+        <button ion-fab (click)="goToNewAdPage()" color="secondary">
+                <ion-icon name="create"></ion-icon> 
+            </button>
     </ion-fab>
 
 </ion-content>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ToastController, LoadingController, Loading } from 'ionic-angular';
 import { User } from 'firebase';
 import { AuthProvider } from '../../providers/auth/auth';
 import { ADS_LIST } from '../../mocks/ads/ad.mocks';
@@ -8,6 +8,8 @@ import { DataProvider } from '../../providers/data/data';
 import { Profile } from '../../models/profile/profile.interface';
 import { Storage } from "@ionic/storage";
 import { StatusBar } from '@ionic-native/status-bar';
+import { IfObservable } from 'rxjs/observable/IfObservable';
+import { Observable } from 'rxjs/Observable';
 /**
  * Generated class for the HomePage page.
  *
@@ -26,9 +28,11 @@ export class HomePage {
 
   currentUserProfile: Profile;
 
-  ads: Ad[] = ADS_LIST;
+  ads: Observable<Ad[]>;
 
   userLoadFinished: boolean = false;
+
+  private _loadingInstance: Loading;
 
   constructor(
     private _navCtrl: NavController,
@@ -38,7 +42,8 @@ export class HomePage {
     private _toastCtrl: ToastController,
     private _dataPvd: DataProvider,
     private _storage: Storage,
-    private _statusBar: StatusBar) {
+    private _statusBar: StatusBar,
+    private _loadingCtrl: LoadingController) {
 
     // FIXME: Doesn't always get user
     this._authPvd.getAuthenticatedUser()
@@ -51,12 +56,18 @@ export class HomePage {
 
   ionViewWillLoad() {
 
+    // Get uer profile
+
     this._storage.get('uid')
       .then(uid => this._dataPvd.getProfileFromUid(uid)
         .subscribe(profile => this.currentUserProfile = profile));
 
-  }
+    // Get ads
 
+    this.ads = this._dataPvd.getAds();
+
+
+  }
 
   preview(ad: Ad) {
     this._modalCtrl.create('AdPreviewPage', { ad })
@@ -64,7 +75,14 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
+    //FIXME: 
+    this._statusBar.overlaysWebView(false);
     this._statusBar.backgroundColorByHexString('#2196F3');
+
+  }
+
+  goToNewAdPage(): void {
+    this._navCtrl.push('NewAdPage');
   }
 
 

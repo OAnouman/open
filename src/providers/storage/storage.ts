@@ -15,12 +15,13 @@ export class StorageProvider {
   constructor(private _afStorage: AngularFireStorage) {
   }
 
-  async createUploadTask(profile: Profile): Promise<Observable<string>> {
+  async createImageUploadTask(image: string, path: string): Promise<Observable<string>> {
 
-    const task = this._afStorage.ref(`avatar/${profile.uid}`).putString(profile.picture, 'data_url')
+    const task = this._afStorage.ref(path).putString(image, 'data_url')
 
     return task.downloadURL();
 
   }
+
 
 }
