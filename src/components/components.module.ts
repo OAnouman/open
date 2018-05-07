@@ -10,6 +10,7 @@ import { AdFormComponent } from './ad-form/ad-form';
 import { AutoResizeTextAreaDirective } from '../directives/auto-resize-text-area/auto-resize-text-area';
 import { IonTagsInputModule } from 'ionic-tags-input';
 import { MomentModule } from "ngx-moment";
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 
 @NgModule({
@@ -24,7 +25,9 @@ import { MomentModule } from "ngx-moment";
     imports: [
         IonicModule,
         IonTagsInputModule,
-        MomentModule],
+        MomentModule,
+        LazyLoadImageModule
+    ],
     exports: [LoginFormComponent,
         EditProfileFormComponent,
         RegisterFormComponent,

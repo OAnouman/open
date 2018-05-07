@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit, OnInit } from '@angular/core';
 import { Ad } from '../../models/ad/ad.interface';
 import { ModalController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data/data';
 import { Observable } from 'rxjs/Observable';
+
 // import { ADS_LIST } from "../../mocks/ads/ad.mocks";
 
 /**
@@ -15,13 +16,15 @@ import { Observable } from 'rxjs/Observable';
   selector: 'ads-list',
   templateUrl: 'ads-list.html'
 })
-export class AdsListComponent {
+export class AdsListComponent implements OnInit {
 
-
-  @Input() ads: Observable<Ad[]>;
-
+  ads$: Observable<Ad[]>;
   @Output() previewAd: EventEmitter<Ad>;
   @Output() selectedAd: EventEmitter<Ad>;
+  offset: number = 1000;
+  startLimit: number = 5;
+
+  ads: Ad[];
 
   constructor(
     private _modalCtrl: ModalController,
@@ -29,6 +32,21 @@ export class AdsListComponent {
 
     this.previewAd = new EventEmitter<Ad>();
     this.selectedAd = new EventEmitter<Ad>();
+
+  }
+
+  ngOnInit(): void {
+
+    // Get ads
+
+    this.ads$ = this._dataPvd.getAds(this.startLimit);
+
+    this.ads$.subscribe((ads: Ad[]) => {
+
+      this.ads = ads;
+
+    })
+
   }
 
   searchAd(): void {
@@ -43,9 +61,20 @@ export class AdsListComponent {
 
   displayMoreContent(infiniteScroll) {
 
+    let limit = this.startLimit + 3;
 
+    this._dataPvd.getAds(limit)
+      .subscribe((ad: Ad[]) => {
 
-    infiniteScroll.complete();
+        ad.slice(this.startLimit, limit).forEach(ad => this.ads.push(ad));
+
+        this.startLimit = limit;
+
+        infiniteScroll.complete();
+
+      });
+
   }
+
 
 }

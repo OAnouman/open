@@ -7,6 +7,14 @@ ads-list {
     }
     .card-image {
         position: relative;
+        img {
+            min-height: 30%;
+            transition: opacity 1s;
+            opacity: 0;
+        }
+        img.ng-lazyloaded {
+            opacity: 1;
+        }
     }
     // .overlay-top {
     //     position: absolute;

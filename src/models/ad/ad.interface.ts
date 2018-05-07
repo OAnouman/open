@@ -7,6 +7,7 @@ export interface Ad {
 
     uid: string;
 
+    // Not saved. Only for hold profile
     userProfile?: Observable<Profile>;
 
     createdAt?: any;

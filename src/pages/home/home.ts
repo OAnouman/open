@@ -62,11 +62,6 @@ export class HomePage {
       .then(uid => this._dataPvd.getProfileFromUid(uid)
         .subscribe(profile => this.currentUserProfile = profile));
 
-    // Get ads
-
-    this.ads = this._dataPvd.getAds();
-
-
   }
 
   preview(ad: Ad) {

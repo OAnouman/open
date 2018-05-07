@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/map';
-import { Profile } from '../../models/profile/profile.interface';
-import { StorageProvider } from '../storage/storage';
-import { User } from 'firebase';
 import { Storage } from "@ionic/storage";
+import { AngularFirestore } from 'angularfire2/firestore';
+import { User } from 'firebase';
+import firebase from 'firebase/app';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/count';
+import 'rxjs/add/operator/take';
 import { Ad } from '../../models/ad/ad.interface';
-import firebase from 'firebase/app'
+import { Profile } from '../../models/profile/profile.interface';
 import { Utils } from '../../utils/Utils';
+import { StorageProvider } from '../storage/storage';
 
 
 /*
@@ -21,8 +23,8 @@ import { Utils } from '../../utils/Utils';
 @Injectable()
 export class DataProvider {
 
-  private _ADS_INIT_FETCH_COUNT: number = 20;
-  private _AD_FETCH_STEP: number = 7;
+  private _ADS_INIT_FETCH_COUNT: number = 5;
+  private _AD_FETCH_STEP: number = 3;
 
   constructor(
     private _afs: AngularFirestore,
@@ -140,9 +142,9 @@ export class DataProvider {
 
   }
 
-  getAds(currentAds?: Observable<Ad[]>) {
+  getAds(count: number = this._AD_FETCH_STEP) {
 
-    return this._afs.collection<Ad>('ads', ref => ref.orderBy('lastUpdatedAt', 'desc').limit(currentAds ? this._AD_FETCH_STEP : this._ADS_INIT_FETCH_COUNT)).valueChanges()
+    return this._afs.collection<Ad>('ads', ref => ref.orderBy('lastUpdatedAt', 'desc').limit(count)).valueChanges()
       .map((ads: Ad[]) => {
 
         return ads.map((ad: Ad) => {
@@ -156,5 +158,17 @@ export class DataProvider {
       });
 
   }
+
+  // getAdsFiltered(currentAds?: Observable<Ad[]>) {
+
+  //   if (!currentAds) {
+  //     return this.getAds(0 ,this._ADS_INIT_FETCH_COUNT);
+  //   } else {
+  //     return this.getAds(this._AD_FETCH_STEP).concat(currentAds);
+  //   }
+
+  //   return this.getAds(currentAds.cou ? currentAds.)
+
+  // }
 
 }

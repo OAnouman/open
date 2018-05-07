@@ -15,7 +15,7 @@ import { StorageProvider } from '../providers/storage/storage';
 import { MyApp } from './app.component';
 import { IonicStorageModule } from "@ionic/storage";
 import { FIREBASE_CREDENTIALS } from './firebase/firebase.credentials';
-
+import { LazyLoadImageModule } from "ng-lazyload-image";
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { FIREBASE_CREDENTIALS } from './firebase/firebase.credentials';
       name: '__open_db', //REVIEW: Change if app name is modified
       driverOrder: ['sqlite', 'indexeddb', 'websql']
     }),
-
+    LazyLoadImageModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
