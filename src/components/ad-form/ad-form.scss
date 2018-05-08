@@ -1,42 +1,23 @@
-ads-list {
-    ion-avatar {
-        margin-left: 16px !important;
-    }
-    ion-card {
-        position: relative;
-    }
-    .card-image {
-        position: relative;
-    }
-    // .overlay-top {
-    //     position: absolute;
-    //     width: auto;
-    //     padding: 5px 10px;
-    //     right: 0;
-    //     top: 0;
-    //     background: #20a056;
-    //     opacity: .8;
-    //     h3 {
-    //         color: white !important;
-    //     }
-    // }
-    .overlay {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        background: #000;
-        opacity: .5;
-        h2 {
-            color: white !important;
+ad-form {
+    div.imgs-container {
+        overflow-x: scroll;
+        max-height: 100px;
+        img {
+            margin-right: 5px;
         }
     }
-    ion-chip {
-        border-radius: 2px !important;
+    div.imgs-container+p {
+        color: darkgray;
+        font-size: 1.6rem;
+        padding-left: 10px;
     }
-    div.chip-container {
-        padding: 5px 16px;
-        ion-chip {
-            margin-right: 7px;
-        }
+    ion-select {
+        max-width: 100%;
+    }
+    div.images-error {
+        font-size: 1.6rem;
+    }
+    form>ion-item:first-child {
+        overflow-x: scroll;
     }
 }

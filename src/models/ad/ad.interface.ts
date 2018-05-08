@@ -26,4 +26,6 @@ export interface Ad {
 
     tags: { name: string, color: string }[];
 
+    published?: boolean;
+
 }

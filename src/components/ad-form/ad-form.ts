@@ -1,7 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { ActionSheetController, AlertController, ToastController, Loading, LoadingController } from 'ionic-angular';
+import { ActionSheetController, AlertController, Loading, LoadingController, ToastController } from 'ionic-angular';
 import { TAGS } from '../../enums/tags.enum'; //FIXME:
 import { Ad } from '../../models/ad/ad.interface';
 import { DataProvider } from '../../providers/data/data';
@@ -93,7 +93,11 @@ export class AdFormComponent implements OnInit {
         {
           type: 'minlength', message: 'La description doit contenir au moins 30 caractères.'
         }
-      ]
+      ],
+
+      pictures: [{
+        type: 'required', message: 'Ajoutez au moins une image'
+      }]
 
     }
 
@@ -115,8 +119,6 @@ export class AdFormComponent implements OnInit {
 
     this._actShtCtrl.create({
       title: 'Supprimer image',
-      subTitle: 'L\'image ne sera pas supprimer de votre périphérque',
-      cssClass: 'action-sheet-buttons__image-delete',
       buttons: [
         {
           text: 'Supprimer',
@@ -144,7 +146,7 @@ export class AdFormComponent implements OnInit {
    */
   async saveAd(): Promise<void> {
 
-    if (this.adForm.valid) {
+    if (this.adForm.valid && this.ad.pictures.length > 0) {
 
       try {
 

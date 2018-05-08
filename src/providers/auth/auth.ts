@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from 'angularfire2/auth';
-import { Profile } from '../../models/profile/profile.interface';
-import { Account } from '../../models/account/account.interface';
-import { DataProvider } from '../data/data';
-import { User } from 'firebase';
-import { IfObservable } from 'rxjs/observable/IfObservable';
-import { Observable } from 'rxjs/Observable';
 import { Storage } from "@ionic/storage";
+import { AngularFireAuth } from 'angularfire2/auth';
+import { User } from 'firebase';
+import { Observable } from 'rxjs/Observable';
+import { Account } from '../../models/account/account.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { DataProvider } from '../data/data';
 
 
 /*

@@ -4,10 +4,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { User } from 'firebase';
 import firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/concat';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/count';
-import 'rxjs/add/operator/take';
 import { Ad } from '../../models/ad/ad.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { Utils } from '../../utils/Utils';
@@ -102,7 +99,7 @@ export class DataProvider {
    * @param {Ad} ad 
    * @memberof DataProvider
    */
-  async saveAd(ad: Ad) {
+  async saveAd(ad: Ad): Promise<void> {
 
     // we save first...
 
@@ -112,8 +109,26 @@ export class DataProvider {
     ad.createdAt = firebase.firestore.FieldValue.serverTimestamp();
     ad.lastUpdatedAt = firebase.firestore.FieldValue.serverTimestamp();
     ad.price = Number(ad.price);
+    ad.published = false;
 
     const adRef$ = await this._afs.collection<Ad>('ads').add(ad)
+
+    // ...store imgs and update ad with img downloadLink
+
+    this.saveAdPictures(ad, adRef$);
+
+
+  }
+
+
+  /**
+   * Save ads pictures
+   * 
+   * @param {Ad} ad 
+   * @param {firebase.firestore.DocumentReference} adRef$ 
+   * @memberof DataProvider
+   */
+  private saveAdPictures(ad: Ad, adRef$: firebase.firestore.DocumentReference): void {
 
     // ...store imgs and update ad with img downloadLink
 
@@ -133,7 +148,7 @@ export class DataProvider {
           // We update ad with downlaodLinks
 
           if ((index + 1) === picturesCount) {
-            await adRef$.update({ pictures });
+            await adRef$.update({ pictures, published: true });
           }
 
         })
@@ -142,9 +157,18 @@ export class DataProvider {
 
   }
 
-  getAds(count: number = this._AD_FETCH_STEP) {
 
-    return this._afs.collection<Ad>('ads', ref => ref.orderBy('lastUpdatedAt', 'desc').limit(count)).valueChanges()
+  /**
+   * This function retrieve all ads.
+   * It returns the requested number f ads
+   * 
+   * @param {number} [count=this._AD_FETCH_STEP] Count of ads to retrieve. If not specified, returns 5
+   * @returns {Observable<Ad[]>}
+   * @memberof DataProvider
+   */
+  getAds(count: number = this._AD_FETCH_STEP): Observable<Ad[]> {
+
+    return this._afs.collection<Ad>('ads', ref => ref.where('published', '==', true).orderBy('lastUpdatedAt', 'desc').limit(count)).valueChanges()
       .map((ads: Ad[]) => {
 
         return ads.map((ad: Ad) => {
@@ -159,16 +183,5 @@ export class DataProvider {
 
   }
 
-  // getAdsFiltered(currentAds?: Observable<Ad[]>) {
-
-  //   if (!currentAds) {
-  //     return this.getAds(0 ,this._ADS_INIT_FETCH_COUNT);
-  //   } else {
-  //     return this.getAds(this._AD_FETCH_STEP).concat(currentAds);
-  //   }
-
-  //   return this.getAds(currentAds.cou ? currentAds.)
-
-  // }
 
 }

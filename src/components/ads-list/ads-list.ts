@@ -1,8 +1,7 @@
-import { Component, Input, Output, EventEmitter, AfterViewInit, OnInit } from '@angular/core';
-import { Ad } from '../../models/ad/ad.interface';
-import { ModalController } from 'ionic-angular';
-import { DataProvider } from '../../providers/data/data';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Ad } from '../../models/ad/ad.interface';
+import { DataProvider } from '../../providers/data/data';
 
 // import { ADS_LIST } from "../../mocks/ads/ad.mocks";
 
@@ -18,20 +17,17 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AdsListComponent implements OnInit {
 
-  ads$: Observable<Ad[]>;
   @Output() previewAd: EventEmitter<Ad>;
-  @Output() selectedAd: EventEmitter<Ad>;
-  offset: number = 1000;
-  startLimit: number = 5;
 
+  ads$: Observable<Ad[]>;
+  offset: number = 2000;
+  startLimit: number = 5;
   ads: Ad[];
 
   constructor(
-    private _modalCtrl: ModalController,
     private _dataPvd: DataProvider) {
 
     this.previewAd = new EventEmitter<Ad>();
-    this.selectedAd = new EventEmitter<Ad>();
 
   }
 

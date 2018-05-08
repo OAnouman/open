@@ -3,11 +3,15 @@
         <ion-item>
             <ion-icon color="secondary" name="camera" item-left (click)="showActionSheet()">
             </ion-icon>
+            <!--IMPROVE: Image Scrolling -->
             <div class="imgs-container">
                 <img *ngFor="let img of ad.pictures" [src]="img" height="100%" width="30%" (press)="deleteImg(img)">
-                <p *ngIf="!ad.pictures" class="picts-placeholder">
-                    Ajouter des images
-                </p>
+            </div>
+            <p *ngIf="!ad.pictures" class="picts-placeholder">
+                Ajouter des images
+            </p>
+            <div *ngIf="ad.pictures?.length === 0 || !ad.pictures" text-wrap class="globals__inputs-error images-error">
+                {{ errorMessages.pictures[0].message }}
             </div>
         </ion-item>
         <ion-item>
@@ -45,6 +49,7 @@
                 <ion-select multiple="true" placeholder="Etiquettes" [selectOptions]="selectOptions" #tags formControlName="tags" [(ngModel)]="ad.tags" (change)="tags.focusNext()" [selectedText]="selectedText" (ionChange)="tagsSelectionChange()">
                     <ion-option [value]="{name:'Emploi', color:'secondary'}">Emploi</ion-option>
                     <ion-option [value]="{name:'Defectueux', color:'danger'}">Defectueux</ion-option>
+                    <ion-option [value]="{name:'Négociable', color:'negociable'}">Négociable</ion-option>
                     <ion-option [value]="{name:'Neuf', color:'success'}">Neuf</ion-option>
                     <ion-option [value]="{name:'Occasion', color:'caution'}">Occasion</ion-option>
                     <ion-option [value]="{name:'Troc', color:'light'}">Troc</ion-option>

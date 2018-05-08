@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ToastController, LoadingController, Loading } from 'ionic-angular';
-import { User } from 'firebase';
-import { AuthProvider } from '../../providers/auth/auth';
-import { ADS_LIST } from '../../mocks/ads/ad.mocks';
-import { Ad } from '../../models/ad/ad.interface';
-import { DataProvider } from '../../providers/data/data';
-import { Profile } from '../../models/profile/profile.interface';
-import { Storage } from "@ionic/storage";
 import { StatusBar } from '@ionic-native/status-bar';
-import { IfObservable } from 'rxjs/observable/IfObservable';
+import { Storage } from "@ionic/storage";
+import { User } from 'firebase';
+import { IonicPage, Loading, LoadingController, ModalController, NavController, NavParams, ToastController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
+import { Ad } from '../../models/ad/ad.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { AuthProvider } from '../../providers/auth/auth';
+import { DataProvider } from '../../providers/data/data';
 /**
  * Generated class for the HomePage page.
  *
