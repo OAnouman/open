@@ -2,9 +2,9 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { ActionSheetController, AlertController, Loading, LoadingController, ToastController } from 'ionic-angular';
-import { TAGS } from '../../enums/tags.enum'; //FIXME:
 import { Ad } from '../../models/ad/ad.interface';
 import { DataProvider } from '../../providers/data/data';
+import { Utils } from '../../utils/Utils';
 
 /**
  * Generated class for the AdFormComponent component.
@@ -18,20 +18,16 @@ import { DataProvider } from '../../providers/data/data';
 })
 export class AdFormComponent implements OnInit {
 
-
   @Output() adCreated: EventEmitter<Ad>;
-  tags = TAGS;
-
-  selectOptions: {};
-
+  tagsList = Utils.TAGS;
+  tagSelectOptions: {};
+  categorySelectOptions: {};
   ad = {} as Ad;
   adForm: FormGroup;
-
   errorMessages;
-
   loadingInstance: Loading;
-
   selectedText: string;
+  categories;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -48,20 +44,15 @@ export class AdFormComponent implements OnInit {
       title: ['', Validators.compose([Validators.required, Validators.maxLength(30)])],
       price: ['', Validators.compose([Validators.required, Validators.pattern('[0-9]*')])],
       tags: ['', Validators.compose([Validators.required])],
-      body: ['', Validators.compose([Validators.required, Validators.minLength(30)])]
+      body: ['', Validators.compose([Validators.required, Validators.minLength(30)])],
+      category: ['', Validators.compose([Validators.required])],
     })
-
-    this.selectOptions = {
-      title: 'Etiquettes',
-      subTitle: 'Selectionnez les étiquettes correspondantes à votre annonce',
-    };
 
   }
 
   ngOnInit(): void {
 
     this.errorMessages = {
-
       title: [
         {
           type: 'required', message: 'Le titre est requis.'
@@ -70,7 +61,6 @@ export class AdFormComponent implements OnInit {
           type: 'maxlength', message: 'Le titre doit contenir au plus 30 caractères.'
         }
       ],
-
       price: [
         {
           type: 'required', message: 'Le prix est requis.'
@@ -79,13 +69,11 @@ export class AdFormComponent implements OnInit {
           type: 'pattern', message: 'Le prix ne doit contenir que des chiffres entre 0 et 9.'
         }
       ],
-
       tags: [
         {
           type: 'required', message: 'Vous devez selectionnre au moins une étiquette.'
         }
       ],
-
       body: [
         {
           type: 'required', message: 'La description est requise.'
@@ -94,12 +82,29 @@ export class AdFormComponent implements OnInit {
           type: 'minlength', message: 'La description doit contenir au moins 30 caractères.'
         }
       ],
+      pictures: [
+        {
+          type: 'required', message: 'Ajoutez au moins une image.'
+        }
+      ],
+      category: [
+        {
+          type: 'required', message: 'Vous devez sélectionnez une catégorie.'
+        }
+      ]
+    };
 
-      pictures: [{
-        type: 'required', message: 'Ajoutez au moins une image'
-      }]
+    this.tagSelectOptions = {
+      title: 'Etiquettes',
+      subTitle: 'Selectionnez les étiquettes correspondantes à votre annonce',
+    };
 
-    }
+    this.categorySelectOptions = {
+      title: 'Catégorie',
+      subTitle: 'Selectionnez la catégorie de votre annonce',
+    };
+
+    this.categories = Utils.CATEGORIES;
 
   }
 
@@ -161,7 +166,6 @@ export class AdFormComponent implements OnInit {
         this.adCreated.emit(this.ad);
 
       } catch (e) {
-
         this._toastCtrl.create({
           message: e.message,
           duration: 5000,

@@ -44,15 +44,28 @@
             </div>
         </ion-item>
         <ion-item>
+            <ion-icon color="secondary" name="folder-open" item-left></ion-icon>
+            <ion-item>
+                <ion-select multiple="false" placeholder="Catégorie" #category formControlName="category" [(ngModel)]="ad.category" [selectOptions]="categorySelectOptions">
+
+                    <ion-option *ngFor="let cat of categories" [value]="cat.value">{{cat.text}}</ion-option>
+
+                </ion-select>
+            </ion-item>
+
+            <div>
+                <ng-container *ngFor="let validation of errorMessages.category">
+                    <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('category').hasError(validation.type) && adForm.get('category').dirty">
+                        {{ validation.message}}
+                    </div>
+                </ng-container>
+            </div>
+        </ion-item>
+        <ion-item>
             <ion-icon color="secondary" name="flag" item-left></ion-icon>
             <ion-item>
-                <ion-select multiple="true" placeholder="Etiquettes" [selectOptions]="selectOptions" #tags formControlName="tags" [(ngModel)]="ad.tags" (change)="tags.focusNext()" [selectedText]="selectedText" (ionChange)="tagsSelectionChange()">
-                    <ion-option [value]="{name:'Emploi', color:'secondary'}">Emploi</ion-option>
-                    <ion-option [value]="{name:'Defectueux', color:'danger'}">Defectueux</ion-option>
-                    <ion-option [value]="{name:'Négociable', color:'negociable'}">Négociable</ion-option>
-                    <ion-option [value]="{name:'Neuf', color:'success'}">Neuf</ion-option>
-                    <ion-option [value]="{name:'Occasion', color:'caution'}">Occasion</ion-option>
-                    <ion-option [value]="{name:'Troc', color:'light'}">Troc</ion-option>
+                <ion-select multiple="true" placeholder="Etiquettes" [selectOptions]="tagSelectOptions" #tags formControlName="tags" [(ngModel)]="ad.tags" (change)="tags.focusNext()" [selectedText]="selectedText" (ionChange)="tagsSelectionChange()">
+                    <ion-option *ngFor="let tag of tagsList" [value]="tag"> {{tag.name}} </ion-option>
                 </ion-select>
             </ion-item>
 

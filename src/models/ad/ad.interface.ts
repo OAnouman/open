@@ -1,5 +1,5 @@
-import { Profile } from "../profile/profile.interface";
 import { Observable } from "rxjs/Observable";
+import { Profile } from "../profile/profile.interface";
 
 export interface Ad {
 
@@ -17,6 +17,8 @@ export interface Ad {
     price: number;
 
     body: string;
+
+    category: string;
 
     viewsCount: number;
 

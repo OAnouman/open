@@ -11,8 +11,64 @@ const randomString = (stringLength: number) => {
 
 }
 
+
+
+const CATEGORIES: { text: string, value: string }[] = [
+    {
+        text: 'Emploi', value: 'job'
+    },
+    {
+        text: 'Entreprise & Services', value: 'enterprise-services'
+    },
+    {
+        text: 'Immobilier', value: 'estate'
+    },
+    {
+        text: 'Informatique & Mutimédia', value: 'it-media'
+    },
+    {
+        text: 'Loisir', value: 'entertainment'
+    },
+    {
+        text: 'Mode & Vêtements', value: 'fashion'
+    },
+    {
+        text: 'Maison', value: 'house'
+    },
+    {
+        text: 'Téléphonie', value: 'telcom'
+    },
+    {
+        text: 'Véhicules et Transport', value: 'cars'
+    }
+];
+
+const TAGS: { name: string, color: string }[] = [
+
+    {
+        name: 'Défecteux', color: 'danger'
+    },
+    {
+        name: 'Négociable', color: 'negociable'
+    },
+    {
+        name: 'Neuf', color: 'success'
+    },
+    {
+        name: 'Occasion', color: 'caution'
+    },
+    {
+        name: 'Troc', color: 'light'
+    }
+
+]
+
 export const Utils = {
 
-    randomString
+    randomString,
+
+    CATEGORIES,
+
+    TAGS,
 
 }
