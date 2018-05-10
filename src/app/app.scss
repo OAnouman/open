@@ -81,8 +81,7 @@ ion-item {
 //**************SIDEMENU******************
 ion-menu {
     ion-header {
-        background-image: url("../assets/imgs/sidemenu_background_blue.jpg");
-        background-size: cover;
+        background: color($colors, secondary);
         height: 30%;
         .circle-img {
             -webkit-border-radius: 50%;

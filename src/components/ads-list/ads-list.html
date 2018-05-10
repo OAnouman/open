@@ -10,7 +10,7 @@
             </p>
         </ion-item>
         <div class="card-image">
-            <img (click)="preview(ad)" width="100%" height="100%" [defaultImage]="'assets/imgs/rectangle.png'" [lazyLoad]="ad.pictures[0]" [offset]="offset">
+            <img (click)="preview(ad)" height="340px" [defaultImage]="'assets/imgs/rectangle.png'" [lazyLoad]="ad.pictures[0]" [offset]="offset">
             <div class="overlay" text-center padding>
                 <h2> {{ ad.price.toLocaleString('fr-FR') }} F </h2>
             </div>

@@ -17,8 +17,10 @@ $app-direction: ltr;
 // to match your app's branding. Ionic uses a Sass map of
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
-$colors: ( primary: (base:#2196F3, contrast:white), secondary: (base:#33C3FF, contrast:#000), danger: #f53d3d, light: #f4f4f4, dark: #222, facebook: #375a8a, background: #DFE3EE, success: #20a056, caution: #f1c400, negociable: #542733);
-$secondary-light:#7AF6FF;
+// Previous theme
+// $colors: ( primary: (base:#2196F3, contrast:white), secondary: (base:#33C3FF, contrast:#000), danger: #f53d3d, light: #f4f4f4, dark: #222, facebook: #375a8a, background: #DFE3EE, success: #20a056, caution: #f1c400, negociable: #542733);
+$colors: ( primary: (base:#db3340, contrast:#ffffff), secondary: (base:#e8b71a, contrast:#000000), secondary-light: (base:#ffe955, contrast:#000000), danger: #f53d3d, light: #f4f4f4, background: #DFE3EE, success: #20a056, caution: #f1c400, negociable: #542733);
+$secondary-light:#ffe955;
 $secondary-dark: #0093CC;
 $primary-dark: #0069C0;
 // logo color
@@ -27,12 +29,15 @@ $logo-color: white;
 $button-login-color: white;
 //Default icon color
 $icon-grey: #8C8C8C;
+$acccent-color: #1FDA9A;
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
+$navbar-md-height: 48px;
+$toolbar-md-height: 48px;
 // App Windows Variables
 // --------------------------------------------------
 // Windows only Sass variables can go here

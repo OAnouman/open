@@ -36,7 +36,7 @@ export class AuthProvider {
 
   }
 
-  /**
+  /** 
    * Create user with email and password
    * 
    * @param {Account} account 
@@ -84,6 +84,10 @@ export class AuthProvider {
 
     return this._afAuth.authState;
 
+  }
+
+  async logout(): Promise<void> {
+    await this._afAuth.auth.signOut();
   }
 
 

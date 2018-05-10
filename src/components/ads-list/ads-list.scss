@@ -8,26 +8,16 @@ ads-list {
     .card-image {
         position: relative;
         img {
-            min-height: 30%;
             transition: opacity 1s;
             opacity: 0;
+            object-fit: cover;
         }
         img.ng-lazyloaded {
             opacity: 1;
         }
         min-height: 192px;
-    } // .overlay-top {
-    //     position: absolute;
-    //     width: auto;
-    //     padding: 5px 10px;
-    //     right: 0;
-    //     top: 0;
-    //     background: #20a056;
-    //     opacity: .8;
-    //     h3 {
-    //         color: white !important;
-    //     }
-    // }
+        max-height: 50%;
+    }
     .overlay {
         position: absolute;
         width: 100%;

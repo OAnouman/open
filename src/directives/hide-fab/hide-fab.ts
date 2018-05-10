@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Renderer2 } from '@angular/core';
 import { Content } from 'ionic-angular';
 
 /**
@@ -10,7 +10,7 @@ import { Content } from 'ionic-angular';
 @Directive({
   selector: '[hide-fab]', // Attribute selector
   host: {
-    '(ionScroll)': 'handleScroll($event)'
+    '(ionScroll)': 'handleScroll($event)',
   }
 })
 export class HideFabDirective implements AfterViewInit {
@@ -26,8 +26,6 @@ export class HideFabDirective implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
 
     this._fabRef = this._element.nativeElement.getElementsByClassName('fab')[0];
     this._renderer.setStyle(this._fabRef, 'transition', 'transform 500ms, top 500ms');
@@ -42,6 +40,7 @@ export class HideFabDirective implements AfterViewInit {
    * @memberof HideFabDirective
    */
   handleScroll(event: Content) {
+
 
     if ((event.scrollTop - this._storedScroll) > 0) {
       this._renderer.setStyle(this._fabRef, 'right', '-70px');

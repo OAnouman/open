@@ -9,51 +9,61 @@
         <!-- <ion-title>{{ ad.title }}</ion-title> -->
         <ion-buttons end>
             <button ion-button clear (click)="dismiss()">
-                Fermer
-            </button>
+        Fermer
+      </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
-<ion-content no-padding>
+<ion-content no-padding hide-fab>
 
     <ion-grid no-padding>
 
-        <ion-row no-padding>
-            <ion-col col-12>
-                <img src="assets/imgs/rectangle.png" width="100%">
+        <ion-row align-items-stretch>
+
+            <ion-col col-12 col-sm-4 class="header-container">
+
+                <img [src]="ad.pictures[0]" alt="Ad pictures" class="header-image">
+
             </ion-col>
 
-            <!-- TODO: Add photo slide here -->
+            <ion-col col-12 col-sm-8>
 
-            <ion-col col-12>
+                <ion-scroll scrollY="true" scrollX="false" #scroll>
 
-                <ion-card>
-                    <ion-card-header>
-                        <ion-title text-center>{{ ad.title.toUpperCase() }}</ion-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                        <ion-list>
-                            <ion-item>
-                                <h1 text-center> {{ ad.price.toLocaleString('fr-FR') }} F</h1>
-                            </ion-item>
-                            <ion-item>
-                                <ion-avatar item-left>
-                                    <img src="assets/imgs/avatar.png" alt="">
-                                </ion-avatar>
-                                <h2>{{ ad.user }} <small>- {{ ad.createdAt }}</small></h2>
-                            </ion-item>
-                            <ion-item (click)="showContactActionSheet()">
-                                <ion-icon item-left name="call" color="primary"></ion-icon>
-                                <h2>47 18 91 71</h2>
-                            </ion-item>
-                            <ion-item>
-                                <p text-wrap>{{ ad.body }}</p>
-                            </ion-item>
-                        </ion-list>
-                    </ion-card-content>
+                    <div class="images-slide">
+                        <img class="rounded" *ngFor="let img of ad.pictures" [src]="img" (click)="zoom($event)">
+                    </div>
 
-                </ion-card>
+                    <ion-card>
+                        <ion-card-header>
+                            <ion-title text-wrap text-center>{{ ad.title.toUpperCase() }}</ion-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                            <ion-list>
+                                <ion-item>
+                                    <h1 class="price" ion-text color="primary" text-center> {{ ad.price.toLocaleString('fr-FR') }} F</h1>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-avatar item-left>
+                                        <img [src]="(ad.userProfile | async)?.picture" alt="">
+                                    </ion-avatar>
+                                    <h2>{{ (ad.userProfile | async)?.username }}
+                                        <small>- {{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo
+                      }}
+                    </small>
+                                    </h2>
+                                </ion-item>
+                                <ion-item>
+                                    <p text-wrap class="body">{{ ad.body }}</p>
+                                </ion-item>
+                            </ion-list>
+                        </ion-card-content>
+
+                    </ion-card>
+
+
+                </ion-scroll>
 
             </ion-col>
 
@@ -61,6 +71,20 @@
 
     </ion-grid>
 
+
+    <ion-fab bottom right #fab>
+        <button color="secondary" ion-fab>
+      <ion-icon name="call"></ion-icon>
+    </button>
+        <ion-fab-list side="top">
+            <button color="secondary-light" ion-fab (click)="callNumber(fab)">
+        <ion-icon name="call"></ion-icon>
+      </button>
+            <button color="secondary-light" ion-fab (click)="sendMessage(fab)">
+        <ion-icon name="chatboxes"></ion-icon>
+      </button>
+        </ion-fab-list>
+    </ion-fab>
 
 
 </ion-content>

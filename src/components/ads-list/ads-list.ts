@@ -20,7 +20,7 @@ export class AdsListComponent implements OnInit {
   @Output() previewAd: EventEmitter<Ad>;
 
   ads$: Observable<Ad[]>;
-  offset: number = 2000;
+  offset: number = 10000;
   startLimit: number = 5;
   ads: Ad[];
 
