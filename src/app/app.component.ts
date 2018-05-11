@@ -83,7 +83,11 @@ export class MyApp {
 
   openProfilePage(): void {
 
-    this.nav.push('ProfilePage');
+    this.nav.setRoot('ProfilePage');
 
+  }
+
+  openHomePage(): void {
+    this.nav.setRoot('HomePage');
   }
 }

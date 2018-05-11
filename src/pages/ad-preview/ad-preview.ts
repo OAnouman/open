@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CallNumber } from '@ionic-native/call-number';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { SMS } from '@ionic-native/sms';
-import { StatusBar } from '@ionic-native/status-bar';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { Ad } from '../../models/ad/ad.interface';
 import { Profile } from '../../models/profile/profile.interface';
@@ -33,7 +32,6 @@ export class AdPreviewPage {
     private _navCtrl: NavController,
     private _navParams: NavParams,
     private _viewCtrl: ViewController,
-    private _statusBar: StatusBar,
     private _dataPvd: DataProvider,
     private _callNumber: CallNumber,
     private _sms: SMS,
@@ -81,7 +79,6 @@ export class AdPreviewPage {
   }
 
   ionViewDidEnter() {
-    this._statusBar.backgroundColorByHexString('#2196F3');
     this.headerImage = document.getElementsByClassName('header-image')[0];
     this.header = document.getElementsByClassName('header-container')[0];
     this.scrollContent = document.getElementsByTagName('ion-scroll')[0];
