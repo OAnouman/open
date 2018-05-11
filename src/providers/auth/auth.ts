@@ -88,6 +88,7 @@ export class AuthProvider {
 
   async logout(): Promise<void> {
     await this._afAuth.auth.signOut();
+    this._storage.remove('uid');
   }
 
 

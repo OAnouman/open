@@ -7,13 +7,13 @@
 <ion-header>
     <ion-navbar color="primary">
         <button ion-button menuToggle>
-            <ion-icon name="menu"></ion-icon>
-        </button>
+      <ion-icon name="menu"></ion-icon>
+    </button>
         <ion-title>Open</ion-title>
         <ion-buttons end>
-            <button ion-button icon-only>
-                <ion-icon name="list"></ion-icon>
-            </button>
+            <button ion-button icon-only (click)="showCategorieList()">
+        <ion-icon name="list"></ion-icon>
+      </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
@@ -21,12 +21,16 @@
 
 <ion-content hide-fab>
 
+    <ion-refresher (ionRefresh)="pullToRefresh($event)">
+        <ion-refresher-content pullingText="Tirez pour actualiser" refreshingText="Actualisation..."></ion-refresher-content>
+    </ion-refresher>
+
     <ads-list (previewAd)="preview($event)"></ads-list>
 
     <ion-fab bottom right>
         <button ion-fab (click)="goToNewAdPage()" color="secondary">
-                <ion-icon name="create"></ion-icon> 
-            </button>
+      <ion-icon name="create"></ion-icon>
+    </button>
     </ion-fab>
 
 </ion-content>

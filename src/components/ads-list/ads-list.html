@@ -1,5 +1,8 @@
 <ion-searchbar placeholder="Je cherche..." animate="true" (ionInput)="searchAd()"></ion-searchbar>
-<ion-list>
+
+<p no-margin text-center class="sort-label">{{ sortLabel }}</p>
+
+<ion-list *ngIf="ads?.length > 0; else noResults">
     <ion-card *ngFor="let ad of ads">
         <ion-item>
             <ion-avatar item-start margin-left>
@@ -54,7 +57,14 @@
 
 </ion-list>
 
-<ion-infinite-scroll (ionInfinite)="displayMoreContent($event)">
+<ng-template #noResults>
+    <div text-center text-wrap class="no-results">
+        <ion-icon name="sad"></ion-icon>
+        <h2>Aucune annonce dans cette catégorie</h2>
+    </div>
+</ng-template>
+
+<ion-infinite-scroll *ngIf="ads?.length > 0" (ionInfinite)="displayMoreContent($event)">
 
     <ion-infinite-scroll-content>
 

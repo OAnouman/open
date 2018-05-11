@@ -1,13 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, NavController } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { AuthProvider } from '../providers/auth/auth';
-import { User } from 'firebase';
+import { StatusBar } from '@ionic-native/status-bar';
+import { Storage } from '@ionic/storage';
 import firebase from "firebase/app";
+import { Nav, Platform } from 'ionic-angular';
 import { Profile } from '../models/profile/profile.interface';
+import { AuthProvider } from '../providers/auth/auth';
 import { DataProvider } from '../providers/data/data';
-import { Storage } from '@ionic/storage'
 
 
 @Component({
@@ -41,7 +40,9 @@ export class MyApp {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
+      // this.statusBar.styleDefault();
+      this.statusBar.overlaysWebView(false);
+      this.statusBar.backgroundColorByHexString('#a20019');
       this.splashScreen.hide();
     });
   }

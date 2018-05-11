@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController, Loading } from 'ionic-angular';
-import { Storage } from "@ionic/storage";
-import { DataProvider } from '../../providers/data/data';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
-import { StatusBar } from '@ionic-native/status-bar';
 
 /**
  * Generated class for the ProfilePage page.
@@ -23,20 +20,20 @@ export class ProfilePage {
 
   constructor(
     private _navCtrl: NavController,
-    private _navParams: NavParams,
-    private _statusBar: StatusBar) {
+    private _navParams: NavParams) {
   }
 
   setPofile(profile: Profile) {
     this._profile = profile;
   }
 
-  ionViewDidEnter() {
-    this._statusBar.backgroundColorByHexString('#2196F3');
-  }
 
   goToEditProfilePage() {
     this._navCtrl.push('EditProfilePage', { profile: this._profile, goBack: true });
+  }
+
+  loggedOut(event) {
+    this._navCtrl.setRoot('LoginPage');
   }
 
 }

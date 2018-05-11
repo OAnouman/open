@@ -11,8 +11,8 @@
         <ion-buttons end>
 
             <button ion-button icon-only (click)="goToEditProfilePage()">
-                <ion-icon color="light" name="create"></ion-icon>
-            </button>
+        <ion-icon color="light" name="create"></ion-icon>
+      </button>
 
         </ion-buttons>
 
@@ -23,6 +23,6 @@
 
 <ion-content>
 
-    <show-profile (profileLoaded)="setPofile($event)"></show-profile>
+    <show-profile (profileLoaded)="setPofile($event)" (loggedOut)="loggedOut($event)"></show-profile>
 
 </ion-content>

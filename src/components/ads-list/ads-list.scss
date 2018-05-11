@@ -37,4 +37,20 @@ ads-list {
             margin-right: 7px;
         }
     }
+    p.sort-label {
+        font-size: 1.6rem;
+        color: #222;
+        padding: 10px;
+    }
+    div.no-results {
+        padding-top: 40px;
+        ion-icon {
+            font-size: 10rem;
+            color: #b5b5b5;
+        }
+        h2 {
+            color: #222;
+            padding: 16px;
+        }
+    }
 }

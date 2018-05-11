@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Profile } from '../../models/profile/profile.interface';
-import { LoadingController, Loading } from 'ionic-angular';
-import { DataProvider } from '../../providers/data/data';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { Loading, LoadingController } from 'ionic-angular';
+import { Profile } from '../../models/profile/profile.interface';
+import { AuthProvider } from '../../providers/auth/auth';
+import { DataProvider } from '../../providers/data/data';
 
 /**
  * Generated class for the ShowProfileComponent component.
@@ -17,6 +18,7 @@ import { Storage } from '@ionic/storage';
 export class ShowProfileComponent implements OnInit {
 
   @Output() profileLoaded: EventEmitter<Profile>;
+  @Output() loggedOut: EventEmitter<null>;
   profile: Profile;
 
   loadingInstance: Loading;
@@ -26,9 +28,12 @@ export class ShowProfileComponent implements OnInit {
   constructor(
     private _storage: Storage,
     private _loadingCtrl: LoadingController,
-    private _dataPvd: DataProvider) {
+    private _dataPvd: DataProvider,
+    private _authPvd: AuthProvider) {
 
     this.profileLoaded = new EventEmitter<Profile>();
+
+    this.loggedOut = new EventEmitter();
 
   }
 
@@ -49,9 +54,15 @@ export class ShowProfileComponent implements OnInit {
           })
       })
 
-
   }
 
+  async logOut() {
+
+    await this._authPvd.logout();
+
+    this.loggedOut.emit();
+
+  }
 
 
 }

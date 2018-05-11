@@ -157,6 +157,24 @@ export class DataProvider {
 
   }
 
+  /**
+   * Fetch data from firestore ads collection according to 
+   * sort criterias
+   * 
+   * @param {number} [count=this._AD_FETCH_STEP] 
+   * @param {string} [category] 
+   * @returns 
+   * @memberof DataProvider
+   */
+  getAds(count: number = this._AD_FETCH_STEP, category?: string) {
+
+    if (!category) {
+      return this.getAdsByUpdatedAtDesc(count)
+    } else if (category) {
+      return this.getAdsByCategory(count, category)
+    }
+
+  }
 
   /**
    * This function retrieve all ads.
@@ -166,9 +184,36 @@ export class DataProvider {
    * @returns {Observable<Ad[]>}
    * @memberof DataProvider
    */
-  getAds(count: number = this._AD_FETCH_STEP): Observable<Ad[]> {
+  getAdsByUpdatedAtDesc(count): Observable<Ad[]> {
 
     return this._afs.collection<Ad>('ads', ref => ref.where('published', '==', true).orderBy('lastUpdatedAt', 'desc').limit(count)).valueChanges()
+      .map((ads: Ad[]) => {
+
+        return ads.map((ad: Ad) => {
+
+          ad.userProfile = this.getProfileFromUid(ad.uid)
+
+          return ad;
+
+        })
+
+      });
+
+  }
+
+  /**
+   * Get ads sorted by category
+   * 
+   * @param {number} [count=this._AD_FETCH_STEP] Number of ads to return
+   * @param {string} category category name
+   * @returns {Observable<Ad[]>} 
+   * @memberof DataProvider
+   */
+  getAdsByCategory(count: number = this._AD_FETCH_STEP, category: string): Observable<Ad[]> {
+
+    return this._afs.collection<Ad>('ads', ref =>
+      ref.where('published', '==', true)
+        .where('category', '==', category).orderBy('lastUpdatedAt', 'desc').limit(count)).valueChanges()
       .map((ads: Ad[]) => {
 
         return ads.map((ad: Ad) => {
