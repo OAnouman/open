@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CallNumber } from '@ionic-native/call-number';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { SMS } from '@ionic-native/sms';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, ViewController } from 'ionic-angular';
 import { Ad } from '../../models/ad/ad.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { DataProvider } from '../../providers/data/data';
@@ -35,7 +35,8 @@ export class AdPreviewPage {
     private _dataPvd: DataProvider,
     private _callNumber: CallNumber,
     private _sms: SMS,
-    private _scrOrientation: ScreenOrientation) {
+    private _scrOrientation: ScreenOrientation,
+    private _toastCtrl: ToastController) {
   }
 
   ionViewWillLoad() {
@@ -43,10 +44,12 @@ export class AdPreviewPage {
     this.ad = this._navParams.get('ad');
 
     // Get user profile
-    this.ad.userProfile = this._dataPvd.getProfileFromUid(this.ad.uid);
+    this.ad.userProfile$ = this._dataPvd.getProfileFromUid(this.ad.uid);
 
     // Subscribe to user profile
-    this.ad.userProfile.subscribe(profile => this._userProfile = profile);
+    this.ad.userProfile$.subscribe(profile => {
+      this._userProfile = profile;
+    });
 
   }
 
@@ -94,8 +97,25 @@ export class AdPreviewPage {
       }
     })
 
+    // Count view
+    this.countViews();
+
   }
 
+  async countViews() {
+
+    try {
+      // this._dataPvd.addView(this.ad.)
+      await this._dataPvd.addView(this.ad.id);
+    } catch (e) {
+      this._toastCtrl.create({
+        message: e.message,
+        duration: 5000,
+        cssClass: 'globasl__toast-error',
+      }).present();
+    }
+
+  }
 
 
 }

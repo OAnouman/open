@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore, DocumentChangeAction } from 'angularfire2/firestore';
 import { User } from 'firebase';
 import firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/count';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/take';
+import { AdView } from '../../models/ad-view/ad-view.interface';
 import { Ad } from '../../models/ad/ad.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { Utils } from '../../utils/Utils';
@@ -77,11 +81,70 @@ export class DataProvider {
    * @memberof DataProvider
    */
   getUserProfile(user: User): Observable<Profile> {
-    return this._afs.doc<Profile>(`profiles/${user.uid}`).valueChanges();
+    return this._afs.doc<Profile>(`profiles/${user.uid}`).valueChanges().take(1);
   }
 
   getProfileFromUid(uid: string) {
-    return this._afs.doc<Profile>(`profiles/${uid}`).valueChanges();
+    return this._afs.doc<Profile>(`profiles/${uid}`).valueChanges().take(1);
+  }
+
+  /**
+   * Add ad to user favorites
+   * 
+   * @param {string} uid 
+   * @param {string} adId 
+   * @memberof DataProvider
+   */
+  addFavoriteAd(uid: string, adId: string) {
+    this._afs.doc<Profile>(`profiles/${uid}`).collection('favorites-ads').doc(adId).set({ fav: true })
+  }
+
+  /**
+   * Remove ad from user favorites
+   * 
+   * @param {string} uid 
+   * @param {string} adId 
+   * @memberof DataProvider
+   */
+  async removeFavoriteAd(uid: string, adId: string) {
+    await this._afs.doc<Profile>(`profiles/${uid}`).collection('favorites-ads').doc(adId).delete();
+  }
+
+  /**
+   * Get all user favorttes ads
+   * 
+   * @param {string} uid 
+   * @returns {Observable<{id?: string, fav: boolean}[]>}
+   * @memberof DataProvider
+   */
+  getFavoritesAds(uid: string): Observable<{ id?: string, fav: boolean }[]> {
+
+    return this._afs.doc<Profile>(`profiles/${uid}`).collection('favorites-ads').snapshotChanges()
+      .map((actions: DocumentChangeAction[]) => {
+
+        return actions.map((action: DocumentChangeAction) => {
+          return <{ id?: string, fav: boolean }>{
+            id: action.payload.doc.id,
+            fav: action.payload.doc.data().fav,
+          }
+
+        })
+
+      }).take(1);
+
+  }
+
+  /**
+   * Check if an ad is iin uer favorites
+   * 
+   * @param {string} uid 
+   * @param {string} adId 
+   * @returns 
+   * @memberof DataProvider
+   */
+  isFavoriteAd(uid: string, adId: string) {
+    return this._afs.doc<Profile>(`profiles/${uid}`).collection('favorites-ads').doc<{ fav: boolean }>(adId).valueChanges()
+      .map(favAd => favAd.fav)
   }
 
 
@@ -169,29 +232,32 @@ export class DataProvider {
   getAds(count: number = this._AD_FETCH_STEP, category?: string) {
 
     if (!category) {
-      return this.getAdsByUpdatedAtDesc(count)
+      return this.getAdsByUpdatedAtDesc(count);
     } else if (category) {
-      return this.getAdsByCategory(count, category)
+      return this.getAdsByCategory(count, category);
     }
 
   }
 
   /**
-   * This function retrieve all ads.
+   * This function retrieve all ads. 
    * It returns the requested number f ads
    * 
    * @param {number} [count=this._AD_FETCH_STEP] Count of ads to retrieve. If not specified, returns 5
    * @returns {Observable<Ad[]>}
    * @memberof DataProvider
    */
-  getAdsByUpdatedAtDesc(count): Observable<Ad[]> {
+  private getAdsByUpdatedAtDesc(count): Observable<Ad[]> {
 
-    return this._afs.collection<Ad>('ads', ref => ref.where('published', '==', true).orderBy('lastUpdatedAt', 'desc').limit(count)).valueChanges()
-      .map((ads: Ad[]) => {
+    return this._afs.collection<Ad>('ads', ref => ref.where('published', '==', true).orderBy('lastUpdatedAt', 'desc').limit(count)).snapshotChanges()
+      .map((actions: DocumentChangeAction[]) => {
 
-        return ads.map((ad: Ad) => {
+        return actions.map((action: DocumentChangeAction) => {
 
-          ad.userProfile = this.getProfileFromUid(ad.uid)
+          const ad = action.payload.doc.data() as Ad;
+          ad.userProfile$ = this.getProfileFromUid(ad.uid)
+          ad.id = action.payload.doc.id;
+          ad.viewsCount = this.getAdViewsCount(action.payload.doc.id);
 
           return ad;
 
@@ -209,24 +275,63 @@ export class DataProvider {
    * @returns {Observable<Ad[]>} 
    * @memberof DataProvider
    */
-  getAdsByCategory(count: number = this._AD_FETCH_STEP, category: string): Observable<Ad[]> {
+  private getAdsByCategory(count: number = this._AD_FETCH_STEP, category: string): Observable<Ad[]> {
 
     return this._afs.collection<Ad>('ads', ref =>
       ref.where('published', '==', true)
-        .where('category', '==', category).orderBy('lastUpdatedAt', 'desc').limit(count)).valueChanges()
-      .map((ads: Ad[]) => {
+        .where('category', '==', category).orderBy('lastUpdatedAt', 'desc').limit(count)).snapshotChanges()
+      .map((actions: DocumentChangeAction[]) => {
 
-        return ads.map((ad: Ad) => {
-
-          ad.userProfile = this.getProfileFromUid(ad.uid)
+        return actions.map(action => {
+          const ad = action.payload.doc.data() as Ad;
+          ad.userProfile$ = this.getProfileFromUid(ad.uid)
+          ad.id = action.payload.doc.id;
+          ad.viewsCount = this.getAdViewsCount(action.payload.doc.id);
 
           return ad;
-
         })
 
       });
 
   }
+
+
+  /********************************************************************
+  *                                ADS VIEWS COUNT
+  ********************************************************************/
+
+  /**
+   * Add user to poeple who have seen the ad
+   * 
+   * @param {string} adId 
+   * @param {string} uid 
+   * @memberof DataProvider
+   */
+  async addView(adId: string) {
+
+    const uid = await this._storage.get('uid');
+
+    await this._afs.doc(`ads/${adId}`).collection<AdView>(`seenBy`)
+      .doc(uid).set({ seen: true });
+  }
+
+  /**
+   * Get ad views count
+   * 
+   * @param {string} adId 
+   * @returns 
+   * @memberof DataProvider
+   */
+  private getAdViewsCount(adId: string) {
+
+    return this._afs.doc<AdView>(`ads/${adId}`).collection('seenBy')
+      .valueChanges().map(seens => {
+        return seens.length;
+      })
+
+  }
+
+
 
 
 }

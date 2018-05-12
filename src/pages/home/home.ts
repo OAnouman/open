@@ -102,7 +102,6 @@ export class HomePage {
 
     })
 
-
   }
 
   preview(ad: Ad) {

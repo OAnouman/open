@@ -6,10 +6,10 @@
     <ion-card *ngFor="let ad of ads">
         <ion-item>
             <ion-avatar item-start margin-left>
-                <img [src]="(ad.userProfile | async)?.picture">
+                <img [src]="(ad.userProfile$ | async)?.picture">
             </ion-avatar>
             <h3>{{ ad.title }}</h3>
-            <p> {{ (ad.userProfile | async)?.username }} - {{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }}
+            <p> {{ (ad.userProfile$ | async)?.username }} - {{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }}
             </p>
         </ion-item>
         <div class="card-image">
@@ -31,9 +31,8 @@
 
         <ion-row align-items-center>
             <ion-col col-auto>
-                <button ion-button icon-left clear small>
-          <ion-icon name="heart-outline"></ion-icon>
-          <div></div>
+                <button ion-button icon-left clear small (click)="favoriteAd(ad)">
+          <ion-icon [name]="ad.favIcon" class="fav-icon"></ion-icon>
         </button>
             </ion-col>
             <ion-col col-auto>
@@ -46,9 +45,9 @@
           <div>Contacter</div>
         </button>
             </ion-col>
-            <ion-col text-center col-auto>
+            <ion-col text-center col-auto push-2>
                 <ion-note>
-                    {{ ad.viewsCount }}
+                    {{ ad.viewsCount | async }}
                     <ion-icon name="eye"></ion-icon>
                 </ion-note>
             </ion-col>

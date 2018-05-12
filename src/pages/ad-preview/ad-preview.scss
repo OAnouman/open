@@ -64,4 +64,21 @@ page-ad-preview {
     .price {
         font-weight: 500;
     }
+    div.chip-container {
+        padding: 10px 0;
+        ion-chip {
+            margin-right: 7px;
+        }
+    }
+    ion-chip {
+        border-radius: 2px !important;
+    }
+    ion-card-header {
+        h1 {
+            font-weight: 900;
+        }
+        ion-icon {
+            font-size: 2.5rem;
+        }
+    }
 }

@@ -3,12 +3,14 @@ import { Profile } from "../profile/profile.interface";
 
 export interface Ad {
 
+    id?: string;
+
     title: string;
 
     uid: string;
 
     // Not saved. Only for hold profile
-    userProfile?: Observable<Profile>;
+    userProfile$?: Observable<Profile>;
 
     createdAt?: any;
 
@@ -20,7 +22,7 @@ export interface Ad {
 
     category: string;
 
-    viewsCount: number;
+    viewsCount: Observable<number>;
 
     pictures: string[];
 
@@ -29,5 +31,7 @@ export interface Ad {
     tags: { name: string, color: string }[];
 
     published?: boolean;
+
+    favIcon?: string;
 
 }

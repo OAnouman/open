@@ -36,8 +36,10 @@
                     </div>
 
                     <ion-card>
-                        <ion-card-header>
-                            <ion-title text-wrap text-center>{{ ad.title.toUpperCase() }}</ion-title>
+                        <ion-card-header text-center>
+                            <h1 text-wrap text-center>{{ ad.title.toUpperCase() }} &nbsp;
+                                <ion-icon color="primary" [name]="ad.favIcon"></ion-icon>
+                            </h1>
                         </ion-card-header>
                         <ion-card-content>
                             <ion-list>
@@ -46,14 +48,19 @@
                                 </ion-item>
                                 <ion-item>
                                     <ion-avatar item-left>
-                                        <img [src]="(ad.userProfile | async)?.picture" alt="">
+                                        <img [src]="(ad.userProfile$ | async)?.picture" alt="">
                                     </ion-avatar>
-                                    <h2>{{ (ad.userProfile | async)?.username }}
+                                    <h2>{{ (ad.userProfile$ | async)?.username }}
                                         <small>- {{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo
                       }}
                     </small>
                                     </h2>
                                 </ion-item>
+                                <div class="chip-container">
+                                    <ion-chip *ngFor="let tag of ad.tags" [color]="tag.color">
+                                        <ion-label>{{ tag.name }}</ion-label>
+                                    </ion-chip>
+                                </div>
                                 <ion-item>
                                     <p text-wrap class="body">{{ ad.body }}</p>
                                 </ion-item>

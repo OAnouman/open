@@ -1,7 +1,12 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Loading, LoadingController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { Loading, LoadingController, ToastController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
 import { Ad } from '../../models/ad/ad.interface';
+import { Profile } from '../../models/profile/profile.interface';
 import { DataProvider } from '../../providers/data/data';
 
 // import { ADS_LIST } from "../../mocks/ads/ad.mocks";
@@ -26,11 +31,16 @@ export class AdsListComponent implements OnInit {
   ads: Ad[];
   sortLabel: string = 'Toutes les annonces';
   displayedCategory: string;
+  notFavorite: string = 'heart-outline';
+  favorite: string = 'heart';
+  private _uid: string;
   private _loadingInstance: Loading;
-
+  private _userProfile: Profile;
   constructor(
     private _dataPvd: DataProvider,
-    private _loadingCtrl: LoadingController) {
+    private _loadingCtrl: LoadingController,
+    private _storage: Storage,
+    private _toastCtrl: ToastController) {
 
     this.previewAd = new EventEmitter<Ad>();
 
@@ -42,7 +52,15 @@ export class AdsListComponent implements OnInit {
 
     this._loadingInstance.present();
 
-    this.getAds();
+    this._storage.get('uid')
+      .then(uid => {
+        this._uid = uid;
+        this._dataPvd.getProfileFromUid(uid).take(1).subscribe(profile => {
+          this._userProfile = profile;
+          this._userProfile.favoritesAds$ = this._dataPvd.getFavoritesAds(uid);
+          this.getAds();
+        })
+      });
 
   }
 
@@ -55,16 +73,36 @@ export class AdsListComponent implements OnInit {
 
     this.ads$ = this._dataPvd.getAds(this.startLimit, this.displayedCategory);
 
-    this.ads$.subscribe((ads: Ad[]) => {
+    this.ads$
+      .map((ads: Ad[]) => ads)
+      .mergeMap(ads => {
 
-      this.ads = ads;
+        return this._userProfile.favoritesAds$.map(favAds => {
+          let adsWithFavIcon: Ad[] = [];
 
-      this._loadingInstance.dismiss();
+          // For each ad we check if it is in user favorites
+          ads.forEach(ad => {
+            const res = favAds.find(favAd => ad.id === favAd.id);
 
-    })
+            // Set fav icon
+            if (res) {
+              ad.favIcon = this.favorite;
+            } else {
+              ad.favIcon = this.notFavorite;
+            }
+
+            adsWithFavIcon.push(ad);
+          });
+
+          return adsWithFavIcon;
+        })
+      })
+      .subscribe(ads => {
+        this.ads = ads;
+        this._loadingInstance.dismiss();
+      })
 
   }
-
 
   searchAd(): void {
 
@@ -108,21 +146,72 @@ export class AdsListComponent implements OnInit {
    * @param {any} infiniteScroll 
    * @memberof AdsListComponent
    */
-  displayMoreContent(infiniteScroll) {
+  displayMoreContent(infiniteScroll: any): void {
 
     let limit = this.startLimit + 3;
 
-    this._dataPvd.getAds(limit, this.displayedCategory)
-      .subscribe((ad: Ad[]) => {
+    this._userProfile.favoritesAds$ = this._dataPvd.getFavoritesAds(this._uid);
 
-        ad.slice(this.startLimit, limit).forEach(ad => this.ads.push(ad));
+    const sub = this._dataPvd.getAds(limit, this.displayedCategory)
+      .map((ads: Ad[]) => {
+        return ads.slice(this.startLimit, limit)
+      })
+      .mergeMap((slicedAds: Ad[]) => {
 
+        return this._userProfile.favoritesAds$
+          .map(favAds => {
+
+            let adsWithFavIcon: Ad[] = [];
+
+            // For each ad we check if it is in user favorites
+            slicedAds.forEach(ad => {
+              const res = favAds.find(favAd => ad.id === favAd.id);
+
+              // Set fav icon
+              if (res) {
+                ad.favIcon = this.favorite;
+              } else {
+                ad.favIcon = this.notFavorite;
+              }
+
+              adsWithFavIcon.push(ad);
+            });
+
+            return adsWithFavIcon;
+          })
+      }).subscribe((ads: Ad[]) => {
+        ads.forEach(ad => this.ads.push(ad));
         this.startLimit = limit;
 
         infiniteScroll.complete();
-
       });
 
+  }
+
+  async favoriteAd(ad: Ad) {
+
+    const prevIcon = ad.favIcon;
+
+    try {
+
+      if (ad.favIcon === this.notFavorite) {
+        ad.favIcon = this.favorite;
+        this._dataPvd.addFavoriteAd(this._uid, ad.id);
+      } else if (ad.favIcon === this.favorite) {
+        ad.favIcon = this.notFavorite;
+        await this._dataPvd.removeFavoriteAd(this._uid, ad.id);
+      }
+
+    } catch (e) {
+      // Revert change
+      ad.favIcon = prevIcon;
+
+      this._toastCtrl.create({
+        message: e.message,
+        duration: 5000,
+        cssClass: 'globals__toast-error',
+      }).present();
+    }
   }
 
 
