@@ -11,6 +11,7 @@ import { EditProfileFormComponent } from './edit-profile-form/edit-profile-form'
 import { LoginFormComponent } from './login-form/login-form';
 import { RegisterFormComponent } from './register-form/register-form';
 import { ShowProfileComponent } from './show-profile/show-profile';
+import { MyAdsListComponent } from './my-ads-list/my-ads-list';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { ShowProfileComponent } from './show-profile/show-profile';
         AdsListComponent,
         SummarizePipe,
         ShowProfileComponent,
-        AdFormComponent],
+        AdFormComponent,
+    MyAdsListComponent],
     imports: [
         IonicModule,
         IonTagsInputModule,
@@ -33,6 +35,7 @@ import { ShowProfileComponent } from './show-profile/show-profile';
         RegisterFormComponent,
         AdsListComponent,
         ShowProfileComponent,
-        AdFormComponent]
+        AdFormComponent,
+    MyAdsListComponent]
 })
 export class ComponentsModule { }

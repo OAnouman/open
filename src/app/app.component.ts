@@ -90,4 +90,10 @@ export class MyApp {
   openHomePage(): void {
     this.nav.setRoot('HomePage');
   }
+
+  openMyAdsPage(): void {
+
+    this.nav.setRoot('MyAdsPage');
+
+  }
 }

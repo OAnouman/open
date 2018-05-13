@@ -295,6 +295,27 @@ export class DataProvider {
 
   }
 
+  async getMyAds(): Promise<Observable<Ad[]>> {
+
+    const uid = await this._storage.get('uid');
+
+    return this._afs.collection<Ad>('ads', ref => ref.where('uid', '==', uid)).snapshotChanges().take(1)
+      .map((actions: DocumentChangeAction[]) => {
+
+        return actions.map((action: DocumentChangeAction) => {
+
+          return <Ad>{
+            ...action.payload.doc.data(),
+            id: action.payload.doc.id,
+            viewsCount: this.getAdViewsCount(action.payload.doc.id).take(1),
+          }
+
+        })
+
+      })
+
+  }
+
 
   /********************************************************************
   *                                ADS VIEWS COUNT
