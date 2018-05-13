@@ -1,0 +1,22 @@
+<ion-list>
+    <ion-item-sliding *ngFor="let ad of myAds | async">
+        <ion-item>
+            <ion-avatar item-left>
+                <img [src]="ad.pictures[0]">
+            </ion-avatar>
+            <h2>{{ ad.title }}</h2>
+            <p>{{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }} - {{ ad.viewsCount | async }} vues</p>
+        </ion-item>
+        <ion-item-options side="left" icon-start>
+            <button ion-button expandable>
+        <ion-icon name="trash"></ion-icon>
+      </button>
+        </ion-item-options>
+        <ion-item-options icon-end>
+            <button ion-button color="secondary" expandable>
+        <ion-icon name="create"></ion-icon>
+      </button>
+        </ion-item-options>
+
+    </ion-item-sliding>
+</ion-list>
