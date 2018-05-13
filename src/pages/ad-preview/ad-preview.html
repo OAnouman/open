@@ -38,7 +38,7 @@
                     <ion-card>
                         <ion-card-header text-center>
                             <h1 text-wrap text-center>{{ ad.title.toUpperCase() }} &nbsp;
-                                <ion-icon color="primary" [name]="ad.favIcon"></ion-icon>
+                                <ion-icon *ngIf="ad.favIcon === 'heart'" color="primary" [name]="ad.favIcon"></ion-icon>
                             </h1>
                         </ion-card-header>
                         <ion-card-content>
