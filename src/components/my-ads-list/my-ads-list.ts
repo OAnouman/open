@@ -221,6 +221,8 @@ export class MyAdsListComponent implements OnInit {
 
     this._selectedItemCount = 1;
 
+    console.log(this._selectedItemCount);
+
     this.onSelect.emit(this._selectedItemCount);
   }
 
@@ -234,7 +236,7 @@ export class MyAdsListComponent implements OnInit {
    * @memberof MyAdsListComponent
    */
   onChecked(checkbox: any, ad: Ad): void {
-    if (checkbox.checkbox) {
+    if (checkbox.checked) {
       this._selectedItemCount++;
       this._selectedAdForDeletion.push(ad);
     } else {
@@ -247,6 +249,8 @@ export class MyAdsListComponent implements OnInit {
       this.editMode = "normal";
       this.onEditMode.emit(false);
     }
+
+    console.log(this._selectedItemCount);
 
     this.onSelect.emit(this._selectedItemCount);
   }

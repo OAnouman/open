@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Loading, LoadingController, ToastController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
@@ -8,6 +8,7 @@ import 'rxjs/add/operator/mergeMap';
 import { Ad } from '../../models/ad/ad.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { DataProvider } from '../../providers/data/data';
+import { Subscription } from 'rxjs/Subscription';
 
 // import { ADS_LIST } from "../../mocks/ads/ad.mocks";
 
@@ -21,11 +22,12 @@ import { DataProvider } from '../../providers/data/data';
   selector: 'ads-list',
   templateUrl: 'ads-list.html'
 })
-export class AdsListComponent implements OnInit {
+export class AdsListComponent implements OnInit, OnDestroy {
 
   @Output() previewAd: EventEmitter<Ad>;
 
   ads$: Observable<Ad[]>;
+  private _adsSubscription: Subscription;
   offset: number = 10000;
   startLimit: number = 5;
   ads: Ad[];
@@ -64,6 +66,12 @@ export class AdsListComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+    
+    this._adsSubscription.unsubscribe();
+
+  }
+
   /**
    * Get ads
    * 
@@ -73,7 +81,7 @@ export class AdsListComponent implements OnInit {
 
     this.ads$ = this._dataPvd.getAds(this.startLimit, this.displayedCategory);
 
-    this.ads$
+    this._adsSubscription = this.ads$
       .map((ads: Ad[]) => ads)
       .mergeMap(ads => {
 
