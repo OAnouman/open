@@ -1,22 +1,35 @@
-<ion-list>
-    <ion-item-sliding *ngFor="let ad of myAds | async">
+<ion-list *ngIf="myAds; else noResults">
+    <ion-item-sliding *ngFor="let ad of myAds | async" (ionDrag)="itemSwipe($event)" (press)="toggleEditMode(check,ad)">
         <ion-item>
             <ion-avatar item-left>
                 <img [src]="ad.pictures[0]">
             </ion-avatar>
-            <h2>{{ ad.title }}</h2>
-            <p>{{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }} - {{ ad.viewsCount | async }} vues</p>
+            <ion-label>
+                <div>
+                    <h2>{{ ad.title }}</h2>
+                    <p>{{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }} - {{ ad.viewsCount | async }} vues</p>
+                </div>
+            </ion-label>
+            <ion-checkbox #check [@editMode]="this.editMode" color="secondary" checked="false" (ionChange)="onChecked($event, ad)"></ion-checkbox>
         </ion-item>
         <ion-item-options side="left" icon-start>
-            <button ion-button expandable>
-        <ion-icon name="trash"></ion-icon>
+            <button ion-button expandable (click)="deleteAd(ad)">
+        <ion-icon [@deleteButtonState]="this.deleteIconState" name="trash"></ion-icon>
       </button>
         </ion-item-options>
         <ion-item-options icon-end>
-            <button ion-button color="secondary" expandable>
+            <button ion-button color="secondary" expandable (click)="editAd(ad)">
         <ion-icon name="create"></ion-icon>
       </button>
         </ion-item-options>
 
     </ion-item-sliding>
 </ion-list>
+
+<ng-template #noResults>
+    <div text-center text-wrap class="no-results">
+        <ion-icon name="sad"></ion-icon>
+        <h2>Vous n'avez publié aucune annonce.
+            <br> Faites le maintenant !</h2>
+    </div>
+</ng-template>

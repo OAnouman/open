@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AdFormComponent } from '../../components/ad-form/ad-form';
-import { Ad } from '../../models/ad/ad.interface';
+import { Component, ViewChild } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { AdFormComponent } from "../../components/ad-form/ad-form";
+import { Ad } from "../../models/ad/ad.interface";
 
 /**
  * Generated class for the NewAdPage page.
@@ -12,11 +12,10 @@ import { Ad } from '../../models/ad/ad.interface';
 
 @IonicPage()
 @Component({
-  selector: 'page-new-ad',
-  templateUrl: 'new-ad.html',
+  selector: "page-new-ad",
+  templateUrl: "new-ad.html"
 })
 export class NewAdPage {
-
   @ViewChild(AdFormComponent)
   set form(form: AdFormComponent) {
     this.adForm = form;
@@ -24,27 +23,20 @@ export class NewAdPage {
 
   // Ref to child Ad form component
   adForm;
-  constructor(
-    private _navCtrl: NavController,
-    private _navParams: NavParams) {
-  }
+  ad = {} as Ad;
 
+  constructor(private _navCtrl: NavController, private _navParams: NavParams) {}
 
   /**
    * Saee t,the ad to firestore
-   * 
+   *
    * @memberof NewAdPage
    */
   async saveAd(): Promise<void> {
     await this.adForm.saveAd();
   }
 
-
   adCreated(ad: Ad): void {
-
-    this._navCtrl.setRoot('HomePage');
-
+    this._navCtrl.setRoot("HomePage");
   }
-
-
 }

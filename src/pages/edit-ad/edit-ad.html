@@ -1,5 +1,5 @@
 <!--
-  Generated template for the NewAdPage page.
+  Generated template for the EditAdPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,9 +7,9 @@
 <ion-header>
 
     <ion-navbar color="primary">
-        <ion-title>Nouvelle annonce</ion-title>
+        <ion-title> {{ ad?.title }} </ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="saveAd()">
+            <button ion-button icon-only (click)="updateAd()">
         <ion-icon name="checkmark"></ion-icon>
       </button>
         </ion-buttons>
@@ -20,6 +20,6 @@
 
 <ion-content padding>
 
-    <ad-form [ad]="ad" (adCreated)="adCreated($event)"></ad-form>
+    <ad-form [ad]="ad" (adUpdated)="adUpdated($event)"></ad-form>
 
 </ion-content>

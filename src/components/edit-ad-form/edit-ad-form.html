@@ -5,12 +5,12 @@
             </ion-icon>
             <!--IMPROVE: Image Scrolling -->
             <div class="imgs-container">
-                <img *ngFor="let img of ad?.pictures" [src]="img" height="100%" width="30%" (press)="deleteImg(img)">
+                <img *ngFor="let img of ad.pictures" [src]="img" height="100%" width="30%" (press)="deleteImg(img)">
             </div>
-            <p *ngIf="!ad?.pictures" class="picts-placeholder">
+            <p *ngIf="!ad.pictures" class="picts-placeholder">
                 Ajouter des images
             </p>
-            <div *ngIf="ad?.pictures?.length === 0 || !ad?.pictures" text-wrap class="globals__inputs-error images-error">
+            <div *ngIf="ad.pictures?.length === 0 || !ad.pictures" text-wrap class="globals__inputs-error images-error">
                 {{ errorMessages.pictures[0].message }}
             </div>
         </ion-item>
@@ -38,7 +38,7 @@
             <div>
                 <ng-container *ngFor="let validation of errorMessages.price">
                     <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('price').hasError(validation.type) && adForm.get('price').dirty">
-                        {{ validation.message }}
+                        {{ validation.message}}
                     </div>
                 </ng-container>
             </div>
@@ -48,7 +48,7 @@
             <ion-item>
                 <ion-select multiple="false" placeholder="Catégorie" #category formControlName="category" [(ngModel)]="ad.category" [selectOptions]="categorySelectOptions">
 
-                    <ion-option *ngFor="let cat of categories" [value]="cat.value">{{cat.text}} </ion-option>
+                    <ion-option *ngFor="let cat of categories" [value]="cat.value">{{cat.text}}</ion-option>
 
                 </ion-select>
             </ion-item>
@@ -56,7 +56,7 @@
             <div>
                 <ng-container *ngFor="let validation of errorMessages.category">
                     <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('category').hasError(validation.type) && adForm.get('category').dirty">
-                        {{ validation.message }}
+                        {{ validation.message}}
                     </div>
                 </ng-container>
             </div>
@@ -64,15 +64,15 @@
         <ion-item>
             <ion-icon color="secondary" name="flag" item-left></ion-icon>
             <ion-item>
-                <ion-select multiple="true" placeholder="Etiquettes" [selectOptions]="tagSelectOptions" #tags formControlName="tags" [(ngModel)]="ad.tags" (change)="tags.focusNext()" [selectedText]="selectedText" (ionChange)="tagsSelectionChange()" [compareWith]="compareTags">
-                    <ion-option *ngFor="let tag of tagsList" [value]="tag">{{ tag.name }}</ion-option>
+                <ion-select multiple="true" placeholder="Etiquettes" [selectOptions]="tagSelectOptions" #tags formControlName="tags" [(ngModel)]="ad.tags" (change)="tags.focusNext()" [selectedText]="selectedText" (ionChange)="tagsSelectionChange()">
+                    <ion-option *ngFor="let tag of tagsList" [value]="tag"> {{tag.name}} </ion-option>
                 </ion-select>
             </ion-item>
 
             <div>
                 <ng-container *ngFor="let validation of errorMessages.tags">
                     <div text-wrap class="globals__inputs-error" *ngIf="adForm.get('tags').hasError(validation.type) && adForm.get('tags').dirty">
-                        {{ validation.message }}
+                        {{ validation.message}}
                     </div>
                 </ng-container>
             </div>

@@ -62,6 +62,12 @@ ion-item {
     }
 }
 
+.globals__toast-confirm {
+    div {
+        background: rgba(252, 183, 20, 0.5);
+    }
+}
+
 .grey {
     color: $icon-grey
 }

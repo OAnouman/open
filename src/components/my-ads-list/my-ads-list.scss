@@ -6,4 +6,19 @@ my-ads-list {
         font-size: 2.3rem !important;
         padding: 16px !important;
     }
+    div.no-results {
+        padding-top: 40px;
+        ion-icon {
+            font-size: 10rem !important;
+            color: #b5b5b5;
+            font-weight: 100;
+        }
+        h2 {
+            color: #b5b5b5;
+            padding: 16px;
+        }
+    }
+    ion-checkbox {
+        margin-right: 20px !important;
+    }
 }

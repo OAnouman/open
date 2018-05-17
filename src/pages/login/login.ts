@@ -27,7 +27,7 @@ export class LoginPage {
     if (profile.name) {
 
       this.toastCtrl.create({
-        message: `Bienvenue sur Open ${profile.name} !`,
+        message: `Bienvenue sur Deals ${profile.name} !`,
         duration: 3000,
       }).present();
 
