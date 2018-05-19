@@ -2,36 +2,36 @@ import { Observable } from "rxjs/Observable";
 import { Profile } from "../profile/profile.interface";
 
 export interface Ad {
+  id?: string;
 
-    id?: string;
+  title: string;
 
-    title: string;
+  uid: string;
 
-    uid: string;
+  // Not saved. Only for hold profile
+  userProfile$?: Observable<Profile>;
 
-    // Not saved. Only for hold profile
-    userProfile$?: Observable<Profile>;
+  createdAt?: any;
 
-    createdAt?: any;
+  lastUpdatedAt?: any;
 
-    lastUpdatedAt?: any;
+  price: number;
 
-    price: number;
+  body: string;
 
-    body: string;
+  category: string;
 
-    category: string;
+  viewsCount: Observable<number>;
 
-    viewsCount: Observable<number>;
+  pictures: string[];
 
-    pictures: string[];
+  sold?: boolean;
 
-    sold?: boolean;
+  tags: { name: string; color: string }[];
 
-    tags: { name: string, color: string }[];
+  published?: boolean;
 
-    published?: boolean;
+  favIcon?: string;
 
-    favIcon?: string;
-
+  multiSelectSelected?: boolean;
 }

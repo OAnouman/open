@@ -4,18 +4,24 @@ import {
   state,
   style,
   transition,
-  trigger
+  trigger,
+  stagger,
+  query,
+  keyframes
 } from "@angular/animations";
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import {
+  Checkbox,
   Loading,
   LoadingController,
   Toast,
-  ToastController
+  ToastController,
+  ItemSliding
 } from "ionic-angular";
 import { Observable } from "rxjs/Observable";
 import { Ad } from "../../models/ad/ad.interface";
 import { DataProvider } from "../../providers/data/data";
+import { AUTO_STYLE } from "@angular/core/src/animation/dsl";
 
 /**
  * Generated class for the MyAdsListComponent component.
@@ -71,6 +77,22 @@ import { DataProvider } from "../../providers/data/data";
           animate(".3s .2s ease", style({ display: "none" }))
         ])
       ])
+    ]),
+    trigger("flyIn", [
+      state("in", style({ transform: "translateX(0)", opacity: 1 })),
+      transition(":enter", [
+        style({ opacity: 0, transform: "translateX(-100%)" }),
+        animate(500)
+      ])
+    ]),
+    trigger("flyOut", [
+      state("out", style({ transform: "translateX(100%)", opacity: 0 })),
+      transition(":leave", [
+        group([
+          animate(".3s .3s ease", style({ opacity: 0 })),
+          animate(".4s ease", style({ transform: "translateX(200%)" }))
+        ])
+      ])
     ])
   ]
 })
@@ -78,14 +100,19 @@ export class MyAdsListComponent implements OnInit {
   @Output() onEditAd: EventEmitter<Ad>;
   @Output() onEditMode: EventEmitter<boolean>;
   @Output() onSelect: EventEmitter<number>;
-  myAds: Observable<Ad[]>;
-  deleteTapCount: number = 0;
-  private _loadingInstance: Loading;
-  deleteIconState: string = "inactive";
-  private _toastInstance: Toast;
-  editMode: string = "normal";
   private _selectedItemCount: number = 0;
   private _selectedAdForDeletion: Ad[];
+  private _loadingInstance: Loading;
+  private _toastInstance: Toast;
+  private queryLimit: number = 10;
+
+  myAds$: Observable<Ad[]>;
+  deleteTapCount: number = 0;
+  deleteIconState: string = "inactive";
+  editMode: string = "normal";
+  flyInState: string = "in";
+  flyOutState: string;
+  myAds: Ad[] = [];
 
   constructor(
     private _dataPvd: DataProvider,
@@ -110,7 +137,11 @@ export class MyAdsListComponent implements OnInit {
 
       this._loadingInstance.present();
 
-      this.myAds = await this._dataPvd.getMyAds();
+      this.myAds$ = await this._dataPvd.getMyAds(this.queryLimit);
+
+      this.myAds$
+        .take(1)
+        .subscribe(ads => ads.forEach(ad => this.myAds.push(ad)));
 
       this._loadingInstance.dismiss();
     } catch (e) {
@@ -134,7 +165,7 @@ export class MyAdsListComponent implements OnInit {
    * @param {Ad} ad
    * @memberof MyAdsListComponent
    */
-  deleteAd(ad?: Ad): void {
+  deleteAd(ad?: Ad, slidingItem?: ItemSliding): void {
     this.deleteTapCount++;
 
     if (this.deleteTapCount <= 1) {
@@ -158,18 +189,53 @@ export class MyAdsListComponent implements OnInit {
 
       this._toastInstance.present();
     } else {
-      this._loadingInstance = this._loadingCtrl.create({
-        content: "Suppression en cours..."
-      });
+      // this._loadingInstance = this._loadingCtrl.create({
+      //   content: "Suppression en cours..."
+      // });
 
-      this._loadingInstance.present();
+      // this._loadingInstance.present();
 
-      ad
-        ? this._dataPvd.deleteAd(ad)
-        : this._dataPvd.bulkDeleteAd(this._selectedAdForDeletion);
+      if (ad) {
+        this._dataPvd.deleteAd(ad);
+        slidingItem.close();
+        this.myAds = this.myAds.filter(myAd => myAd.id !== ad.id);
+      } else {
+        this._dataPvd.bulkDeleteAd(this._selectedAdForDeletion);
 
-      this._loadingInstance.dismiss();
+        // Update myAds
+        this.myAds = this.myAds.filter(
+          ad =>
+            this._selectedAdForDeletion.find(delAd => delAd.id === ad.id)
+              ? false
+              : true
+        );
+
+        // Empty ads to delete array
+        this._selectedAdForDeletion = [];
+
+        // Set normal mode
+        this.editMode = "normal";
+      }
+
+      // this._loadingInstance.dismiss();
     }
+  }
+
+  async displayMoreContent(infiniteScroll) {
+    const limit = this.queryLimit + 3;
+
+    this.myAds$ = await this._dataPvd.getMyAds(limit);
+
+    this.myAds$
+      .take(1)
+      .map((ads: Ad[]) => {
+        return ads.slice(this.queryLimit, limit);
+      })
+      .subscribe(ads => {
+        ads.forEach(ad => this.myAds.push(ad));
+        this.queryLimit = limit;
+        infiniteScroll.complete();
+      });
   }
 
   /**************************************
@@ -193,7 +259,7 @@ export class MyAdsListComponent implements OnInit {
    * @param {any} event
    * @memberof MyAdsListComponent
    */
-  itemSwipe(event) {
+  itemSwipe(event: any) {
     const slidingPercent = event.getSlidingPercent();
 
     if (slidingPercent <= 0) {
@@ -212,16 +278,15 @@ export class MyAdsListComponent implements OnInit {
    * @param {Ad} ad
    * @memberof MyAdsListComponent
    */
-  toggleEditMode(checkbox: any, ad: Ad): void {
+  toggleEditMode(checkbox: Checkbox, ad: Ad): void {
     this.editMode = "edit";
     this.onEditMode.emit(true);
 
-    if (!checkbox.checked) checkbox.checked = true;
-    this._selectedAdForDeletion.push(ad);
-
-    this._selectedItemCount = 1;
-
-    console.log(this._selectedItemCount);
+    if (!ad.multiSelectSelected) {
+      ad.multiSelectSelected = true;
+      this._selectedAdForDeletion.push(ad);
+      // this._selectedItemCount = 1;
+    }
 
     this.onSelect.emit(this._selectedItemCount);
   }
@@ -235,12 +300,13 @@ export class MyAdsListComponent implements OnInit {
    * @param {Ad} ad
    * @memberof MyAdsListComponent
    */
-  onChecked(checkbox: any, ad: Ad): void {
+  onChecked(checkbox: Checkbox, ad: Ad): void {
     if (checkbox.checked) {
       this._selectedItemCount++;
       this._selectedAdForDeletion.push(ad);
     } else {
       this._selectedItemCount--;
+      ad.multiSelectSelected = false;
       this._selectedAdForDeletion = this._selectedAdForDeletion.filter(
         ad => ad.id !== ad.id
       );
@@ -250,8 +316,21 @@ export class MyAdsListComponent implements OnInit {
       this.onEditMode.emit(false);
     }
 
-    console.log(this._selectedItemCount);
-
     this.onSelect.emit(this._selectedItemCount);
+  }
+
+  selectAllAds(): void {
+    this.myAds.forEach(ad => {
+      if (ad.multiSelectSelected === true) return;
+      ad.multiSelectSelected = true;
+    });
+  }
+
+  deseletctAll() {
+    this.myAds.forEach(ad => {
+      if (ad.multiSelectSelected === false) return;
+      ad.multiSelectSelected = false;
+      this.editMode = "normal";
+    });
   }
 }

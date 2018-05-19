@@ -96,6 +96,14 @@ export class MyAdsPage {
     this._myAdsComponent.deleteAd();
   }
 
+  selectAllAds(): void {
+    this._myAdsComponent.selectAllAds();
+  }
+
+  deselectAll(): void {
+    this._myAdsComponent.deseletctAll();
+  }
+
   ionViewWillLeave() {
     // Reset status bar color
     this._statusBar.backgroundColorByHexString("#a20019");

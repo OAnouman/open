@@ -243,8 +243,7 @@ export class DataProvider {
    * @memberof DataProvider
    */
   async bulkDeleteAd(ads: Ad[]) {
-
-    if (!ads || ads.length === 0) return
+    if (!ads || ads.length === 0) return;
 
     ads.forEach(async ad => {
       await this._storagePvd.deleteFiles(ad.pictures);
@@ -373,18 +372,19 @@ export class DataProvider {
       });
   }
 
-  async getMyAds(): Promise<Observable<Ad[]>> {
+  async getMyAds(count: number): Promise<Observable<Ad[]>> {
     const uid = await this._storage.get("uid");
 
     return this._afs
-      .collection<Ad>("ads", ref => ref.where("uid", "==", uid))
+      .collection<Ad>("ads", ref => ref.where("uid", "==", uid).limit(count))
       .snapshotChanges()
       .map((actions: DocumentChangeAction[]) => {
         return actions.map((action: DocumentChangeAction) => {
           return <Ad>{
             ...action.payload.doc.data(),
             id: action.payload.doc.id,
-            viewsCount: this.getAdViewsCount(action.payload.doc.id).take(1)
+            viewsCount: this.getAdViewsCount(action.payload.doc.id).take(1),
+            multiSelectSelected: false
           };
         });
       });

@@ -1,5 +1,5 @@
-<ion-list *ngIf="myAds; else noResults">
-    <ion-item-sliding *ngFor="let ad of myAds | async" (ionDrag)="itemSwipe($event)" (press)="toggleEditMode(check,ad)">
+<ion-list *ngIf="myAds.length > 0; else noResults" [@flyIn]="flyInState">
+    <ion-item-sliding *ngFor="let ad of myAds" (ionDrag)="itemSwipe($event)" (press)="toggleEditMode(check,ad)" @flyOut #slidingItem>
         <ion-item>
             <ion-avatar item-left>
                 <img [src]="ad.pictures[0]">
@@ -10,10 +10,10 @@
                     <p>{{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }} - {{ ad.viewsCount | async }} vues</p>
                 </div>
             </ion-label>
-            <ion-checkbox #check [@editMode]="this.editMode" color="secondary" checked="false" (ionChange)="onChecked($event, ad)"></ion-checkbox>
+            <ion-checkbox #check [@editMode]="this.editMode" color="secondary" [checked]="ad.multiSelectSelected" (ionChange)="onChecked(check,ad)"></ion-checkbox>
         </ion-item>
         <ion-item-options side="left" icon-start>
-            <button ion-button expandable (click)="deleteAd(ad)">
+            <button ion-button expandable (click)="deleteAd(ad, slidingItem)">
         <ion-icon [@deleteButtonState]="this.deleteIconState" name="trash"></ion-icon>
       </button>
         </ion-item-options>
@@ -30,6 +30,15 @@
     <div text-center text-wrap class="no-results">
         <ion-icon name="sad"></ion-icon>
         <h2>Vous n'avez publié aucune annonce.
-            <br> Faites le maintenant !</h2>
+            <br> Faites le maintenant en cliquant sur le button
+            <br>
+            <ion-icon name="add"></ion-icon>
+        </h2>
     </div>
 </ng-template>
+
+<ion-infinite-scroll *ngIf="myAds?.length > 0" (ionInfinite)="displayMoreContent($event)">
+    <ion-infinite-scroll-content loadingText="Chargement de vos annonces...">
+
+    </ion-infinite-scroll-content>
+</ion-infinite-scroll>
