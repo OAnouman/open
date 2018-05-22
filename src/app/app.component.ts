@@ -1,16 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
-import { Storage } from '@ionic/storage';
+import { Component, ViewChild } from "@angular/core";
+import { SplashScreen } from "@ionic-native/splash-screen";
+import { StatusBar } from "@ionic-native/status-bar";
+import { Storage } from "@ionic/storage";
 import firebase from "firebase/app";
-import { Nav, Platform } from 'ionic-angular';
-import { Profile } from '../models/profile/profile.interface';
-import { AuthProvider } from '../providers/auth/auth';
-import { DataProvider } from '../providers/data/data';
-
+import { Nav, Platform } from "ionic-angular";
+import { Profile } from "../models/profile/profile.interface";
+import { AuthProvider } from "../providers/auth/auth";
+import { DataProvider } from "../providers/data/data";
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: "app.html"
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -18,10 +17,10 @@ export class MyApp {
   rootPage: string;
 
   userProfile: Profile;
+  private _uid: string;
+  avatarPlaceholder: string = "../assets/imgs/avatar.png";
 
-  avatarPlaceholder: string = '../assets/imgs/avatar.png';
-
-  pages: Array<{ title: string, component: any }>;
+  pages: Array<{ title: string; component: any }>;
 
   constructor(
     public platform: Platform,
@@ -29,8 +28,8 @@ export class MyApp {
     public splashScreen: SplashScreen,
     private _authPvd: AuthProvider,
     private _dataPvd: DataProvider,
-    private _storage: Storage) {
-
+    private _storage: Storage
+  ) {
     this.initializeApp();
 
     this.setRootPage();
@@ -42,7 +41,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       // this.statusBar.styleDefault();
       this.statusBar.overlaysWebView(false);
-      this.statusBar.backgroundColorByHexString('#a20019');
+      this.statusBar.backgroundColorByHexString("#a20019");
       this.splashScreen.hide();
     });
   }
@@ -54,46 +53,60 @@ export class MyApp {
   }
 
   async setRootPage() {
-
     // Set auth persistance
     // All future login will be indefinity kept
     // REVIEW
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-    // Set root page 
+    // Set root page
 
-    // Try to get the uid from local storage (SQLite). 
-    // if null no user is logged in on this device, else 
+    // Try to get the uid from local storage (SQLite).
+    // if null no user is logged in on this device, else
     // we fetch firebase for the user profile
 
-    const uid = await this._storage.get('uid');
+    this._uid = await this.getUid();
 
-    if (!uid) {
-      this.rootPage = 'LoginPage';
-    }
-    else {
-      this.rootPage = 'HomePage';
-      this._dataPvd.getProfileFromUid(uid)
-        .subscribe(profile => {
-          this.userProfile = profile;
-        });
+    if (!this._uid) {
+      this.rootPage = "LoginPage";
+    } else {
+      this.rootPage = "HomePage";
     }
 
+
+  }
+
+  private async getUid(): Promise<string> {
+    return await this._storage.get("uid");
   }
 
   openProfilePage(): void {
-
-    this.nav.setRoot('ProfilePage');
-
+    this.nav.setRoot("ProfilePage");
   }
 
   openHomePage(): void {
-    this.nav.setRoot('HomePage');
+    this.nav.setRoot("HomePage");
   }
 
   openMyAdsPage(): void {
+    this.nav.setRoot("MyAdsPage");
+  }
 
-    this.nav.setRoot('MyAdsPage');
+  /**
+   * Triggered when sidemenu is shown
+   * 
+   * @memberof MyApp
+   */
+  async onSidemenuOpen(): Promise<void> {
+
+    if (!this._uid) {
+      // The user has just connected to the app
+      // So we try again to retrieve the uid
+      this._uid = await this.getUid();
+    }
+
+    this._dataPvd.getProfileFromUid(this._uid).subscribe(profile =>
+      this.userProfile = profile);
+
 
   }
 }

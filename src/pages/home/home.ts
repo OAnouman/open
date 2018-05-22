@@ -1,15 +1,26 @@
-import { Component, ViewChild } from '@angular/core';
-import { StatusBar } from '@ionic-native/status-bar';
+import { Component, ViewChild } from "@angular/core";
+import { StatusBar } from "@ionic-native/status-bar";
 import { Storage } from "@ionic/storage";
-import { User } from 'firebase';
-import { Alert, AlertController, IonicPage, Loading, LoadingController, ModalController, NavController, NavParams, ToastController } from 'ionic-angular';
-import { Observable } from 'rxjs/Observable';
-import { AdsListComponent } from '../../components/ads-list/ads-list';
-import { Ad } from '../../models/ad/ad.interface';
-import { Profile } from '../../models/profile/profile.interface';
-import { AuthProvider } from '../../providers/auth/auth';
-import { DataProvider } from '../../providers/data/data';
+import { User } from "firebase";
+import {
+  Alert,
+  AlertController,
+  IonicPage,
+  Loading,
+  LoadingController,
+  ModalController,
+  NavController,
+  NavParams,
+  ToastController
+} from "ionic-angular";
+import { Observable } from "rxjs/Observable";
+import { AdsListComponent } from "../../components/ads-list/ads-list";
+import { Ad } from "../../models/ad/ad.interface";
+import { Profile } from "../../models/profile/profile.interface";
+import { AuthProvider } from "../../providers/auth/auth";
+import { DataProvider } from "../../providers/data/data";
 import { Utils } from "../../utils/Utils";
+import { Subscription } from "rxjs/Subscription";
 /**
  * Generated class for the HomePage page.
  *
@@ -19,11 +30,10 @@ import { Utils } from "../../utils/Utils";
 
 @IonicPage()
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html',
+  selector: "page-home",
+  templateUrl: "home.html"
 })
 export class HomePage {
-
   @ViewChild(AdsListComponent)
   set form(form: AdsListComponent) {
     this.adList = form;
@@ -32,13 +42,12 @@ export class HomePage {
   adList: AdsListComponent;
   currentUser: User;
   currentUserProfile: Profile;
-  ads: Observable<Ad[]>;
+  ads$: Observable<Ad[]>;
   userLoadFinished: boolean = false;
   categories;
   categoriesRadiosInputs = [];
   categoriesAlertList: Alert;
   private _loadingInstance: Loading;
-
   private _selectedCategory: string;
 
   constructor(
@@ -51,130 +60,121 @@ export class HomePage {
     private _storage: Storage,
     private _statusBar: StatusBar,
     private _loadingCtrl: LoadingController,
-    private _alertCtrl: AlertController) {
+    private _alertCtrl: AlertController
+  ) {
+    //Set default sort
 
+    this._selectedCategory = "";
+  }
+
+  ionViewWillLoad() {
     // FIXME: Doesn't always get user
-    this._authPvd.getAuthenticatedUser()
+    this._authPvd
+      .getAuthenticatedUser()
+      .take(1)
       .subscribe(user => {
         this.currentUser = user;
         this.userLoadFinished = true;
       });
 
-    //Set default sort
-
-    this._selectedCategory = '';
-
-  }
-
-  ionViewWillLoad() {
-
     // Get uer profile
 
-    this._storage.get('uid')
-      .then(uid => this._dataPvd.getProfileFromUid(uid)
-        .subscribe(profile => this.currentUserProfile = profile));
+    this._storage.get("uid").then(uid =>
+      this._dataPvd
+        .getProfileFromUid(uid)
+        .take(1)
+        .subscribe(profile => (this.currentUserProfile = profile))
+    );
 
     // Get all categories
 
     this.categories = Utils.CATEGORIES;
 
-    // Add All 
+    // Add All
 
     this.categoriesRadiosInputs.push({
-      type: 'radio',
-      value: '',
-      handler: (data) => this.sortByCategory(data),
-      label: 'Toutes les annonces',
-      checked: false,
-    })
+      type: "radio",
+      value: "",
+      handler: data => this.sortByCategory(data),
+      label: "Toutes les annonces",
+      checked: false
+    });
 
-    this.categories.forEach((cat: { text: string, value: string }) => {
-
-      this.categoriesRadiosInputs.push(
-        {
-          type: 'radio',
-          value: cat.value,
-          handler: (data) => this.sortByCategory(data),
-          label: cat.text,
-          checked: (this._selectedCategory === cat.value ? true : false),
-        }
-      )
-
-    })
-
+    this.categories.forEach((cat: { text: string; value: string }) => {
+      this.categoriesRadiosInputs.push({
+        type: "radio",
+        value: cat.value,
+        handler: data => this.sortByCategory(data),
+        label: cat.text,
+        checked: this._selectedCategory === cat.value ? true : false
+      });
+    });
   }
 
   preview(ad: Ad) {
-    this._modalCtrl.create('AdPreviewPage', { ad })
-      .present();
+    this._modalCtrl.create("AdPreviewPage", { ad }).present();
   }
 
   goToNewAdPage(): void {
-    this._navCtrl.push('NewAdPage');
+    this._navCtrl.push("NewAdPage");
   }
 
   /**
    * Display alert which contains categories list.
    * When a categpry is selected pass it to @function sortByCategory
-   * 
+   *
    * @memberof HomePage
    */
-  showCategorieList() {
-
+  showCategoriesList() {
     this.categoriesRadiosInputs = this.categoriesRadiosInputs.map(radio => {
-      radio.value === this._selectedCategory ?
-        radio.checked = true : radio.checked = false
+      radio.value === this._selectedCategory
+        ? (radio.checked = true)
+        : (radio.checked = false);
 
       return radio;
-    })
+    });
 
     this.categoriesAlertList = this._alertCtrl.create({
-      title: 'Trier par catégorie',
+      title: "Trier par catégorie",
       buttons: [
         {
-          text: 'Annuler',
-          role: 'cancel',
+          text: "Annuler",
+          role: "cancel"
         }
       ],
       inputs: this.categoriesRadiosInputs
-
-    })
+    });
 
     this.categoriesAlertList.present();
   }
 
   /**
-   * When a categpry is selected pass it to ads list 
-   * component to update displayed ads list. 
+   * When a categpry is selected pass it to ads list
+   * component to update displayed ads list.
    * See @function AdsListComponent.sortByCategories
-   * 
-   * @param {*} category 
+   *
+   * @param {*} category
    * @memberof HomePage
    */
   sortByCategory(category: any) {
-
     this.adList.sortByCategories(category);
 
     this._selectedCategory = category.value;
 
     this.categoriesAlertList.dismiss();
-
   }
 
   /**
    * Trigger ads list refreshing
-   * 
-   * @param {any} event 
+   *
+   * @param {any} event
    * @memberof HomePage
    */
-  pullToRefresh(event) {
-
+  pullToRefresh(event: any) {
     // IMPROVE:
 
-    setTimeout(() => event.complete(), 3000)
+    this.sortByCategory(this._selectedCategory);
 
+    event.complete();
   }
-
-  //IMPLEMENT: Unsubscribe when view (activity) destroyed or unload
-
 }

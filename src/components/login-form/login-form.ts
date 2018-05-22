@@ -96,7 +96,7 @@ export class LoginFormComponent implements OnInit {
 
       const profile$ = await this.authPvd.signInWithEmailAndPassword(this.account);
 
-      profile$.subscribe(profile => {
+      profile$.take(1).subscribe(profile => {
 
 
         // If user doesn't have a profile with 

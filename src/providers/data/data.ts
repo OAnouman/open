@@ -29,7 +29,7 @@ export class DataProvider {
     private _afs: AngularFirestore,
     private _storagePvd: StorageProvider,
     private _storage: Storage
-  ) {}
+  ) { }
 
   /********************************************************************
    *                                PROFILE
