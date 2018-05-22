@@ -52,8 +52,5 @@ export class EditProfilePage {
 
   }
 
-  ionViewDidEnter() {
-    this._statusBar.backgroundColorByHexString('#2196F3');
-  }
 
 }

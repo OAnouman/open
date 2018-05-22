@@ -19,9 +19,7 @@ login-form {
         font-size: 5rem !important;
         color: color($colors, primary, base);
         text-shadow: 1px 3px 3px rgba(0, 0, 0, .16);
-    }
-    .footer {}
-    // ion-item {
+    } // ion-item {
     //     background: transparent !important;
     // } // ion input
     // .item-md.item-input.input-has-focus .item-inner {
@@ -49,5 +47,24 @@ login-form {
         text-decoration: none;
         color: $button-login-color;
         font-size: 1rem;
+    } // Google sign in color
+    .red {
+        color: #ea4335;
+    }
+    .green {
+        color: #34a853;
+    }
+    .blue {
+        color: #4285f4;
+    }
+    .yellow {
+        color: #fbbc05;
+    }
+    .red,
+    .green,
+    .blue,
+    .yellow {
+        font-size: 1.4rem;
+        font-weight: 500;
     }
 }

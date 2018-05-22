@@ -51,13 +51,24 @@
 
                 <ion-row padding-top>
                     <ion-col col-12 no-padding>
-                        <button ion-button block color="primary" [disabled]="loginForm.invalid" (click)="signInWithEmailAndPassword($event)" [disabled]="isButtonsDisabled">Se Connecter</button>
+                        <button ion-button block color="primary" [disabled]="loginForm.invalid" (click)="signInWithEmailAndPassword($event)">Se Connecter</button>
                     </ion-col>
                     <ion-col col-12>
                         <button ion-button block clear color="primary" (click)="goToRegisterPage()" [disabled]="isButtonsDisabled">S'inscrire</button>
                     </ion-col>
                 </ion-row>
 
+                <div text-center>
+                    <hr no-margin>
+                </div>
+
+                <ion-row padding-top>
+                    <ion-col col-12 no-padding>
+                        <button ion-button block color="google" (click)="signInWithGoogle()">
+              Se connecter avec Google
+            </button>
+                    </ion-col>
+                </ion-row>
                 <div text-center>
                     <p no-padding>Mot de passe oublié ?</p>
                 </div>
