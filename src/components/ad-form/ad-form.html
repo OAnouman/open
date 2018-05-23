@@ -5,7 +5,7 @@
             </ion-icon>
             <!--IMPROVE: Image Scrolling -->
             <div class="imgs-container">
-                <img *ngFor="let img of ad?.pictures" [src]="img" height="100%" width="30%" (press)="deleteImg(img)">
+                <img *ngFor="let img of ad?.pictures" [src]="img" height="80" width="80" (press)="deleteImg(img)">
             </div>
             <p *ngIf="!ad?.pictures" class="picts-placeholder">
                 Ajouter des images

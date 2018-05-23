@@ -4,17 +4,17 @@ import {
   OnInit,
   Output,
   OnDestroy
-} from "@angular/core";
-import { Storage } from "@ionic/storage";
-import { Loading, LoadingController, ToastController } from "ionic-angular";
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/forkJoin";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/mergeMap";
-import { Ad } from "../../models/ad/ad.interface";
-import { Profile } from "../../models/profile/profile.interface";
-import { DataProvider } from "../../providers/data/data";
-import { Subscription } from "rxjs/Subscription";
+} from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { Loading, LoadingController, ToastController } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import { Ad } from '../../models/ad/ad.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { DataProvider } from '../../providers/data/data';
+import { Subscription } from 'rxjs/Subscription';
 
 // import { ADS_LIST } from "../../mocks/ads/ad.mocks";
 
@@ -25,21 +25,20 @@ import { Subscription } from "rxjs/Subscription";
  * Components.
  */
 @Component({
-  selector: "ads-list",
-  templateUrl: "ads-list.html"
+  selector: 'ads-list',
+  templateUrl: 'ads-list.html'
 })
 export class AdsListComponent implements OnInit, OnDestroy {
   @Output() previewAd: EventEmitter<Ad>;
 
   ads$: Observable<Ad[]>;
   private _adsSubscription: Subscription;
-  offset: number = 10000;
   startLimit: number = 5;
   ads: Ad[];
-  sortLabel: string = "Toutes les annonces";
+  sortLabel: string = 'Toutes les annonces';
   displayedCategory: string;
-  notFavorite: string = "heart-outline";
-  favorite: string = "heart";
+  notFavorite: string = 'heart-outline';
+  favorite: string = 'heart';
   private _uid: string;
   private _loadingInstance: Loading;
   private _userProfile: Profile;
@@ -54,12 +53,12 @@ export class AdsListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._loadingInstance = this._loadingCtrl.create({
-      content: "Chargement des annonces..."
+      content: 'Chargement des annonces...'
     });
 
     this._loadingInstance.present();
 
-    this._storage.get("uid").then(uid => {
+    this._storage.get('uid').then(uid => {
       this._uid = uid;
       this._dataPvd
         .getProfileFromUid(uid)
@@ -81,7 +80,7 @@ export class AdsListComponent implements OnInit, OnDestroy {
    *
    * @memberof AdsListComponent
    */
-  getAds() {
+  getAds(event?: any) {
     this.ads$ = this._dataPvd.getAds(this.startLimit, this.displayedCategory);
 
     this._adsSubscription = this.ads$
@@ -109,7 +108,10 @@ export class AdsListComponent implements OnInit, OnDestroy {
       })
       .subscribe(ads => {
         this.ads = ads;
-        this._loadingInstance.dismiss();
+
+        if (this._loadingInstance) this._loadingInstance.dismiss();
+
+        if (event) event.complete();
       });
   }
 
@@ -121,14 +123,13 @@ export class AdsListComponent implements OnInit, OnDestroy {
    * @param {*} category from @class HomePage
    * @memberof AdsListComponent
    */
-  sortByCategories(category: any) {
+  sortByCategories(category: any, event?: any) {
     this.sortLabel = category.label;
-
     this.displayedCategory = category.value;
 
     // Trigger a new search
 
-    this.getAds();
+    this.getAds(event);
   }
 
   /**
@@ -206,7 +207,7 @@ export class AdsListComponent implements OnInit, OnDestroy {
         .create({
           message: e.message,
           duration: 5000,
-          cssClass: "globals__toast-error"
+          cssClass: 'globals__toast-error'
         })
         .present();
     }

@@ -1,26 +1,27 @@
-import { ErrorHandler, NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { CallNumber } from "@ionic-native/call-number";
-import { Camera } from "@ionic-native/camera";
-import { ImagePicker } from "@ionic-native/image-picker";
-import { ScreenOrientation } from "@ionic-native/screen-orientation";
-import { SMS } from "@ionic-native/sms";
-import { SplashScreen } from "@ionic-native/splash-screen";
-import { StatusBar } from "@ionic-native/status-bar";
-import { IonicStorageModule } from "@ionic/storage";
-import { AngularFireModule } from "angularfire2";
-import { AngularFireAuthModule } from "angularfire2/auth";
-import { AngularFirestoreModule } from "angularfire2/firestore";
-import { AngularFireStorageModule } from "angularfire2/storage";
-import { IonicApp, IonicErrorHandler, IonicModule } from "ionic-angular";
-import { LazyLoadImageModule } from "ng-lazyload-image";
-import { MomentModule } from "ngx-moment";
-import { AuthProvider } from "../providers/auth/auth";
-import { DataProvider } from "../providers/data/data";
-import { StorageProvider } from "../providers/storage/storage";
-import { MyApp } from "./app.component";
-import { FIREBASE_CREDENTIALS } from "./firebase/firebase.credentials";
+import { ErrorHandler, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CallNumber } from '@ionic-native/call-number';
+import { Camera } from '@ionic-native/camera';
+import { ImagePicker } from '@ionic-native/image-picker';
+import { File } from '@ionic-native/file';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { SMS } from '@ionic-native/sms';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { IonicStorageModule } from '@ionic/storage';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireStorageModule } from 'angularfire2/storage';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { MomentModule } from 'ngx-moment';
+import { AuthProvider } from '../providers/auth/auth';
+import { DataProvider } from '../providers/data/data';
+import { StorageProvider } from '../providers/storage/storage';
+import { MyApp } from './app.component';
+import { FIREBASE_CREDENTIALS } from './firebase/firebase.credentials';
+import { IonicImageLoader } from 'ionic-image-loader';
 
 @NgModule({
   declarations: [MyApp],
@@ -33,11 +34,11 @@ import { FIREBASE_CREDENTIALS } from "./firebase/firebase.credentials";
     AngularFireAuthModule,
     AngularFireStorageModule,
     IonicStorageModule.forRoot({
-      name: "__open_db", //REVIEW: Change if app name is modified
-      driverOrder: ["sqlite", "indexeddb", "websql"]
+      name: '__open_db', //REVIEW: Change if app name is modified
+      driverOrder: ['sqlite', 'indexeddb', 'websql']
     }),
-    LazyLoadImageModule,
-    MomentModule
+    MomentModule,
+    IonicImageLoader.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [MyApp],
@@ -52,7 +53,8 @@ import { FIREBASE_CREDENTIALS } from "./firebase/firebase.credentials";
     StorageProvider,
     CallNumber,
     SMS,
-    ScreenOrientation
+    ScreenOrientation,
+    File
   ]
 })
 export class AppModule {}

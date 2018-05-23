@@ -3,7 +3,7 @@
     <ion-row justifiy-content-center align-items-center>
         <ion-col col-12 text-center>
 
-            <img *ngIf="userProfile.picture; else avatarPlaceholder" width="100%" [src]="userProfile.picture" (click)="showActionSheet()">
+            <img-loader *ngIf="userProfile.picture; else avatarPlaceholder" width="100%" [src]="userProfile.picture" (click)="showActionSheet()" useImg></img-loader>
 
             <ng-template #avatarPlaceholder>
                 <ion-icon class="avatar-placeholder" name="camera" color="light" (click)="showActionSheet()"></ion-icon>

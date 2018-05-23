@@ -2,7 +2,7 @@
     <ion-item-sliding *ngFor="let ad of myAds" (ionDrag)="itemSwipe($event)" (press)="toggleEditMode(check,ad)" @flyOut #slidingItem>
         <ion-item>
             <ion-avatar item-left>
-                <img [src]="ad.pictures[0]">
+                <img-loader [src]="ad.pictures[0]" useImg></img-loader>
             </ion-avatar>
             <ion-label>
                 <div>

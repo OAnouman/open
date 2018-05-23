@@ -1,7 +1,7 @@
-import { Component, ViewChild } from "@angular/core";
-import { StatusBar } from "@ionic-native/status-bar";
-import { Storage } from "@ionic/storage";
-import { User } from "firebase";
+import { Component, ViewChild } from '@angular/core';
+import { StatusBar } from '@ionic-native/status-bar';
+import { Storage } from '@ionic/storage';
+import { User } from 'firebase';
 import {
   Alert,
   AlertController,
@@ -12,15 +12,14 @@ import {
   NavController,
   NavParams,
   ToastController
-} from "ionic-angular";
-import { Observable } from "rxjs/Observable";
-import { AdsListComponent } from "../../components/ads-list/ads-list";
-import { Ad } from "../../models/ad/ad.interface";
-import { Profile } from "../../models/profile/profile.interface";
-import { AuthProvider } from "../../providers/auth/auth";
-import { DataProvider } from "../../providers/data/data";
-import { Utils } from "../../utils/Utils";
-import { Subscription } from "rxjs/Subscription";
+} from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
+import { AdsListComponent } from '../../components/ads-list/ads-list';
+import { Ad } from '../../models/ad/ad.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { AuthProvider } from '../../providers/auth/auth';
+import { DataProvider } from '../../providers/data/data';
+import { Utils } from '../../utils/Utils';
 /**
  * Generated class for the HomePage page.
  *
@@ -30,8 +29,8 @@ import { Subscription } from "rxjs/Subscription";
 
 @IonicPage()
 @Component({
-  selector: "page-home",
-  templateUrl: "home.html"
+  selector: 'page-home',
+  templateUrl: 'home.html'
 })
 export class HomePage {
   @ViewChild(AdsListComponent)
@@ -48,7 +47,8 @@ export class HomePage {
   categoriesRadiosInputs = [];
   categoriesAlertList: Alert;
   private _loadingInstance: Loading;
-  private _selectedCategory: string;
+  private _selectedCategory: { value: string; label: string };
+  private _defaultSortLabel: string = 'Toutes les annonces';
 
   constructor(
     private _navCtrl: NavController,
@@ -64,7 +64,7 @@ export class HomePage {
   ) {
     //Set default sort
 
-    this._selectedCategory = "";
+    this._selectedCategory = { value: '', label: this._defaultSortLabel };
   }
 
   ionViewWillLoad() {
@@ -79,7 +79,7 @@ export class HomePage {
 
     // Get uer profile
 
-    this._storage.get("uid").then(uid =>
+    this._storage.get('uid').then(uid =>
       this._dataPvd
         .getProfileFromUid(uid)
         .take(1)
@@ -93,30 +93,30 @@ export class HomePage {
     // Add All
 
     this.categoriesRadiosInputs.push({
-      type: "radio",
-      value: "",
+      type: 'radio',
+      value: '',
       handler: data => this.sortByCategory(data),
-      label: "Toutes les annonces",
+      label: 'Toutes les annonces',
       checked: false
     });
 
     this.categories.forEach((cat: { text: string; value: string }) => {
       this.categoriesRadiosInputs.push({
-        type: "radio",
+        type: 'radio',
         value: cat.value,
         handler: data => this.sortByCategory(data),
         label: cat.text,
-        checked: this._selectedCategory === cat.value ? true : false
+        checked: this._selectedCategory.value === cat.value ? true : false
       });
     });
   }
 
   preview(ad: Ad) {
-    this._modalCtrl.create("AdPreviewPage", { ad }).present();
+    this._modalCtrl.create('AdPreviewPage', { ad }).present();
   }
 
   goToNewAdPage(): void {
-    this._navCtrl.push("NewAdPage");
+    this._navCtrl.push('NewAdPage');
   }
 
   /**
@@ -135,11 +135,11 @@ export class HomePage {
     });
 
     this.categoriesAlertList = this._alertCtrl.create({
-      title: "Trier par catégorie",
+      title: 'Trier par catégorie',
       buttons: [
         {
-          text: "Annuler",
-          role: "cancel"
+          text: 'Annuler',
+          role: 'cancel'
         }
       ],
       inputs: this.categoriesRadiosInputs
@@ -156,12 +156,11 @@ export class HomePage {
    * @param {*} category
    * @memberof HomePage
    */
-  sortByCategory(category: any) {
-    this.adList.sortByCategories(category);
+  sortByCategory(category: any, event?: any) {
+    this.adList.sortByCategories(category, event);
+    this._selectedCategory = category;
 
-    this._selectedCategory = category.value;
-
-    this.categoriesAlertList.dismiss();
+    if (this.categoriesAlertList) this.categoriesAlertList.dismiss();
   }
 
   /**
@@ -172,9 +171,6 @@ export class HomePage {
    */
   pullToRefresh(event: any) {
     // IMPROVE:
-
-    this.sortByCategory(this._selectedCategory);
-
-    event.complete();
+    this.sortByCategory(this._selectedCategory, event);
   }
 }

@@ -1,0 +1,5 @@
+<ion-slides pager autoplay="4000" [loop]="picturesUrls.length > 1" *ngIf="picturesUrls.length > 0">
+    <ion-slide *ngFor="let pictureUrl of picturesUrls">
+        <img-loader [src]="pictureUrl" spinner="true" useImg></img-loader>
+    </ion-slide>
+</ion-slides>

@@ -6,14 +6,14 @@
     <ion-card *ngFor="let ad of ads">
         <ion-item>
             <ion-avatar item-start margin-left>
-                <img [src]="(ad.userProfile$ | async)?.picture">
+                <img-loader [src]="(ad.userProfile$ | async)?.picture" useImg></img-loader>
             </ion-avatar>
             <h3>{{ ad.title }}</h3>
             <p> {{ (ad.userProfile$ | async)?.username }} - {{ (ad.lastUpdatedAt > ad.createdAt ? ad.lastUpdatedAt : ad.createdAt ) | amLocale:'fr' | amTimeAgo }}
             </p>
         </ion-item>
         <div class="card-image">
-            <img (click)="preview(ad)" height="340px" [defaultImage]="'assets/imgs/rectangle.png'" [lazyLoad]="ad.pictures[0]" [offset]="offset">
+            <img-loader (click)="preview(ad)" height="340px" [src]="ad.pictures[0]"></img-loader>
             <div class="overlay" text-center padding>
                 <h2> {{ ad.price.toLocaleString('fr-FR') }} F </h2>
             </div>

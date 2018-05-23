@@ -23,18 +23,14 @@
 
             <ion-col col-12 col-sm-4 class="header-container">
 
-                <img [src]="ad.pictures[0]" alt="Ad pictures" class="header-image">
+                <!-- <img [src]="ad.pictures[0]" alt="Ad pictures" class="header-image"> -->
+                <ad-pictures-slide [picturesUrls]="ad.pictures"></ad-pictures-slide>
 
             </ion-col>
 
             <ion-col col-12 col-sm-8>
 
                 <ion-scroll scrollY="true" scrollX="false" #scroll>
-
-                    <div class="images-slide">
-                        <img class="rounded" *ngFor="let img of ad.pictures" [src]="img" (click)="zoom($event)">
-                    </div>
-
                     <ion-card>
                         <ion-card-header text-center>
                             <h1 text-wrap text-center>{{ ad.title.toUpperCase() }} &nbsp;
