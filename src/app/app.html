@@ -22,32 +22,49 @@
     <ion-content>
         <ion-list no-lines padding-top>
 
-            <button ion-item (click)="openHomePage()" menuToggle>
-        <ion-icon name="home" color="secondary" item-start></ion-icon>
+            <button ion-item (click)="openHomePage()" menuClose>
+        <ion-icon name="home" color="primary" item-start></ion-icon>
         Accueil
       </button>
             <hr>
-            <button ion-item (click)="openMyAdsPage()" menuToggle>
-        <ion-icon name="filing" class="primary-dark" item-start></ion-icon>
+            <button ion-item (click)="openMyAdsPage()" menuClose>
+        <ion-icon name="filing" color="secondary" item-start></ion-icon>
         Mes annonces
       </button>
 
-            <button ion-item>
+            <button ion-item menuClose>
+            <ion-icon name="heart" color="secondary" item-start></ion-icon>
+            Mes favoris
+          </button>
+
+            <button ion-item menuClose>
         <ion-icon color="danger" name="notifications" item-start></ion-icon>
         Mes alertes
       </button>
 
             <hr>
 
-            <button ion-item (click)="openProfilePage()" menuToggle>
+            <button ion-item (click)="openProfilePage()" menuClose>
         <ion-icon name="contact" item-start class="grey"></ion-icon>
         Mon profil
       </button>
 
-            <button ion-item bottom>
-        <ion-icon name="settings" class="grey" item-start></ion-icon>
-        Paramètres
-      </button>
+            <button ion-item menuClose>
+                <ion-icon name="settings" class="grey" item-start></ion-icon>
+                Paramètres
+            </button>
+
+            <hr>
+
+            <button ion-item menuClose>
+                <ion-icon name="help-circle" item-start class="secondary-dark" ></ion-icon>
+                Support
+            </button>
+
+            <button ion-item menuClose>
+                <ion-icon name="information-circle" item-start class="grey" ></ion-icon>
+                A propos
+            </button>
 
         </ion-list>
 

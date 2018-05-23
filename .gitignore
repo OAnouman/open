@@ -31,6 +31,8 @@ www/
 resources/
 $RECYCLE.BIN/
 
+ul_web_hooks/
+
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
