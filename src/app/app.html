@@ -5,7 +5,7 @@
                 <ion-col>
                     <ion-row align-items-center justify-content-center text-center>
                         <ion-col col-12>
-                            <img [src]="userProfile?.picture ? userProfile?.picture : avatarPlaceholder" height="100" width="100" class="circle-img" (click)="openProfilePage()" menuToggle>
+                            <img-loader [src]="userProfile?.picture ? userProfile?.picture : avatarPlaceholder" class="circle-img" (click)="openProfilePage()" menuToggle useImg> </img-loader>
                         </ion-col>
                         <ion-col col-auto text-center>
                             <p class="username" no-margin>{{ userProfile?.name }}
@@ -33,9 +33,9 @@
       </button>
 
             <button ion-item menuClose>
-            <ion-icon name="heart" color="secondary" item-start></ion-icon>
-            Mes favoris
-          </button>
+        <ion-icon name="heart" color="secondary" item-start></ion-icon>
+        Mes favoris
+      </button>
 
             <button ion-item menuClose>
         <ion-icon color="danger" name="notifications" item-start></ion-icon>
@@ -50,21 +50,21 @@
       </button>
 
             <button ion-item menuClose>
-                <ion-icon name="settings" class="grey" item-start></ion-icon>
-                Paramètres
-            </button>
+        <ion-icon name="settings" class="grey" item-start></ion-icon>
+        Paramètres
+      </button>
 
             <hr>
 
             <button ion-item menuClose>
-                <ion-icon name="help-circle" item-start class="secondary-dark" ></ion-icon>
-                Support
-            </button>
+        <ion-icon name="help-circle" item-start class="secondary-dark"></ion-icon>
+        Support
+      </button>
 
             <button ion-item menuClose>
-                <ion-icon name="information-circle" item-start class="grey" ></ion-icon>
-                A propos
-            </button>
+        <ion-icon name="information-circle" item-start class="grey"></ion-icon>
+        A propos
+      </button>
 
         </ion-list>
 

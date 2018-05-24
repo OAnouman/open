@@ -90,9 +90,12 @@ ion-menu {
         background: color($colors, secondary);
         height: 30%;
         .circle-img {
-            -webkit-border-radius: 50%;
-            border-radius: 50%;
-            border: 2px solid color($colors, light);
+            img {
+                border-radius: 50%;
+                border: 2px solid color($colors, light);
+                height: 100px;
+                width: 100px;
+            }
         }
         ion-grid {
             height: 100%;
