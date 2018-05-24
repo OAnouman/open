@@ -1,4 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
+import {
+  trigger,
+  state,
+  animate,
+  transition,
+  style,
+  group,
+  keyframes
+} from '@angular/animations';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Storage } from '@ionic/storage';
 import { User } from 'firebase';
@@ -20,6 +29,8 @@ import { Profile } from '../../models/profile/profile.interface';
 import { AuthProvider } from '../../providers/auth/auth';
 import { DataProvider } from '../../providers/data/data';
 import { Utils } from '../../utils/Utils';
+import { Subscription } from 'rxjs/Subscription';
+import { Network } from '@ionic-native/network';
 /**
  * Generated class for the HomePage page.
  *
@@ -30,7 +41,60 @@ import { Utils } from '../../utils/Utils';
 @IonicPage()
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'home.html',
+  animations: [
+    trigger('network', [
+      state(
+        'online',
+        style({
+          position: 'relative',
+          transform: 'translateY(-30px)',
+          display: 'none'
+        })
+      ),
+      state(
+        'offline',
+        style({
+          position: 'sticky',
+          transform: 'translateY(0)',
+          display: 'block',
+          top: 0
+        })
+      ),
+      transition('offline => online', [
+        animate(
+          3000,
+          keyframes([
+            style({
+              display: 'flex',
+              background: 'rgba(32, 160, 86,.9)',
+              offset: 0
+            }),
+            style({ transform: 'translateY(0)', offset: 0.9 }),
+            style({ transform: 'translateY(-30px)', offset: 1 })
+          ])
+        )
+      ]),
+      transition('online => offline', [
+        animate(
+          300,
+          keyframes([
+            style({
+              transform: 'translateY(-30px)',
+              offset: 0
+            }),
+            // style({ transform: 'translateY(5px)', offset: 0.5 }),
+            style({ transform: 'translateY(5px)', offset: 1 })
+          ])
+        )
+      ])
+    ]),
+    trigger('offlineHideFab', [
+      state('online', style({ opacity: 1 })),
+      state('offline', style({ opacity: 0 })),
+      transition('online <=> offline', animate(200))
+    ])
+  ]
 })
 export class HomePage {
   @ViewChild(AdsListComponent)
@@ -46,9 +110,16 @@ export class HomePage {
   categories;
   categoriesRadiosInputs = [];
   categoriesAlertList: Alert;
+  networkState: string;
+  networkStateLabel: string;
+
+  private OFFLINE_STATE_LABEL: string = 'Vous êtes hors ligne';
+  private ONLINE_STATE_LABEL: string = 'Connexion rétablie';
   private _loadingInstance: Loading;
   private _selectedCategory: { value: string; label: string };
   private _defaultSortLabel: string = 'Toutes les annonces';
+  private _disconnectNetworkSub: Subscription;
+  private _connectNetworkSub: Subscription;
 
   constructor(
     private _navCtrl: NavController,
@@ -60,7 +131,8 @@ export class HomePage {
     private _storage: Storage,
     private _statusBar: StatusBar,
     private _loadingCtrl: LoadingController,
-    private _alertCtrl: AlertController
+    private _alertCtrl: AlertController,
+    private _network: Network
   ) {
     //Set default sort
 
@@ -108,6 +180,26 @@ export class HomePage {
         label: cat.text,
         checked: this._selectedCategory.value === cat.value ? true : false
       });
+    });
+
+    // Network listener
+
+    if (this._network.type === 'none') {
+      this.networkState = 'offline';
+      this.networkStateLabel = this.OFFLINE_STATE_LABEL;
+    } else {
+      this.networkState = 'online';
+      this.networkStateLabel = this.ONLINE_STATE_LABEL;
+    }
+
+    this._disconnectNetworkSub = this._network.onDisconnect().subscribe(() => {
+      this.networkState = 'offline';
+      this.networkStateLabel = this.OFFLINE_STATE_LABEL;
+    });
+
+    this._connectNetworkSub = this._network.onConnect().subscribe(() => {
+      this.networkState = 'online';
+      this.networkStateLabel = this.ONLINE_STATE_LABEL;
     });
   }
 
@@ -172,5 +264,10 @@ export class HomePage {
   pullToRefresh(event: any) {
     // IMPROVE:
     this.sortByCategory(this._selectedCategory, event);
+  }
+
+  ionViewDidLeave() {
+    this._connectNetworkSub.unsubscribe();
+    this._disconnectNetworkSub.unsubscribe();
   }
 }

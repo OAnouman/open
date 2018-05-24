@@ -2,4 +2,11 @@ page-my-ads {
     .toolbar-md-primary .toolbar-background-md {
         transition: background 1s;
     }
+    .sticky {
+        background: rgba(245, 61, 61, .9);
+        top: -20px;
+        padding: 5px;
+        z-index: 100;
+        color: color($colors, light);
+    }
 }

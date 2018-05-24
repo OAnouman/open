@@ -12,7 +12,7 @@
     </button>
         <ion-title>{{ title }}</ion-title>
         <ion-buttons end *ngIf="!isInEditMode">
-            <button ion-button icon-only (click)="openNewAdPage()">
+            <button ion-button icon-only (click)="openNewAdPage()" [disabled]="!canCreateNewAd">
         <ion-icon name="add"></ion-icon>
       </button>
             <button ion-button icon-only (click)="sort($event)">
@@ -36,6 +36,10 @@
 
 
 <ion-content>
+
+    <div text-center class="sticky" [@network]="networkState">
+        {{ networkStateLabel }}
+    </div>
 
     <my-ads-list (onEditAd)="onEditAd($event)" (onEditMode)="onEditMode($event)" (onSelect)="onSelect($event)"></my-ads-list>
 

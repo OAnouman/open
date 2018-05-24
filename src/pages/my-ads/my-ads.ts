@@ -1,8 +1,18 @@
-import { Component, ViewChild } from "@angular/core";
-import { IonicPage, NavController, NavParams } from "ionic-angular";
-import { Ad } from "../../models/ad/ad.interface";
-import { MyAdsListComponent } from "../../components/my-ads-list/my-ads-list";
-import { StatusBar } from "@ionic-native/status-bar";
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Ad } from '../../models/ad/ad.interface';
+import { MyAdsListComponent } from '../../components/my-ads-list/my-ads-list';
+import { StatusBar } from '@ionic-native/status-bar';
+import {
+  trigger,
+  state,
+  transition,
+  style,
+  animate,
+  keyframes
+} from '@angular/animations';
+import { Network } from '@ionic-native/network';
+import { Subscription } from 'rxjs/Subscription';
 
 /**
  * Generated class for the MyAdsPage page.
@@ -13,40 +23,96 @@ import { StatusBar } from "@ionic-native/status-bar";
 
 @IonicPage()
 @Component({
-  selector: "page-my-ads",
-  templateUrl: "my-ads.html"
+  selector: 'page-my-ads',
+  templateUrl: 'my-ads.html',
+  animations: [
+    trigger('network', [
+      state(
+        'online',
+        style({
+          position: 'relative',
+          transform: 'translateY(-30px)',
+          display: 'none'
+        })
+      ),
+      state(
+        'offline',
+        style({
+          position: 'sticky',
+          transform: 'translateY(0)',
+          display: 'block',
+          top: 0
+        })
+      ),
+      transition('offline => online', [
+        animate(
+          3000,
+          keyframes([
+            style({
+              display: 'flex',
+              background: 'rgba(32, 160, 86,.9)',
+              offset: 0
+            }),
+            style({ transform: 'translateY(0)', offset: 0.9 }),
+            style({ transform: 'translateY(-30px)', offset: 1 })
+          ])
+        )
+      ]),
+      transition('online => offline', [
+        animate(
+          300,
+          keyframes([
+            style({
+              transform: 'translateY(-30px)',
+              offset: 0
+            }),
+            style({ transform: 'translateY(5px)', offset: 1 })
+          ])
+        )
+      ])
+    ])
+  ]
 })
 export class MyAdsPage {
   @ViewChild(MyAdsListComponent)
   set form(myAdList: MyAdsListComponent) {
     this._myAdsComponent = myAdList;
   }
+
+  private OFFLINE_STATE_LABEL: string = 'Vous êtes hors ligne';
+  private ONLINE_STATE_LABEL: string = 'Connexion rétablie';
   private _myAdsComponent: MyAdsListComponent;
+  private _disconnectNetworkSub: Subscription;
+  private _connectNetworkSub: Subscription;
   navBarColor: string;
-  NAVBAR_COLOR_NORMAL: string = "primary";
-  NAVBAR_COLOR_EDIT: string = "secondary";
+  NAVBAR_COLOR_NORMAL: string = 'primary';
+  NAVBAR_COLOR_EDIT: string = 'secondary';
   isInEditMode: boolean = false;
   title: string;
-  TITLE_NORMAL = "Mes annonces";
-  TITLE_EDIT_SINGULAR: string = "sélectionné";
-  TITLE_EDIT_PLURAL: string = "sélectionnés";
+  networkState: string;
+  networkStateLabel: string;
+  canCreateNewAd: boolean;
+  TITLE_NORMAL = 'Mes annonces';
+  TITLE_EDIT_SINGULAR: string = 'sélectionné';
+  TITLE_EDIT_PLURAL: string = 'sélectionnés';
   constructor(
     private _navCtrl: NavController,
     private _navParams: NavParams,
-    private _statusBar: StatusBar
+    private _statusBar: StatusBar,
+    private _network: Network
   ) {
     this.navBarColor = this.NAVBAR_COLOR_NORMAL;
     this.title = this.TITLE_NORMAL;
   }
 
   onEditAd(ad: Ad): void {
-    this._navCtrl.push("EditAdPage", { ad });
+    this._navCtrl.push('EditAdPage', { ad });
   }
 
   sort(event) {}
 
   openNewAdPage() {
-    this._navCtrl.push("NewAdPage");
+    this._navCtrl.push('NewAdPage');
   }
 
   /**
@@ -60,10 +126,10 @@ export class MyAdsPage {
 
     if (isInEditMode) {
       this.navBarColor = this.NAVBAR_COLOR_EDIT;
-      this._statusBar.backgroundColorByHexString("#b18800");
+      this._statusBar.backgroundColorByHexString('#b18800');
     } else {
       this.navBarColor = this.NAVBAR_COLOR_NORMAL;
-      this._statusBar.backgroundColorByHexString("#a20019");
+      this._statusBar.backgroundColorByHexString('#a20019');
     }
   }
 
@@ -106,6 +172,35 @@ export class MyAdsPage {
 
   ionViewWillLeave() {
     // Reset status bar color
-    this._statusBar.backgroundColorByHexString("#a20019");
+    this._statusBar.backgroundColorByHexString('#a20019');
+  }
+
+  ionViewWillLoad() {
+    if (this._network.type === 'none') {
+      this.networkState = 'offline';
+      this.networkStateLabel = this.OFFLINE_STATE_LABEL;
+      this.canCreateNewAd = false;
+    } else {
+      this.networkState = 'online';
+      this.networkStateLabel = this.ONLINE_STATE_LABEL;
+      this.canCreateNewAd = true;
+    }
+
+    this._disconnectNetworkSub = this._network.onDisconnect().subscribe(() => {
+      this.networkState = 'offline';
+      this.networkStateLabel = this.OFFLINE_STATE_LABEL;
+      this.canCreateNewAd = false;
+    });
+
+    this._connectNetworkSub = this._network.onConnect().subscribe(() => {
+      this.networkState = 'online';
+      this.networkStateLabel = this.ONLINE_STATE_LABEL;
+      this.canCreateNewAd = true;
+    });
+  }
+
+  ionViewDidLeave() {
+    this._connectNetworkSub.unsubscribe();
+    this._disconnectNetworkSub.unsubscribe();
   }
 }

@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CallNumber } from '@ionic-native/call-number';
 import { Camera } from '@ionic-native/camera';
-import { ImagePicker } from '@ionic-native/image-picker';
 import { File } from '@ionic-native/file';
+import { ImagePicker } from '@ionic-native/image-picker';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { SMS } from '@ionic-native/sms';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -15,13 +15,14 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonicImageLoader } from 'ionic-image-loader';
 import { MomentModule } from 'ngx-moment';
 import { AuthProvider } from '../providers/auth/auth';
 import { DataProvider } from '../providers/data/data';
 import { StorageProvider } from '../providers/storage/storage';
 import { MyApp } from './app.component';
 import { FIREBASE_CREDENTIALS } from './firebase/firebase.credentials';
-import { IonicImageLoader } from 'ionic-image-loader';
+import { Network } from '@ionic-native/network';
 
 @NgModule({
   declarations: [MyApp],
@@ -54,7 +55,8 @@ import { IonicImageLoader } from 'ionic-image-loader';
     CallNumber,
     SMS,
     ScreenOrientation,
-    File
+    File,
+    Network
   ]
 })
 export class AppModule {}

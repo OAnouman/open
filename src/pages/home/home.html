@@ -25,9 +25,13 @@
         <ion-refresher-content pullingText="Tirez pour actualiser" refreshingText="Actualisation..."></ion-refresher-content>
     </ion-refresher>
 
+    <div text-center class="sticky" [@network]="networkState">
+        {{ networkStateLabel }}
+    </div>
+
     <ads-list (previewAd)="preview($event)"></ads-list>
 
-    <ion-fab bottom right>
+    <ion-fab bottom right [@offlineHideFab]="networkState">
         <button ion-fab (click)="goToNewAdPage()" color="secondary">
       <ion-icon name="create"></ion-icon>
     </button>

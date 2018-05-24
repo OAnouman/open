@@ -19,7 +19,7 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 // Previous theme
 // $colors: ( primary: (base:#2196F3, contrast:white), secondary: (base:#33C3FF, contrast:#000), danger: #f53d3d, light: #f4f4f4, dark: #222, facebook: #375a8a, background: #DFE3EE, success: #20a056, caution: #f1c400, negociable: #542733);
-$colors: ( primary: (base:#db3340, contrast:#ffffff), secondary: (base:#e8b71a, contrast:#222), google: #4285f4, secondary-light: (base:#ffe955, contrast:#000000), danger: #f53d3d, light: #f2f2f2, background: #DFE3EE, success: #20a056, caution: #f1c400, negociable: #542733);
+$colors: ( primary: (base:#db3340, contrast:#ffffff), secondary: (base:rgb(232, 184, 27), contrast:#222), google: #4285f4, secondary-light: (base:#ffe955, contrast:#000000), danger: rgb(245, 61, 61), light: #f2f2f2, background: #DFE3EE, success: rgb(32, 160, 86), caution: #f1c400, negociable: #542733);
 $secondary-light:#ffe955;
 $secondary-dark: #b18800;
 $primary-dark: #a20019;

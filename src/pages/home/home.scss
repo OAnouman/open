@@ -15,4 +15,11 @@ page-home {
         padding: 10px;
         background: color($colors, background) !important;
     }
+    .sticky {
+        background: rgba(245, 61, 61, .9);
+        top: -20px;
+        padding: 5px;
+        z-index: 100;
+        color: color($colors, light);
+    }
 }

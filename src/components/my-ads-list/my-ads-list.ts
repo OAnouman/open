@@ -4,24 +4,20 @@ import {
   state,
   style,
   transition,
-  trigger,
-  stagger,
-  query,
-  keyframes
-} from "@angular/animations";
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+  trigger
+} from '@angular/animations';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   Checkbox,
+  ItemSliding,
   Loading,
   LoadingController,
   Toast,
-  ToastController,
-  ItemSliding
-} from "ionic-angular";
-import { Observable } from "rxjs/Observable";
-import { Ad } from "../../models/ad/ad.interface";
-import { DataProvider } from "../../providers/data/data";
-import { AUTO_STYLE } from "@angular/core/src/animation/dsl";
+  ToastController
+} from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
+import { Ad } from '../../models/ad/ad.interface';
+import { DataProvider } from '../../providers/data/data';
 
 /**
  * Generated class for the MyAdsListComponent component.
@@ -31,66 +27,66 @@ import { AUTO_STYLE } from "@angular/core/src/animation/dsl";
  */
 
 @Component({
-  selector: "my-ads-list",
-  templateUrl: "my-ads-list.html",
+  selector: 'my-ads-list',
+  templateUrl: 'my-ads-list.html',
   animations: [
-    trigger("deleteButtonState", [
+    trigger('deleteButtonState', [
       state(
-        "inactive",
+        'inactive',
         style({
-          transform: "scale(1)"
+          transform: 'scale(1)'
         })
       ),
       state(
-        "active",
+        'active',
         style({
-          transform: "scale(1.5)"
+          transform: 'scale(1.5)'
         })
       ),
-      transition("inactive => active", animate("50ms ease-in")),
-      transition("active => inactive", animate("500ms ease-out"))
+      transition('inactive => active', animate('50ms ease-in')),
+      transition('active => inactive', animate('500ms ease-out'))
     ]),
-    trigger("editMode", [
+    trigger('editMode', [
       state(
-        "normal",
+        'normal',
         style({
-          opacity: "0",
-          display: "none"
+          opacity: '0',
+          display: 'none'
         })
       ),
       state(
-        "edit",
+        'edit',
         style({
-          opacity: "1",
-          display: "flex"
+          opacity: '1',
+          display: 'flex'
         })
       ),
-      transition("normal => edit", [
+      transition('normal => edit', [
         group([
-          animate(".3s .2s ease", style({ opacity: "1" })),
-          animate(".3s ease", style({ display: "flex" }))
+          animate('.3s .2s ease', style({ opacity: '1' })),
+          animate('.3s ease', style({ display: 'flex' }))
         ])
       ]),
-      transition("edit => normal", [
+      transition('edit => normal', [
         group([
-          animate(".3s ease", style({ opacity: "0" })),
-          animate(".3s .2s ease", style({ display: "none" }))
+          animate('.3s ease', style({ opacity: '0' })),
+          animate('.3s .2s ease', style({ display: 'none' }))
         ])
       ])
     ]),
-    trigger("flyIn", [
-      state("in", style({ transform: "translateX(0)", opacity: 1 })),
-      transition(":enter", [
-        style({ opacity: 0, transform: "translateX(-100%)" }),
+    trigger('flyIn', [
+      state('in', style({ transform: 'translateX(0)', opacity: 1 })),
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(-100%)' }),
         animate(500)
       ])
     ]),
-    trigger("flyOut", [
-      state("out", style({ transform: "translateX(100%)", opacity: 0 })),
-      transition(":leave", [
+    trigger('flyOut', [
+      state('out', style({ transform: 'translateX(100%)', opacity: 0 })),
+      transition(':leave', [
         group([
-          animate(".3s .3s ease", style({ opacity: 0 })),
-          animate(".4s ease", style({ transform: "translateX(200%)" }))
+          animate('.3s .3s ease', style({ opacity: 0 })),
+          animate('.4s ease', style({ transform: 'translateX(200%)' }))
         ])
       ])
     ])
@@ -108,9 +104,9 @@ export class MyAdsListComponent implements OnInit {
 
   myAds$: Observable<Ad[]>;
   deleteTapCount: number = 0;
-  deleteIconState: string = "inactive";
-  editMode: string = "normal";
-  flyInState: string = "in";
+  deleteIconState: string = 'inactive';
+  editMode: string = 'normal';
+  flyInState: string = 'in';
   flyOutState: string;
   myAds: Ad[] = [];
 
@@ -132,7 +128,7 @@ export class MyAdsListComponent implements OnInit {
   async getMyAds(): Promise<void> {
     try {
       this._loadingInstance = this._loadingCtrl.create({
-        content: "Chargement de mes annonces..."
+        content: 'Chargement de mes annonces...'
       });
 
       this._loadingInstance.present();
@@ -148,7 +144,7 @@ export class MyAdsListComponent implements OnInit {
       this._toastCtrl.create({
         message: e.message,
         duration: 5000,
-        cssClass: "globals__toast-error"
+        cssClass: 'globals__toast-error'
       });
     }
   }
@@ -172,10 +168,10 @@ export class MyAdsListComponent implements OnInit {
       this.toggleDeleteIconState();
 
       this._toastInstance = this._toastCtrl.create({
-        message: "Appuyer encore une fois pour supprimer",
+        message: 'Appuyer encore une fois pour supprimer',
         duration: 3000,
-        cssClass: "globals__toast-confirm",
-        closeButtonText: "Annuler",
+        cssClass: 'globals__toast-confirm',
+        closeButtonText: 'Annuler',
         showCloseButton: true
       });
 
@@ -214,7 +210,7 @@ export class MyAdsListComponent implements OnInit {
         this._selectedAdForDeletion = [];
 
         // Set normal mode
-        this.editMode = "normal";
+        this.editMode = 'normal';
       }
 
       // this._loadingInstance.dismiss();
@@ -249,7 +245,7 @@ export class MyAdsListComponent implements OnInit {
    */
   toggleDeleteIconState(): void {
     this.deleteIconState =
-      this.deleteIconState === "active" ? "inactive" : "active";
+      this.deleteIconState === 'active' ? 'inactive' : 'active';
   }
 
   /**
@@ -264,7 +260,7 @@ export class MyAdsListComponent implements OnInit {
 
     if (slidingPercent <= 0) {
       // To the left
-      this.deleteIconState = "inactive";
+      this.deleteIconState = 'inactive';
       if (this._toastInstance) this._toastInstance.dismiss();
     } else if (slidingPercent <= -2) {
       // To the right
@@ -279,7 +275,7 @@ export class MyAdsListComponent implements OnInit {
    * @memberof MyAdsListComponent
    */
   toggleEditMode(checkbox: Checkbox, ad: Ad): void {
-    this.editMode = "edit";
+    this.editMode = 'edit';
     this.onEditMode.emit(true);
 
     if (!ad.multiSelectSelected) {
@@ -312,7 +308,7 @@ export class MyAdsListComponent implements OnInit {
       );
     }
     if (this._selectedItemCount === 0) {
-      this.editMode = "normal";
+      this.editMode = 'normal';
       this.onEditMode.emit(false);
     }
 
@@ -330,7 +326,7 @@ export class MyAdsListComponent implements OnInit {
     this.myAds.forEach(ad => {
       if (ad.multiSelectSelected === false) return;
       ad.multiSelectSelected = false;
-      this.editMode = "normal";
+      this.editMode = 'normal';
     });
   }
 }
