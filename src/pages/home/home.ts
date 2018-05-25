@@ -185,22 +185,27 @@ export class HomePage {
     // Network listener
 
     if (this._network.type === 'none') {
-      this.networkState = 'offline';
-      this.networkStateLabel = this.OFFLINE_STATE_LABEL;
+      this.setOffline();
     } else {
-      this.networkState = 'online';
-      this.networkStateLabel = this.ONLINE_STATE_LABEL;
+      this.setOnline();
     }
 
     this._disconnectNetworkSub = this._network.onDisconnect().subscribe(() => {
-      this.networkState = 'offline';
-      this.networkStateLabel = this.OFFLINE_STATE_LABEL;
+      this.setOffline();
     });
 
     this._connectNetworkSub = this._network.onConnect().subscribe(() => {
-      this.networkState = 'online';
-      this.networkStateLabel = this.ONLINE_STATE_LABEL;
+      this.setOnline();
     });
+  }
+
+  private setOnline() {
+    this.networkState = 'online';
+    this.networkStateLabel = this.ONLINE_STATE_LABEL;
+  }
+  private setOffline() {
+    this.networkState = 'offline';
+    this.networkStateLabel = this.OFFLINE_STATE_LABEL;
   }
 
   preview(ad: Ad) {

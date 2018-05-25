@@ -1,18 +1,18 @@
-import { Injectable } from "@angular/core";
-import { Storage } from "@ionic/storage";
-import { AngularFirestore, DocumentChangeAction } from "angularfire2/firestore";
-import { User } from "firebase";
-import firebase from "firebase/app";
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/count";
-import "rxjs/add/operator/do";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/take";
-import { Ad } from "../../models/ad/ad.interface";
-import { AdView } from "../../models/adview/adView.interface";
-import { Profile } from "../../models/profile/profile.interface";
-import { Utils } from "../../utils/Utils";
-import { StorageProvider } from "../storage/storage";
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { AngularFirestore, DocumentChangeAction } from 'angularfire2/firestore';
+import { User } from 'firebase';
+import firebase from 'firebase/app';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/count';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/take';
+import { Ad } from '../../models/ad/ad.interface';
+import { AdView } from '../../models/adview/adView.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { Utils } from '../../utils/Utils';
+import { StorageProvider } from '../storage/storage';
 
 /*
   Generated class for the DataProvider provider.
@@ -29,7 +29,7 @@ export class DataProvider {
     private _afs: AngularFirestore,
     private _storagePvd: StorageProvider,
     private _storage: Storage
-  ) { }
+  ) {}
 
   /********************************************************************
    *                                PROFILE
@@ -48,9 +48,9 @@ export class DataProvider {
     if (profile.picture) {
       // If picture is already online we just save
       // profile infos
-      if (profile.picture.startsWith("https://")) {
+      if (profile.picture.startsWith('https://')) {
         await this._afs.doc<Profile>(`profiles/${profile.uid}`).set(profile);
-      } else if (profile.picture.startsWith("data:image")) {
+      } else if (profile.picture.startsWith('data:image')) {
         // Picture sets for first time or new picture selected
         (await this._storagePvd.createImageUploadTask(
           profile.picture,
@@ -86,6 +86,14 @@ export class DataProvider {
       .take(1);
   }
 
+  async getCurrentUserProfile(): Promise<Observable<Profile>> {
+    const uid = await this._storage.get('uid');
+    return this._afs
+      .doc<Profile>(`profiles/${uid}`)
+      .valueChanges()
+      .take(1);
+  }
+
   /**
    * Add ad to user favorites
    *
@@ -96,7 +104,7 @@ export class DataProvider {
   addFavoriteAd(uid: string, adId: string) {
     this._afs
       .doc<Profile>(`profiles/${uid}`)
-      .collection("favorites-ads")
+      .collection('favorites-ads')
       .doc(adId)
       .set({ fav: true });
   }
@@ -111,7 +119,7 @@ export class DataProvider {
   async removeFavoriteAd(uid: string, adId: string) {
     await this._afs
       .doc<Profile>(`profiles/${uid}`)
-      .collection("favorites-ads")
+      .collection('favorites-ads')
       .doc(adId)
       .delete();
   }
@@ -126,7 +134,7 @@ export class DataProvider {
   getFavoritesAds(uid: string): Observable<{ id?: string; fav: boolean }[]> {
     return this._afs
       .doc<Profile>(`profiles/${uid}`)
-      .collection("favorites-ads")
+      .collection('favorites-ads')
       .snapshotChanges()
       .map((actions: DocumentChangeAction[]) => {
         return actions.map((action: DocumentChangeAction) => {
@@ -150,7 +158,7 @@ export class DataProvider {
   isFavoriteAd(uid: string, adId: string) {
     return this._afs
       .doc<Profile>(`profiles/${uid}`)
-      .collection("favorites-ads")
+      .collection('favorites-ads')
       .doc<{ fav: boolean }>(adId)
       .valueChanges()
       .map(favAd => favAd.fav);
@@ -169,7 +177,7 @@ export class DataProvider {
   async saveAd(ad: Ad): Promise<void> {
     // we save first...
 
-    const uid = await this._storage.get("uid");
+    const uid = await this._storage.get('uid');
 
     ad.uid = uid;
     ad.createdAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -177,7 +185,7 @@ export class DataProvider {
     ad.price = Number(ad.price);
     ad.published = false;
 
-    const adRef$ = await this._afs.collection<Ad>("ads").add(ad);
+    const adRef$ = await this._afs.collection<Ad>('ads').add(ad);
 
     // ...store imgs and update ad with img downloadLink
 
@@ -272,7 +280,7 @@ export class DataProvider {
 
     ad.pictures.forEach(async (pic, index) => {
       // If picture is already online add to array then skip
-      if (!pic.startsWith("data:image")) {
+      if (!pic.startsWith('data:image')) {
         pictures.push(pic);
         return;
       }
@@ -320,10 +328,10 @@ export class DataProvider {
    */
   private getAdsByUpdatedAtDesc(count): Observable<Ad[]> {
     return this._afs
-      .collection<Ad>("ads", ref =>
+      .collection<Ad>('ads', ref =>
         ref
-          .where("published", "==", true)
-          .orderBy("lastUpdatedAt", "desc")
+          .where('published', '==', true)
+          .orderBy('lastUpdatedAt', 'desc')
           .limit(count)
       )
       .snapshotChanges()
@@ -352,11 +360,11 @@ export class DataProvider {
     category: string
   ): Observable<Ad[]> {
     return this._afs
-      .collection<Ad>("ads", ref =>
+      .collection<Ad>('ads', ref =>
         ref
-          .where("published", "==", true)
-          .where("category", "==", category)
-          .orderBy("lastUpdatedAt", "desc")
+          .where('published', '==', true)
+          .where('category', '==', category)
+          .orderBy('lastUpdatedAt', 'desc')
           .limit(count)
       )
       .snapshotChanges()
@@ -373,10 +381,10 @@ export class DataProvider {
   }
 
   async getMyAds(count: number): Promise<Observable<Ad[]>> {
-    const uid = await this._storage.get("uid");
+    const uid = await this._storage.get('uid');
 
     return this._afs
-      .collection<Ad>("ads", ref => ref.where("uid", "==", uid).limit(count))
+      .collection<Ad>('ads', ref => ref.where('uid', '==', uid).limit(count))
       .snapshotChanges()
       .map((actions: DocumentChangeAction[]) => {
         return actions.map((action: DocumentChangeAction) => {
@@ -402,7 +410,7 @@ export class DataProvider {
    * @memberof DataProvider
    */
   async addView(adId: string) {
-    const uid = await this._storage.get("uid");
+    const uid = await this._storage.get('uid');
 
     await this._afs
       .doc(`ads/${adId}`)
@@ -421,7 +429,7 @@ export class DataProvider {
   private getAdViewsCount(adId: string) {
     return this._afs
       .doc<AdView>(`ads/${adId}`)
-      .collection("seenBy")
+      .collection('seenBy')
       .valueChanges()
       .map(seens => {
         return seens.length;

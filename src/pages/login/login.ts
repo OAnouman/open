@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ToastController
+} from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
 
 /**
@@ -12,33 +17,27 @@ import { Profile } from '../../models/profile/profile.interface';
 @IonicPage()
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html',
+  templateUrl: 'login.html'
 })
 export class LoginPage {
-
   constructor(
     private navCtrl: NavController,
     private navParams: NavParams,
-    private toastCtrl: ToastController) {
-  }
+    private toastCtrl: ToastController
+  ) {}
 
   getSignedUser(profile: Profile): void {
-
-    if (profile.name) {
-
-      this.toastCtrl.create({
-        message: `Bienvenue sur Deals ${profile.name} !`,
-        duration: 3000,
-      }).present();
+    if (profile.username) {
+      this.toastCtrl
+        .create({
+          message: `Bienvenue sur Deals ${profile.name} !`,
+          duration: 3000
+        })
+        .present();
 
       this.navCtrl.setRoot('HomePage', { profile });
     } else {
-
       this.navCtrl.setRoot('EditProfilePage', { profile });
-
     }
-
-
   }
-
-}       
+}

@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { Storage } from "@ionic/storage";
-import { AngularFireAuth } from "angularfire2/auth";
-import { User } from "firebase";
-import { Observable } from "rxjs/Observable";
-import { Account } from "../../models/account/account.interface";
-import { Profile } from "../../models/profile/profile.interface";
-import { DataProvider } from "../data/data";
-import firebase from "firebase";
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { User } from 'firebase';
+import { Observable } from 'rxjs/Observable';
+import { Account } from '../../models/account/account.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { DataProvider } from '../data/data';
+import firebase from 'firebase';
 
 /*
   Generated class for the AuthProvider provider.
@@ -43,26 +43,26 @@ export class AuthProvider {
   private async oAuthSignIn(
     provider: firebase.auth.AuthProvider
   ): Promise<Observable<any>> {
+    let res;
+
     if (!(<any>window).cordova) {
       // If on Browser
-      const res = await this._afAuth.auth.signInWithPopup(provider);
-
-      return res;
+      res = await this._afAuth.auth.signInWithPopup(provider);
     } else {
       // If on Mobile
       await this._afAuth.auth.signInWithRedirect(provider);
 
-      const res = await this._afAuth.auth.getRedirectResult();
-
-      const user = res.user;
-
-      this.saveUid(user.uid);
-
-      return this._dataPvd.getProfileFromUid(user.uid).map(profile => {
-        if (!profile) return res;
-        return profile;
-      });
+      res = await this._afAuth.auth.getRedirectResult();
     }
+
+    const user = res.user;
+
+    this.saveUid(user.uid);
+
+    return this._dataPvd.getProfileFromUid(user.uid).map(profile => {
+      if (!profile) return res;
+      return profile;
+    });
   }
 
   /**
@@ -81,9 +81,9 @@ export class AuthProvider {
     // Save uid to local storage to later profile fetch
     // on app start
 
-    await this._storage.set("uid", user["user"].uid);
+    await this._storage.set('uid', user['user'].uid);
 
-    return this._dataPvd.getUserProfile(user["user"]);
+    return this._dataPvd.getUserProfile(user['user']);
   }
 
   /**
@@ -106,9 +106,9 @@ export class AuthProvider {
 
     let userProfile = {} as Profile;
 
-    userProfile.uid = user["user"].uid;
+    userProfile.uid = user['user'].uid;
 
-    userProfile.email = user["user"].email;
+    userProfile.email = user['user'].email;
 
     // Save uid to local storage to later profile fetch
     // on app start
@@ -126,7 +126,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private async saveUid(uid: string) {
-    await this._storage.set("uid", uid);
+    await this._storage.set('uid', uid);
   }
 
   /**
@@ -136,7 +136,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private async removeUid() {
-    await this._storage.remove("uid");
+    await this._storage.remove('uid');
   }
 
   /**

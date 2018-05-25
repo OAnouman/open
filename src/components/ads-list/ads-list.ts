@@ -66,6 +66,7 @@ export class AdsListComponent implements OnInit, OnDestroy {
         .subscribe(profile => {
           this._userProfile = profile;
           this._userProfile.favoritesAds$ = this._dataPvd.getFavoritesAds(uid);
+
           this.getAds();
         });
     });

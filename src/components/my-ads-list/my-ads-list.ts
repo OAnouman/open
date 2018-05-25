@@ -106,9 +106,8 @@ export class MyAdsListComponent implements OnInit {
   deleteTapCount: number = 0;
   deleteIconState: string = 'inactive';
   editMode: string = 'normal';
-  flyInState: string = 'in';
-  flyOutState: string;
   myAds: Ad[] = [];
+  canEditAd: boolean;
 
   constructor(
     private _dataPvd: DataProvider,
@@ -185,12 +184,6 @@ export class MyAdsListComponent implements OnInit {
 
       this._toastInstance.present();
     } else {
-      // this._loadingInstance = this._loadingCtrl.create({
-      //   content: "Suppression en cours..."
-      // });
-
-      // this._loadingInstance.present();
-
       if (ad) {
         this._dataPvd.deleteAd(ad);
         slidingItem.close();
@@ -232,6 +225,54 @@ export class MyAdsListComponent implements OnInit {
         this.queryLimit = limit;
         infiniteScroll.complete();
       });
+  }
+
+  /**
+   * Add selected ad to ads deleteion list
+   * and increments selected ads count.
+   * If count is equal to 0 then set edit mode state to normal
+   *
+   * @param {any} checkbox
+   * @param {Ad} ad
+   * @memberof MyAdsListComponent
+   */
+  onChecked(checkbox: Checkbox, ad: Ad): void {
+    if (checkbox.checked) {
+      this._selectedItemCount++;
+      this._selectedAdForDeletion.push(ad);
+    } else {
+      this._selectedItemCount--;
+      ad.multiSelectSelected = false;
+      this._selectedAdForDeletion = this._selectedAdForDeletion.filter(
+        ad => ad.id !== ad.id
+      );
+    }
+    if (this._selectedItemCount === 0) {
+      this.editMode = 'normal';
+      this.onEditMode.emit(false);
+    }
+
+    this.onSelect.emit(this._selectedItemCount);
+  }
+
+  selectAllAds(): void {
+    this.myAds.forEach(ad => {
+      if (ad.multiSelectSelected === true) return;
+      ad.multiSelectSelected = true;
+    });
+  }
+
+  deseletctAll() {
+    this.myAds.forEach(ad => {
+      if (ad.multiSelectSelected === false) return;
+      ad.multiSelectSelected = false;
+      this.editMode = 'normal';
+    });
+  }
+
+  public set canEdit(state: boolean) {
+    this.canEditAd = state;
+    console.log(this.canEditAd);
   }
 
   /**************************************
@@ -285,48 +326,5 @@ export class MyAdsListComponent implements OnInit {
     }
 
     this.onSelect.emit(this._selectedItemCount);
-  }
-
-  /**
-   * Add selected ad to ads deleteion list
-   * and increments selected ads count.
-   * If count is equal to 0 then set edit mode state to normal
-   *
-   * @param {any} checkbox
-   * @param {Ad} ad
-   * @memberof MyAdsListComponent
-   */
-  onChecked(checkbox: Checkbox, ad: Ad): void {
-    if (checkbox.checked) {
-      this._selectedItemCount++;
-      this._selectedAdForDeletion.push(ad);
-    } else {
-      this._selectedItemCount--;
-      ad.multiSelectSelected = false;
-      this._selectedAdForDeletion = this._selectedAdForDeletion.filter(
-        ad => ad.id !== ad.id
-      );
-    }
-    if (this._selectedItemCount === 0) {
-      this.editMode = 'normal';
-      this.onEditMode.emit(false);
-    }
-
-    this.onSelect.emit(this._selectedItemCount);
-  }
-
-  selectAllAds(): void {
-    this.myAds.forEach(ad => {
-      if (ad.multiSelectSelected === true) return;
-      ad.multiSelectSelected = true;
-    });
-  }
-
-  deseletctAll() {
-    this.myAds.forEach(ad => {
-      if (ad.multiSelectSelected === false) return;
-      ad.multiSelectSelected = false;
-      this.editMode = 'normal';
-    });
   }
 }

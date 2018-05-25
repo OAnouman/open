@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Output, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Loading,
   LoadingController,
   NavController,
   ToastController
-} from "ionic-angular";
-import "rxjs/Observable";
-import { Account } from "../../models/account/account.interface";
-import { Profile } from "../../models/profile/profile.interface";
-import { AuthProvider } from "../../providers/auth/auth";
-import { Observable } from "rxjs/Observable";
+} from 'ionic-angular';
+import 'rxjs/Observable';
+import { Account } from '../../models/account/account.interface';
+import { Profile } from '../../models/profile/profile.interface';
+import { AuthProvider } from '../../providers/auth/auth';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Generated class for the LoginFormComponent component.
@@ -19,8 +19,8 @@ import { Observable } from "rxjs/Observable";
  * Components.
  */
 @Component({
-  selector: "login-form",
-  templateUrl: "login-form.html"
+  selector: 'login-form',
+  templateUrl: 'login-form.html'
 })
 export class LoginFormComponent implements OnInit {
   /**
@@ -52,8 +52,8 @@ export class LoginFormComponent implements OnInit {
     this.isButtonsDisabled = false;
 
     this.loginForm = _formGroup.group({
-      email: ["", Validators.compose([Validators.email, Validators.required])],
-      password: ["", Validators.compose([Validators.required])]
+      email: ['', Validators.compose([Validators.email, Validators.required])],
+      password: ['', Validators.compose([Validators.required])]
     });
   }
 
@@ -61,18 +61,18 @@ export class LoginFormComponent implements OnInit {
     this.errorMessages = {
       email: [
         {
-          type: "email",
+          type: 'email',
           message: "L'adresse mail doit être valide."
         },
         {
-          type: "required",
+          type: 'required',
           message: "L'adresse mail est requise."
         }
       ],
       password: [
         {
-          type: "required",
-          message: "Le mot de passe est requis."
+          type: 'required',
+          message: 'Le mot de passe est requis.'
         }
       ]
     };
@@ -80,7 +80,7 @@ export class LoginFormComponent implements OnInit {
 
   async signInWithGoogle() {
     this._loadingInstance = this._loadingCtrl.create({
-      content: "Connexion...",
+      content: 'Connexion...',
       dismissOnPageChange: true
     });
 
@@ -98,7 +98,7 @@ export class LoginFormComponent implements OnInit {
           message: e.message,
           duration: 5000,
           showCloseButton: true,
-          cssClass: "globals__toast-error"
+          cssClass: 'globals__toast-error'
         })
         .present();
     }
@@ -113,7 +113,7 @@ export class LoginFormComponent implements OnInit {
     this.isButtonsDisabled = true;
 
     this._loadingInstance = this._loadingCtrl.create({
-      content: "Connexion...",
+      content: 'Connexion...',
       dismissOnPageChange: true
     });
 
@@ -135,14 +135,14 @@ export class LoginFormComponent implements OnInit {
           message: e.message,
           duration: 5000,
           showCloseButton: true,
-          cssClass: "globals__toast-error"
+          cssClass: 'globals__toast-error'
         })
         .present();
     }
   }
 
   goToRegisterPage(): void {
-    this._navCtrl.push("RegisterPage");
+    this._navCtrl.push('RegisterPage');
   }
 
   private getProfileFromEmailAndPAsswordAndEmit(profile$: Observable<Profile>) {
@@ -173,10 +173,10 @@ export class LoginFormComponent implements OnInit {
 
       if (!res.uid) {
         profile = <Profile>{
-          email: res.user.email,
+          email: res.additionalUserInfo.profile.email,
           uid: res.user.uid,
-          picture: res.profile.picture,
-          name: res.profile.name
+          picture: res.additionalUserInfo.profile.picture,
+          name: res.additionalUserInfo.profile.name
         };
       } else {
         profile = res;

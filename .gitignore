@@ -33,6 +33,8 @@ $RECYCLE.BIN/
 
 ul_web_hooks/
 
+src/app/firebase/
+
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
