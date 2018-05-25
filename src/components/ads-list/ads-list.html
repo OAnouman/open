@@ -1,8 +1,8 @@
-<ion-searchbar placeholder="Je cherche..." animate="true" (ionInput)="searchAd()"></ion-searchbar>
+<ion-searchbar *ngIf="showSearchbar" placeholder="Je cherche..." animate="true" (ionInput)="searchAd()" @showSearchbar></ion-searchbar>
 
 <p no-margin text-center class="sort-label">{{ sortLabel }}</p>
 
-<ion-list *ngIf="ads?.length > 0; else noResults">
+<ion-list *ngIf="ads?.length > 0; else noResults" @popUp>
     <ion-card *ngFor="let ad of ads">
         <ion-item>
             <ion-avatar item-start margin-left>
@@ -32,7 +32,7 @@
         <ion-row align-items-center>
             <ion-col col-auto>
                 <button ion-button icon-left clear small (click)="favoriteAd(ad)">
-          <ion-icon [name]="ad.favIcon" class="fav-icon"></ion-icon>
+          <ion-icon [name]="ad.favIcon" class="fav-icon" [@blink]="ad.favIcon"></ion-icon>
         </button>
             </ion-col>
             <ion-col col-auto>

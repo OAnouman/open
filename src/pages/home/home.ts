@@ -224,7 +224,7 @@ export class HomePage {
    */
   showCategoriesList() {
     this.categoriesRadiosInputs = this.categoriesRadiosInputs.map(radio => {
-      radio.value === this._selectedCategory
+      radio.value === this._selectedCategory.value
         ? (radio.checked = true)
         : (radio.checked = false);
 
@@ -274,5 +274,9 @@ export class HomePage {
   ionViewDidLeave() {
     this._connectNetworkSub.unsubscribe();
     this._disconnectNetworkSub.unsubscribe();
+  }
+
+  toggleSearchbar(): void {
+    this.adList.toggleSearchbar();
   }
 }

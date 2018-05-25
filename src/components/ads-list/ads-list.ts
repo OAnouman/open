@@ -5,6 +5,15 @@ import {
   Output,
   OnDestroy
 } from '@angular/core';
+import {
+  trigger,
+  animate,
+  keyframes,
+  state,
+  style,
+  transition,
+  query
+} from '@angular/animations';
 import { Storage } from '@ionic/storage';
 import { Loading, LoadingController, ToastController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
@@ -26,7 +35,63 @@ import { Subscription } from 'rxjs/Subscription';
  */
 @Component({
   selector: 'ads-list',
-  templateUrl: 'ads-list.html'
+  templateUrl: 'ads-list.html',
+  animations: [
+    trigger('blink', [
+      state('heart', style({})),
+      state('heart-outline', style({})),
+      transition('heart-outline <=> heart', [
+        query(
+          ':self',
+          animate(
+            300,
+            keyframes([
+              style({ transform: 'scale(1)', opacity: 1, offset: 0 }),
+              style({ transform: 'scale(1.2)', opacity: 0.7, offset: 0.5 }),
+              style({ transform: 'scale(1.6)', opacity: 0.4, offset: 0.7 }),
+              style({ transform: 'scale(2)', opacity: 0, offset: 1 })
+            ])
+          )
+        )
+      ])
+    ]),
+    trigger('popUp', [
+      transition(':enter', [
+        animate(
+          300,
+          keyframes([
+            style({
+              transform: 'translateY(5%)',
+              opacity: 0.5,
+              display: 'flex',
+              offset: 0
+            }),
+            style({ transform: 'translateY(0)', opacity: 1, offset: 1 })
+          ])
+        )
+      ])
+    ]),
+    trigger('showSearchbar', [
+      transition(':enter', [
+        animate(
+          300,
+          keyframes([
+            style({ transform: 'translateY(-20%)', opacity: 0.3, offset: 0 }),
+            style({ transform: 'translateY(0)', opacity: 1, offset: 1 })
+          ])
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          300,
+          keyframes([
+            style({ transform: 'translateY(0)', opacity: 1, offset: 0 }),
+            style({ transform: 'translateY(-20%)', opacity: 0.3, offset: 1 })
+          ])
+        )
+      ])
+    ])
+  ]
 })
 export class AdsListComponent implements OnInit, OnDestroy {
   @Output() previewAd: EventEmitter<Ad>;
@@ -39,6 +104,7 @@ export class AdsListComponent implements OnInit, OnDestroy {
   displayedCategory: string;
   notFavorite: string = 'heart-outline';
   favorite: string = 'heart';
+  showSearchbar: boolean = false;
   private _uid: string;
   private _loadingInstance: Loading;
   private _userProfile: Profile;
@@ -191,7 +257,6 @@ export class AdsListComponent implements OnInit, OnDestroy {
 
   async favoriteAd(ad: Ad) {
     const prevIcon = ad.favIcon;
-
     try {
       if (ad.favIcon === this.notFavorite) {
         ad.favIcon = this.favorite;
@@ -212,5 +277,9 @@ export class AdsListComponent implements OnInit, OnDestroy {
         })
         .present();
     }
+  }
+
+  toggleSearchbar() {
+    this.showSearchbar = !this.showSearchbar;
   }
 }
