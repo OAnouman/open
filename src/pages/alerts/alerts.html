@@ -1,0 +1,41 @@
+<!--
+  Generated template for the AlertsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar color="primary">
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>Mes alertes</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="openCategoriesAlertList()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+    <ion-grid no-padding>
+        <ion-row *ngIf="showInfoBlock" align-items-center justify-content-start class="info-block" margin @flyOut>
+            <ion-col col-10>
+                Vous serez notifié lorsqu'une annonce correspondante aux catégories selectionnées sera publiée ou lorsqu'un des utilisateurs sélectionnés publiera une annonce.
+                <br>Pour créer une alerte appuyer sur le button
+                <ion-icon name="add"></ion-icon>
+            </ion-col>
+            <ion-col col-1 offset-1>
+                <ion-icon name="close" (click)="closeInfo()"></ion-icon>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <alerts-list></alerts-list>
+
+</ion-content>

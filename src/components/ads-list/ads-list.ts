@@ -12,7 +12,8 @@ import {
   state,
   style,
   transition,
-  query
+  query,
+  group
 } from '@angular/animations';
 import { Storage } from '@ionic/storage';
 import { Loading, LoadingController, ToastController } from 'ionic-angular';
@@ -24,6 +25,7 @@ import { Ad } from '../../models/ad/ad.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { DataProvider } from '../../providers/data/data';
 import { Subscription } from 'rxjs/Subscription';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
 
 // import { ADS_LIST } from "../../mocks/ads/ad.mocks";
 
@@ -41,45 +43,25 @@ import { Subscription } from 'rxjs/Subscription';
       state('heart', style({})),
       state('heart-outline', style({})),
       transition('heart-outline <=> heart', [
-        query(
-          ':self',
-          animate(
-            300,
-            keyframes([
-              style({ transform: 'scale(1)', opacity: 1, offset: 0 }),
-              style({ transform: 'scale(1.2)', opacity: 0.7, offset: 0.5 }),
-              style({ transform: 'scale(1.6)', opacity: 0.4, offset: 0.7 }),
-              style({ transform: 'scale(2)', opacity: 0, offset: 1 })
-            ])
-          )
-        )
+        group([
+          animate('.3s ease-out', style({ transform: 'scale(1.4)' })),
+          animate('.25s .05s ease-out', style({ opacity: 0 }))
+        ])
       ])
     ]),
-    trigger('popUp', [
+    trigger('fadeIn', [
       transition(':enter', [
-        animate(
-          300,
-          keyframes([
-            style({
-              transform: 'translateY(5%)',
-              opacity: 0.5,
-              display: 'flex',
-              offset: 0
-            }),
-            style({ transform: 'translateY(0)', opacity: 1, offset: 1 })
-          ])
-        )
+        style({ opacity: 0 }),
+        group([animate('.5s ease-out', style({ opacity: 1 }))])
       ])
     ]),
     trigger('showSearchbar', [
       transition(':enter', [
-        animate(
-          300,
-          keyframes([
-            style({ transform: 'translateY(-20%)', opacity: 0.3, offset: 0 }),
-            style({ transform: 'translateY(0)', opacity: 1, offset: 1 })
-          ])
-        )
+        style({ transform: 'translateY(-20%)' }),
+        group([
+          animate('.3s ease-out', style({ transform: 'translateY(0%)' })),
+          animate('.25s .05s ease-out', style({ opacity: 1 }))
+        ])
       ]),
       transition(':leave', [
         animate(
@@ -111,7 +93,7 @@ export class AdsListComponent implements OnInit, OnDestroy {
   constructor(
     private _dataPvd: DataProvider,
     private _loadingCtrl: LoadingController,
-    private _storage: Storage,
+    private _localStrgPvd: LocalStorageProvider,
     private _toastCtrl: ToastController
   ) {
     this.previewAd = new EventEmitter<Ad>();
@@ -124,7 +106,7 @@ export class AdsListComponent implements OnInit, OnDestroy {
 
     this._loadingInstance.present();
 
-    this._storage.get('uid').then(uid => {
+    this._localStrgPvd.get('uid').then(uid => {
       this._uid = uid;
       this._dataPvd
         .getProfileFromUid(uid)
@@ -260,7 +242,7 @@ export class AdsListComponent implements OnInit, OnDestroy {
     try {
       if (ad.favIcon === this.notFavorite) {
         ad.favIcon = this.favorite;
-        this._dataPvd.addFavoriteAd(this._uid, ad.id);
+        await this._dataPvd.addFavoriteAd(ad.id);
       } else if (ad.favIcon === this.favorite) {
         ad.favIcon = this.notFavorite;
         await this._dataPvd.removeFavoriteAd(this._uid, ad.id);

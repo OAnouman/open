@@ -1,13 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
 import {
-  trigger,
-  state,
   animate,
-  transition,
+  keyframes,
+  state,
   style,
-  group,
-  keyframes
+  transition,
+  trigger
 } from '@angular/animations';
+import { Component, ViewChild } from '@angular/core';
+import { Network } from '@ionic-native/network';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Storage } from '@ionic/storage';
 import { User } from 'firebase';
@@ -20,17 +20,19 @@ import {
   ModalController,
   NavController,
   NavParams,
+  PopoverController,
   ToastController
 } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { AdsListComponent } from '../../components/ads-list/ads-list';
 import { Ad } from '../../models/ad/ad.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { AuthProvider } from '../../providers/auth/auth';
 import { DataProvider } from '../../providers/data/data';
 import { Utils } from '../../utils/Utils';
-import { Subscription } from 'rxjs/Subscription';
-import { Network } from '@ionic-native/network';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
+
 /**
  * Generated class for the HomePage page.
  *
@@ -128,11 +130,12 @@ export class HomePage {
     private _modalCtrl: ModalController,
     private _toastCtrl: ToastController,
     private _dataPvd: DataProvider,
-    private _storage: Storage,
+    private _localStrgPvd: LocalStorageProvider,
     private _statusBar: StatusBar,
     private _loadingCtrl: LoadingController,
     private _alertCtrl: AlertController,
-    private _network: Network
+    private _network: Network,
+    private _popoverCtrl: PopoverController
   ) {
     //Set default sort
 
@@ -151,7 +154,7 @@ export class HomePage {
 
     // Get uer profile
 
-    this._storage.get('uid').then(uid =>
+    this._localStrgPvd.get('uid').then(uid =>
       this._dataPvd
         .getProfileFromUid(uid)
         .take(1)
@@ -267,7 +270,7 @@ export class HomePage {
    * @memberof HomePage
    */
   pullToRefresh(event: any) {
-    // IMPROVE:
+    // IMPROVE
     this.sortByCategory(this._selectedCategory, event);
   }
 
@@ -278,5 +281,11 @@ export class HomePage {
 
   toggleSearchbar(): void {
     this.adList.toggleSearchbar();
+  }
+
+  showMenu(event) {
+    this._popoverCtrl
+      .create('HomeMenuPage', {}, { cssClass: 'popover' })
+      .present({ ev: event });
   }
 }

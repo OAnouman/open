@@ -8,6 +8,8 @@ import { Profile } from '../models/profile/profile.interface';
 import { AuthProvider } from '../providers/auth/auth';
 import { DataProvider } from '../providers/data/data';
 import { ImageLoaderConfig } from 'ionic-image-loader';
+import { LocalStorageProvider } from '../providers/local-storage/local-storage';
+import { FCM, NotificationData } from '@ionic-native/fcm';
 
 @Component({
   templateUrl: 'app.html'
@@ -29,10 +31,13 @@ export class MyApp {
     public splashScreen: SplashScreen,
     private _authPvd: AuthProvider,
     private _dataPvd: DataProvider,
-    private _storage: Storage,
-    private _imageLoaderConfig: ImageLoaderConfig
+    private _localStrgPvd: LocalStorageProvider,
+    private _imageLoaderConfig: ImageLoaderConfig,
+    private _fcm: FCM
   ) {
     this.initializeApp();
+
+    this.initFCM();
 
     this.setRootPage();
 
@@ -84,8 +89,31 @@ export class MyApp {
     this._imageLoaderConfig.setMaximumCacheAge(15 * 24 * 60 * 60 * 1000);
   }
 
+  private initFCM() {
+    // Register token to server
+    // Run only if on device since cordova
+    // is not available on browser
+    if (this.platform.is('cordova')) {
+      this._fcm
+        .getToken()
+        .then(async token =>
+          this._dataPvd.registerPushNotifocationToken(token)
+        );
+      this._fcm
+        .onTokenRefresh()
+        .subscribe(async token =>
+          this._dataPvd.registerPushNotifocationToken(token)
+        );
+      this._fcm.onNotification().subscribe((data: NotificationData) => {
+        if (data.wasTapped) {
+        } else {
+        }
+      });
+    }
+  }
+
   private async getUid(): Promise<string> {
-    return await this._storage.get('uid');
+    return await this._localStrgPvd.get('uid');
   }
 
   openProfilePage(): void {
@@ -98,6 +126,26 @@ export class MyApp {
 
   openMyAdsPage(): void {
     this.nav.setRoot('MyAdsPage');
+  }
+
+  openSettingsPage(): void {
+    this.nav.setRoot('SettingsPage');
+  }
+
+  openAlertsPage(): void {
+    this.nav.setRoot('AlertsPage');
+  }
+
+  openFavoritesAdsPage(): void {
+    this.nav.setRoot('FavoritesAdsPage');
+  }
+
+  openFeedbackPage(): void {
+    this.nav.setRoot('FeedbackPage');
+  }
+
+  openAboutPage(): void {
+    this.nav.setRoot('AboutPage');
   }
 
   /**

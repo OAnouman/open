@@ -1,25 +1,23 @@
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 
 export interface Profile {
+  name?: string;
+  username?: string;
+  email?: string;
+  phoneNumber?: string;
+  city?: string;
+  picture?: string;
+  uid?: string;
+  credential?: {
+    //IMPLEMENT Get datas when login
+    accesToken?: string;
 
-    name?: string,
-    username?: string,
-    email?: string,
-    phoneNumber?: string;
-    city?: string;
-    picture?: string;
-    uid?: string;
-    credential?: {
+    idToken?: string;
 
-        accesToken?: string,
+    providerId?: string;
 
-        idToken?: string,
-
-        providerId?: string;
-
-        signInMethod?: string;
-
-    }
-    favoritesAds$?: Observable<{ id?: string, fav: boolean }[]>;
-
+    signInMethod?: string;
+  };
+  favoritesAds$?: Observable<{ id?: string; fav: boolean }[]>;
+  alerts?: {}[];
 }

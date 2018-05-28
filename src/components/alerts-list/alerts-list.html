@@ -1,0 +1,35 @@
+<!-- Segment button -->
+<ion-segment [(ngModel)]="alertsToDisplay">
+    <ion-segment-button color="secondary" [value]="CATEGORY_ALERT_TAG">
+        Categories
+    </ion-segment-button>
+    <ion-segment-button color="secondary" [value]="USER_ALERT_TAG">
+        Utilisateurs
+    </ion-segment-button>
+</ion-segment>
+
+<!-- Switched content -->
+
+<div [ngSwitch]="alertsToDisplay">
+
+    <ion-list [@list]="userAlerts.length" *ngSwitchCase="'category'" padding-horizontal>
+        <ion-item *ngFor="let alert of userAlerts" @items>
+            {{ alert.text }}
+
+            <button ion-button clear icon-only item-end (click)="deleteAlert(alert)">
+        <ion-icon name="trash" class="icon-small"></ion-icon>
+      </button>
+        </ion-item>
+    </ion-list>
+
+    <ion-list [@list]="userAlerts.length" *ngSwitchCase="'user'" padding-horizontal>
+        <!-- <ion-item *ngFor="let alert of userAlerts" @items>
+            {{ alert.text }}
+
+            <button ion-button clear icon-only item-end (click)="deleteAlert(alert)">
+        <ion-icon name="trash" class="icon-small"></ion-icon>
+      </button>
+        </ion-item> -->
+    </ion-list>
+
+</div>

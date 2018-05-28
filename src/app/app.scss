@@ -84,6 +84,13 @@ ion-item {
     color: $secondary-light;
 }
 
+// ****************POPOVER****************
+.popover .popover-content {
+    ion-list {
+        padding: 0 10px;
+    }
+}
+
 //**************SIDEMENU******************
 ion-menu {
     ion-header {

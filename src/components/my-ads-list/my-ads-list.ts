@@ -4,7 +4,10 @@ import {
   state,
   style,
   transition,
-  trigger
+  trigger,
+  query,
+  stagger,
+  animateChild
 } from '@angular/animations';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
@@ -18,6 +21,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Ad } from '../../models/ad/ad.interface';
 import { DataProvider } from '../../providers/data/data';
+import { StylesCompileDependency } from '@angular/compiler';
 
 /**
  * Generated class for the MyAdsListComponent component.
@@ -74,21 +78,41 @@ import { DataProvider } from '../../providers/data/data';
         ])
       ])
     ]),
-    trigger('flyIn', [
-      state('in', style({ transform: 'translateX(0)', opacity: 1 })),
+    // trigger('flyIn', [
+    //   state('in', style({ transform: 'translateX(0)', opacity: 1 })),
+    //   transition(':enter', [
+    //     style({ opacity: 0, transform: 'translateX(-100%)' }),
+    //     animate(500)
+    //   ])
+    // ]),
+    // trigger('flyOut', [
+    //   state('out', style({ transform: 'translateX(100%)', opacity: 0 })),
+    //   transition(':leave', [
+    //     group([
+    //       animate('.3s .3s ease', style({ opacity: 0 })),
+    //       animate('.4s ease', style({ transform: 'translateX(200%)' }))
+    //     ])
+    //   ])
+    // ]),
+    trigger('items', [
       transition(':enter', [
-        style({ opacity: 0, transform: 'translateX(-100%)' }),
-        animate(500)
+        style({ transform: 'scale(2)', opacity: 0 }),
+        animate(
+          '.3s cubic-bezier(.8, -0.6, 0.2, 1.5)',
+          style({ transform: 'scale(1)', opacity: 1 })
+        )
+      ]),
+      transition(':leave', [
+        style({ transform: 'scale(1)', height: '*', margin: '*' }),
+        animate(
+          '.3s cubic-bezier(.8, -0.6, 0.2, 1.5)',
+          style({ transform: 'scale(.5)', opacity: 0.5, height: 0, margin: 0 })
+        )
       ])
     ]),
-    trigger('flyOut', [
-      state('out', style({ transform: 'translateX(100%)', opacity: 0 })),
-      transition(':leave', [
-        group([
-          animate('.3s .3s ease', style({ opacity: 0 })),
-          animate('.4s ease', style({ transform: 'translateX(200%)' }))
-        ])
-      ])
+    trigger('list', [
+      transition(':increment', [query('@items', stagger(100, animateChild()))]),
+      transition(':decrement', [query('@items', stagger(100, animateChild()))])
     ])
   ]
 })
@@ -108,6 +132,7 @@ export class MyAdsListComponent implements OnInit {
   editMode: string = 'normal';
   myAds: Ad[] = [];
   canEditAd: boolean;
+  hasAds: boolean = true;
 
   constructor(
     private _dataPvd: DataProvider,
@@ -134,9 +159,13 @@ export class MyAdsListComponent implements OnInit {
 
       this.myAds$ = await this._dataPvd.getMyAds(this.queryLimit);
 
-      this.myAds$
-        .take(1)
-        .subscribe(ads => ads.forEach(ad => this.myAds.push(ad)));
+      this.myAds$.take(1).subscribe(ads => {
+        if (ads.length === 0) {
+          this.hasAds = false;
+          return;
+        }
+        ads.forEach(ad => this.myAds.push(ad));
+      });
 
       this._loadingInstance.dismiss();
     } catch (e) {
@@ -272,7 +301,6 @@ export class MyAdsListComponent implements OnInit {
 
   public set canEdit(state: boolean) {
     this.canEditAd = state;
-    console.log(this.canEditAd);
   }
 
   /**************************************

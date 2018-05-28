@@ -4,6 +4,7 @@ import { Loading, LoadingController } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
 import { AuthProvider } from '../../providers/auth/auth';
 import { DataProvider } from '../../providers/data/data';
+import { LocalStorageProvider } from '../../providers/local-storage/local-storage';
 
 /**
  * Generated class for the ShowProfileComponent component.
@@ -16,7 +17,6 @@ import { DataProvider } from '../../providers/data/data';
   templateUrl: 'show-profile.html'
 })
 export class ShowProfileComponent implements OnInit {
-
   @Output() profileLoaded: EventEmitter<Profile>;
   @Output() loggedOut: EventEmitter<null>;
   profile: Profile;
@@ -26,43 +26,35 @@ export class ShowProfileComponent implements OnInit {
   text: string;
 
   constructor(
-    private _storage: Storage,
+    private _localStrgPvd: LocalStorageProvider,
     private _loadingCtrl: LoadingController,
     private _dataPvd: DataProvider,
-    private _authPvd: AuthProvider) {
-
+    private _authPvd: AuthProvider
+  ) {
     this.profileLoaded = new EventEmitter<Profile>();
 
     this.loggedOut = new EventEmitter();
-
   }
 
   ngOnInit(): void {
-
-    this.loadingInstance = this._loadingCtrl
-      .create({ content: 'Chargement...' });
+    this.loadingInstance = this._loadingCtrl.create({
+      content: 'Chargement...'
+    });
 
     this.loadingInstance.present();
 
-    this._storage.get('uid')
-      .then(uid => {
-        this._dataPvd.getProfileFromUid(uid)
-          .subscribe(profile => {
-            this.profile = profile
-            this.profileLoaded.emit(profile);
-            this.loadingInstance.dismiss();
-          })
-      })
-
+    this._localStrgPvd.get('uid').then(uid => {
+      this._dataPvd.getProfileFromUid(uid).subscribe(profile => {
+        this.profile = profile;
+        this.profileLoaded.emit(profile);
+        this.loadingInstance.dismiss();
+      });
+    });
   }
 
   async logOut() {
-
     await this._authPvd.logout();
 
     this.loggedOut.emit();
-
   }
-
-
 }

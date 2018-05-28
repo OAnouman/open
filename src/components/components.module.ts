@@ -13,6 +13,7 @@ import { LoginFormComponent } from './login-form/login-form';
 import { MyAdsListComponent } from './my-ads-list/my-ads-list';
 import { RegisterFormComponent } from './register-form/register-form';
 import { ShowProfileComponent } from './show-profile/show-profile';
+import { AlertsListComponent } from './alerts-list/alerts-list';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ShowProfileComponent } from './show-profile/show-profile';
     AdFormComponent,
     MyAdsListComponent,
     EditAdFormComponent,
-    AdPicturesSlideComponent
+    AdPicturesSlideComponent,
+    AlertsListComponent
   ],
   imports: [IonicModule, MomentModule, DirectivesModule, IonicImageLoader],
   exports: [
@@ -37,7 +39,8 @@ import { ShowProfileComponent } from './show-profile/show-profile';
     AdFormComponent,
     MyAdsListComponent,
     EditAdFormComponent,
-    AdPicturesSlideComponent
+    AdPicturesSlideComponent,
+    AlertsListComponent
   ]
 })
 export class ComponentsModule {}

@@ -32,12 +32,12 @@
         Mes annonces
       </button>
 
-            <button ion-item menuClose>
+            <button ion-item menuClose (click)="openFavoritesAdsPage()">
         <ion-icon name="heart" color="secondary" item-start></ion-icon>
         Mes favoris
       </button>
 
-            <button ion-item menuClose>
+            <button ion-item menuClose (click)="openAlertsPage()">
         <ion-icon color="danger" name="notifications" item-start></ion-icon>
         Mes alertes
       </button>
@@ -49,19 +49,19 @@
         Mon profil
       </button>
 
-            <button ion-item menuClose>
+            <button ion-item menuClose (click)="openSettingsPage()">
         <ion-icon name="settings" class="grey" item-start></ion-icon>
         Paramètres
       </button>
 
             <hr>
 
-            <button ion-item menuClose>
+            <button ion-item menuClose (click)="openFeedbackPage()">
         <ion-icon name="help-circle" item-start class="secondary-dark"></ion-icon>
         Support
       </button>
 
-            <button ion-item menuClose>
+            <button ion-item menuClose (click)="openAboutPage()">
         <ion-icon name="information-circle" item-start class="grey"></ion-icon>
         A propos
       </button>

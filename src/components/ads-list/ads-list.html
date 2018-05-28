@@ -2,7 +2,7 @@
 
 <p no-margin text-center class="sort-label">{{ sortLabel }}</p>
 
-<ion-list *ngIf="ads?.length > 0; else noResults" @popUp>
+<ion-list *ngIf="ads?.length > 0; else noResults" @fadeIn>
     <ion-card *ngFor="let ad of ads">
         <ion-item>
             <ion-avatar item-start margin-left>

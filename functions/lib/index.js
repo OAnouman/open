@@ -19,8 +19,33 @@ exports.onAdCreated = functions.firestore
     .document('ads/{adId}')
     .onCreate((snap, context) => {
     const ad = snap.data();
-    ad.objectID = context.params.adId;
-    const index = client.initIndex(ALGOLIA_INDEX_NAME);
-    index.saveObject(ad);
+    // ad.objectID = context.params.adId;
+    // const index = client.initIndex(ALGOLIA_INDEX_NAME);
+    // index.saveObject(ad);
+    //Setting up message
+    const message = {
+        notification: {
+            title: `Nouvelle annonce - ${ad.title}`,
+            body: ad.body
+        },
+        android: {
+            ttl: 3600 * 4 * 1000,
+            priority: 'normal',
+            notification: {
+                sound: 'default',
+                icon: 'https://firebasestorage.googleapis.com/v0/b/fir-crud-422c3.appspot.com/o/private_app_files%2Ficon.png?alt=media&token=3a09ec10-91f1-4124-8477-049788173ba3',
+                clickAction: 'FCM_PLUGIN_ACTIVITY'
+            }
+        },
+        topic: ad.category
+    };
+    //Sending messge
+    admin
+        .messaging()
+        .send(message)
+        .then(res => {
+        console.log('Message successfully sent', res);
+    })
+        .catch(err => console.log(err));
 });
 //# sourceMappingURL=index.js.map

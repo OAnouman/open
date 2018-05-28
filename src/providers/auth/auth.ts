@@ -7,6 +7,7 @@ import { Account } from '../../models/account/account.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { DataProvider } from '../data/data';
 import firebase from 'firebase';
+import { LocalStorageProvider } from '../local-storage/local-storage';
 
 /*
   Generated class for the AuthProvider provider.
@@ -19,7 +20,7 @@ export class AuthProvider {
   constructor(
     private _afAuth: AngularFireAuth,
     private _dataPvd: DataProvider,
-    private _storage: Storage
+    private _loaclStrgPvd: LocalStorageProvider
   ) {}
 
   /**
@@ -81,7 +82,7 @@ export class AuthProvider {
     // Save uid to local storage to later profile fetch
     // on app start
 
-    await this._storage.set('uid', user['user'].uid);
+    await this._loaclStrgPvd.set('uid', user['user'].uid);
 
     return this._dataPvd.getUserProfile(user['user']);
   }
@@ -126,7 +127,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private async saveUid(uid: string) {
-    await this._storage.set('uid', uid);
+    await this._loaclStrgPvd.set('uid', uid);
   }
 
   /**
@@ -136,7 +137,7 @@ export class AuthProvider {
    * @memberof AuthProvider
    */
   private async removeUid() {
-    await this._storage.remove('uid');
+    await this._loaclStrgPvd.remove('uid');
   }
 
   /**

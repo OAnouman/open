@@ -13,6 +13,11 @@ import { AdView } from '../../models/adview/adView.interface';
 import { Profile } from '../../models/profile/profile.interface';
 import { Utils } from '../../utils/Utils';
 import { StorageProvider } from '../storage/storage';
+import { LocalStorageProvider } from '../local-storage/local-storage';
+import { PushNotificationToken } from '../../models/push-notification-token/push-token.interface';
+import { FcmProvider } from '../fcm/fcm';
+import { differenceWith, isEqual } from 'lodash';
+import { Platform } from 'ionic-angular';
 
 /*
   Generated class for the DataProvider provider.
@@ -28,7 +33,9 @@ export class DataProvider {
   constructor(
     private _afs: AngularFirestore,
     private _storagePvd: StorageProvider,
-    private _storage: Storage
+    private _localStrgPrvd: LocalStorageProvider,
+    private _fcmPvd: FcmProvider,
+    private _platform: Platform
   ) {}
 
   /********************************************************************
@@ -87,7 +94,7 @@ export class DataProvider {
   }
 
   async getCurrentUserProfile(): Promise<Observable<Profile>> {
-    const uid = await this._storage.get('uid');
+    const uid = await this._localStrgPrvd.get('uid');
     return this._afs
       .doc<Profile>(`profiles/${uid}`)
       .valueChanges()
@@ -101,7 +108,9 @@ export class DataProvider {
    * @param {string} adId
    * @memberof DataProvider
    */
-  addFavoriteAd(uid: string, adId: string) {
+  async addFavoriteAd(adId: string) {
+    const uid = await this._localStrgPrvd.get('uid');
+
     this._afs
       .doc<Profile>(`profiles/${uid}`)
       .collection('favorites-ads')
@@ -148,7 +157,7 @@ export class DataProvider {
   }
 
   /**
-   * Check if an ad is iin uer favorites
+   * Check if an ad is in user favorites
    *
    * @param {string} uid
    * @param {string} adId
@@ -177,7 +186,7 @@ export class DataProvider {
   async saveAd(ad: Ad): Promise<void> {
     // we save first...
 
-    const uid = await this._storage.get('uid');
+    const uid = await this._localStrgPrvd.get('uid');
 
     ad.uid = uid;
     ad.createdAt = firebase.firestore.FieldValue.serverTimestamp();
@@ -218,7 +227,7 @@ export class DataProvider {
       category: ad.category,
       lastUpdatedAt: ad.lastUpdatedAt,
       pictures: ad.pictures,
-      price: ad.price,
+      price: Number(ad.price),
       published: ad.published,
       tags: ad.tags,
       title: ad.title
@@ -237,7 +246,6 @@ export class DataProvider {
    */
   async deleteAd(ad: Ad) {
     // Delete images
-
     await this._storagePvd.deleteFiles(ad.pictures);
 
     await this._afs.doc<Ad>(`ads/${ad.id}`).delete();
@@ -282,6 +290,9 @@ export class DataProvider {
       // If picture is already online add to array then skip
       if (!pic.startsWith('data:image')) {
         pictures.push(pic);
+        if (index + 1 === picturesCount) {
+          await adRef$.update({ pictures, published: true });
+        }
         return;
       }
 
@@ -381,7 +392,7 @@ export class DataProvider {
   }
 
   async getMyAds(count: number): Promise<Observable<Ad[]>> {
-    const uid = await this._storage.get('uid');
+    const uid = await this._localStrgPrvd.get('uid');
 
     return this._afs
       .collection<Ad>('ads', ref => ref.where('uid', '==', uid).limit(count))
@@ -410,7 +421,7 @@ export class DataProvider {
    * @memberof DataProvider
    */
   async addView(adId: string) {
-    const uid = await this._storage.get('uid');
+    const uid = await this._localStrgPrvd.get('uid');
 
     await this._afs
       .doc(`ads/${adId}`)
@@ -426,7 +437,7 @@ export class DataProvider {
    * @returns
    * @memberof DataProvider
    */
-  private getAdViewsCount(adId: string) {
+  private getAdViewsCount(adId: string): Observable<number> {
     return this._afs
       .doc<AdView>(`ads/${adId}`)
       .collection('seenBy')
@@ -434,5 +445,56 @@ export class DataProvider {
       .map(seens => {
         return seens.length;
       });
+  }
+
+  /********************************************************************
+   *                            ALERTS
+   ********************************************************************/
+
+  async saveAlertsSubscription(oldAlerts: {}[], alerts: {}[]): Promise<void> {
+    const uid = await this._localStrgPrvd.get('uid');
+    // Run only if on device since cordova
+    // is not available on browser
+
+    if (this._platform.is('cordova')) {
+      // Save alerts...
+      await this._afs.doc<Profile>(`profiles/${uid}`).update({ alerts });
+
+      // Get deleted alerts
+      const deletedAlerts = differenceWith(oldAlerts, alerts, isEqual);
+
+      //...then subscribe to categories
+      this._fcmPvd.subcribeToTopics(alerts.map((alert: any) => alert.value));
+
+      //Unsubscribe deleted alerts
+      this._fcmPvd.unsubcribeToTopics(
+        deletedAlerts.map((alert: any) => alert.value)
+      );
+    }
+  }
+
+  /**
+   * Register push notifcation token to server
+   *
+   * @param {any} token
+   * @memberof DataProvider
+   */
+  async registerPushNotifocationToken(token: string): Promise<void> {
+    const uid = await this._localStrgPrvd.get('uid');
+    await this._afs
+      .doc<PushNotificationToken>(`push-notification-token/${uid}`)
+      .set({ token, uid });
+  }
+
+  /**
+   * Unregister psuh notifiation token on server
+   *
+   * @memberof DataProvider
+   */
+  async unregisterPsuhNotificationToken() {
+    const uid = await this._localStrgPrvd.get('uid');
+    await this._afs
+      .doc<PushNotificationToken>(`push-notification-token/${uid}`)
+      .delete();
   }
 }

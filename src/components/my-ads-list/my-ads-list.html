@@ -1,5 +1,5 @@
-<ion-list *ngIf="myAds.length > 0; else noResults" @flyIn>
-    <ion-item-sliding *ngFor="let ad of myAds" (ionDrag)="itemSwipe($event)" (press)="toggleEditMode(check,ad)" @flyOut #slidingItem>
+<ion-list [@list]="myAds.length" *ngIf="hasAds; else noResults">
+    <ion-item-sliding *ngFor="let ad of myAds" (ionDrag)="itemSwipe($event)" (press)="toggleEditMode(check,ad)" @items #slidingItem>
         <ion-item>
             <ion-avatar item-left>
                 <img-loader [src]="ad.pictures[0]" useImg></img-loader>

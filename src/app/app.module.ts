@@ -5,6 +5,7 @@ import { CallNumber } from '@ionic-native/call-number';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { ImagePicker } from '@ionic-native/image-picker';
+import { Network } from '@ionic-native/network';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { SMS } from '@ionic-native/sms';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -19,10 +20,12 @@ import { IonicImageLoader } from 'ionic-image-loader';
 import { MomentModule } from 'ngx-moment';
 import { AuthProvider } from '../providers/auth/auth';
 import { DataProvider } from '../providers/data/data';
+import { LocalStorageProvider } from '../providers/local-storage/local-storage';
 import { StorageProvider } from '../providers/storage/storage';
 import { MyApp } from './app.component';
 import { FIREBASE_CREDENTIALS } from './firebase/firebase.credentials';
-import { Network } from '@ionic-native/network';
+import { FCM } from '@ionic-native/fcm';
+import { FcmProvider } from '../providers/fcm/fcm';
 
 @NgModule({
   declarations: [MyApp],
@@ -56,7 +59,10 @@ import { Network } from '@ionic-native/network';
     SMS,
     ScreenOrientation,
     File,
-    Network
+    Network,
+    LocalStorageProvider,
+    FCM,
+    FcmProvider
   ]
 })
 export class AppModule {}
