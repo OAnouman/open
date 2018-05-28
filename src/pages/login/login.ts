@@ -3,7 +3,8 @@ import {
   IonicPage,
   NavController,
   NavParams,
-  ToastController
+  ToastController,
+  MenuController
 } from 'ionic-angular';
 import { Profile } from '../../models/profile/profile.interface';
 
@@ -23,8 +24,12 @@ export class LoginPage {
   constructor(
     private navCtrl: NavController,
     private navParams: NavParams,
-    private toastCtrl: ToastController
-  ) {}
+    private toastCtrl: ToastController,
+    private _menuCtrl: MenuController
+  ) {
+    // Disable menu swipe on this page
+    _menuCtrl.swipeEnable(false);
+  }
 
   getSignedUser(profile: Profile): void {
     if (profile.username) {
